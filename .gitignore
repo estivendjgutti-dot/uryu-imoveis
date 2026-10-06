@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.vercel/
+.env
+.env.*
+!.env.example
+uploads/
+tmp/
+*.log
+test-results/
+
+.vercel
+.env*
+!.env.example

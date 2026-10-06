@@ -1,1132 +1,1314 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Uryu — Curadoria Imobiliária de Alto Padrão</title>
-<meta name="description" content="Uma seleção rara de residências, escolhidas por quem entende que morar bem é uma forma de arte.">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Uryu Imóveis | Comprar, alugar e anunciar</title>
+    <meta
+      name="description"
+      content="Encontre imóveis para comprar ou alugar com a Uryu. Atendimento próximo em cada etapa da negociação."
+    />
 
-<!-- Fonts -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Manrope:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Manrope:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
 
-<!-- Tailwind -->
-<script src="https://cdn.tailwindcss.com"></script>
-<script>
-  tailwind.config = {
-    theme: {
-      extend: {
-        colors: {
-          cream:   '#F6F1E9',
-          stone:   '#EAE2D3',
-          olive:   '#818B6E',
-          'olive-deep': '#5F6850',
-          slate:   '#9BA8AC',
-          'slate-deep': '#6F7C81',
-          charcoal:'#2A2823',
-          gold:    '#C9BC98',
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              cream: "#F6F1E9",
+              stone: "#EAE2D3",
+              olive: "#818B6E",
+              "olive-deep": "#5F6850",
+              slate: "#9BA8AC",
+              "slate-deep": "#6F7C81",
+              charcoal: "#2A2823",
+              gold: "#C9BC98",
+            },
+            fontFamily: {
+              serif: ["Fraunces", "ui-serif", "Georgia", "serif"],
+              sans: ["Manrope", "ui-sans-serif", "system-ui", "sans-serif"],
+              mono: ['"JetBrains Mono"', "ui-monospace", "monospace"],
+            },
+            letterSpacing: {
+              widest2: ".28em",
+            },
+          },
         },
-        fontFamily: {
-          serif: ['Fraunces', 'ui-serif', 'Georgia', 'serif'],
-          sans:  ['Manrope', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-          mono:  ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
-        },
-        letterSpacing: {
-          widest2: '.28em',
-        },
+      };
+    </script>
+
+    <!-- GSAP -->
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+    <script src="config.js"></script>
+    <script src="imoveis.js"></script>
+    <link rel="stylesheet" href="site.css" />
+
+    <style>
+      html {
+        scroll-behavior: smooth;
       }
-    }
-  }
-</script>
+      body {
+        background-color: #eae2d3;
+      }
 
-<!-- GSAP -->
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-<script src="imoveis.js"></script>
+      /* glass panel utility */
+      .glass {
+        background: rgba(32, 30, 26, 0.88);
+        backdrop-filter: blur(22px) saturate(140%);
+        -webkit-backdrop-filter: blur(22px) saturate(140%);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+      }
+      .glass-dark {
+        background: rgba(42, 40, 35, 0.28);
+        backdrop-filter: blur(18px) saturate(120%);
+        -webkit-backdrop-filter: blur(18px) saturate(120%);
+      }
 
-<style>
-  html { scroll-behavior: smooth; }
-  body { background-color: #EAE2D3; }
+      .hairline {
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(201, 188, 152, 0.7),
+          transparent
+        );
+        height: 1px;
+      }
 
-  /* glass panel utility */
-  .glass {
-    background: rgba(32, 30, 26, 0.88);
-    backdrop-filter: blur(22px) saturate(140%);
-    -webkit-backdrop-filter: blur(22px) saturate(140%);
-    border: 1px solid rgba(255,255,255,0.14);
-  }
-  .glass-dark {
-    background: rgba(42, 40, 35, 0.28);
-    backdrop-filter: blur(18px) saturate(120%);
-    -webkit-backdrop-filter: blur(18px) saturate(120%);
-  }
+      ::selection {
+        background: #818b6e;
+        color: #f6f1e9;
+      }
 
-  .hairline { background: linear-gradient(90deg, transparent, rgba(201,188,152,.7), transparent); height:1px; }
+      /* reveal defaults (GSAP overrides via JS, this is fallback / reduced-motion safe) */
+      .reveal {
+        opacity: 0;
+        transform: translateY(28px);
+      }
+      .reveal.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
 
-  ::selection { background: #818B6E; color: #F6F1E9; }
+      @media (prefers-reduced-motion: reduce) {
+        .reveal {
+          opacity: 1 !important;
+          transform: none !important;
+        }
+        html {
+          scroll-behavior: auto;
+        }
+      }
 
-  /* reveal defaults (GSAP overrides via JS, this is fallback / reduced-motion safe) */
-  .reveal { opacity: 0; transform: translateY(28px); }
-  .reveal.is-visible { opacity: 1; transform: translateY(0); }
+      /* custom scrollbar, minimal */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: rgba(42, 40, 35, 0.25);
+        border-radius: 3px;
+      }
 
-  @media (prefers-reduced-motion: reduce) {
-    .reveal { opacity: 1 !important; transform: none !important; }
-    html { scroll-behavior: auto; }
-  }
+      .navlink {
+        position: relative;
+      }
+      .navlink::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -4px;
+        height: 1px;
+        width: 0;
+        background: currentColor;
+        transition: width 0.35s ease;
+      }
+      .navlink:hover::after {
+        width: 100%;
+      }
 
-  /* custom scrollbar, minimal */
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: rgba(42,40,35,0.25); border-radius: 3px; }
+      .img-zoom {
+        transition: transform 1.1s cubic-bezier(0.16, 0.8, 0.24, 1);
+      }
+      .group:hover .img-zoom {
+        transform: scale(1.07);
+      }
 
-  .navlink { position: relative; }
-  .navlink::after {
-    content: ''; position: absolute; left:0; bottom:-4px; height:1px; width:0;
-    background: currentColor; transition: width .35s ease;
-  }
-  .navlink:hover::after { width: 100%; }
+      .card-lift {
+        transition:
+          transform 0.55s cubic-bezier(0.16, 0.8, 0.24, 1),
+          box-shadow 0.55s ease;
+      }
+      .card-lift:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 24px 60px -20px rgba(42, 40, 35, 0.35);
+      }
 
-  .img-zoom { transition: transform 1.1s cubic-bezier(.16,.8,.24,1); }
-  .group:hover .img-zoom { transform: scale(1.07); }
+      .btn-line {
+        position: relative;
+        overflow: hidden;
+      }
+      .btn-line span {
+        position: relative;
+        z-index: 1;
+      }
+      .btn-line::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: #2a2823;
+        transform: translateX(-101%);
+        transition: transform 0.5s cubic-bezier(0.16, 0.8, 0.24, 1);
+      }
+      .btn-line:hover::before {
+        transform: translateX(0);
+      }
+      .btn-line:hover {
+        color: #f6f1e9 !important;
+      }
 
-  .card-lift { transition: transform .55s cubic-bezier(.16,.8,.24,1), box-shadow .55s ease; }
-  .card-lift:hover { transform: translateY(-6px); box-shadow: 0 24px 60px -20px rgba(42,40,35,0.35); }
+      /* language switcher */
+      .lang-btn {
+        opacity: 0.55;
+        transition: opacity 0.25s ease;
+      }
+      .lang-btn.active {
+        opacity: 1;
+        border-bottom: 1px solid currentColor;
+      }
+      .lang-btn:hover {
+        opacity: 1;
+      }
 
-  .btn-line { position: relative; overflow: hidden; }
-  .btn-line span { position: relative; z-index: 1; }
-  .btn-line::before {
-    content:''; position:absolute; inset:0; background:#2A2823; transform: translateX(-101%);
-    transition: transform .5s cubic-bezier(.16,.8,.24,1);
-  }
-  .btn-line:hover::before { transform: translateX(0); }
-  .btn-line:hover { color: #F6F1E9 !important; }
+      /* range sliders */
+      input[type="range"] {
+        accent-color: #c9bc98;
+      }
+      select option {
+        color: #2a2823;
+        background: #f6f1e9;
+      }
 
-  /* language switcher */
-  .lang-btn { opacity: .55; transition: opacity .25s ease; }
-  .lang-btn.active { opacity: 1; border-bottom: 1px solid currentColor; }
-  .lang-btn:hover { opacity: 1; }
+      /* category chips */
+      .cat-chip {
+        transition: all 0.25s ease;
+      }
+      .cat-chip.active {
+        background: #f6f1e9;
+        color: #2a2823;
+        border-color: #f6f1e9;
+      }
 
-  /* range sliders */
-  input[type="range"] { accent-color: #C9BC98; }
-  select option { color: #2A2823; background: #F6F1E9; }
+      /* whatsapp float */
+      #whats-btn {
+        transition:
+          transform 0.3s cubic-bezier(0.16, 0.8, 0.24, 1),
+          box-shadow 0.3s ease;
+      }
+      #whats-btn:hover {
+        transform: scale(1.08);
+        box-shadow: 0 12px 36px rgba(37, 211, 102, 0.5);
+      }
+    </style>
+  </head>
 
-  /* category chips */
-  .cat-chip { transition: all .25s ease; }
-  .cat-chip.active { background: #F6F1E9; color: #2A2823; border-color: #F6F1E9; }
-
-  /* whatsapp float */
-  #whats-btn { transition: transform .3s cubic-bezier(.16,.8,.24,1), box-shadow .3s ease; }
-  #whats-btn:hover { transform: scale(1.08); box-shadow: 0 12px 36px rgba(37,211,102,.5); }
-</style>
-</head>
-
-<body class="font-sans text-cream antialiased overflow-x-hidden">
-
-  <!-- ============ FIXED CINEMATIC VIDEO LAYER ============ -->
-  <div class="fixed inset-0 w-full h-full -z-20 bg-charcoal">
-    <canvas id="bg-canvas" class="absolute inset-0 w-full h-full transition-opacity duration-500" style="opacity:0"></canvas>
-    <video id="bg-video" class="w-full h-full object-cover opacity-90 transition-opacity duration-500" muted playsinline preload="auto" poster="">
-      <source src="background.mp4" type="video/mp4">
-    </video>
-    <!-- ambient vignette, always on, very light -->
-    <div class="absolute inset-0 bg-gradient-to-b from-charcoal/25 via-transparent to-charcoal/40 pointer-events-none"></div>
-    <div class="absolute inset-0 bg-charcoal/10 pointer-events-none"></div>
-  </div>
-
-  <!-- timecode + scroll spine (signature element) -->
-  <div class="fixed right-5 md:right-8 top-0 h-screen z-40 pointer-events-none flex-col items-end justify-between pt-8 pb-32 hidden lg:flex">
-    <div id="timecode" class="font-mono text-[11px] tracking-widest text-cream/80 [text-shadow:0_1px_6px_rgba(0,0,0,.5)]">00:00 / 00:00</div>
-    <div class="relative w-px h-[55vh] bg-cream/25">
-      <div id="spine-dot" class="absolute -left-[3px] top-0 w-[7px] h-[7px] rounded-full bg-gold shadow-[0_0_10px_rgba(201,188,152,.9)]"></div>
+  <body class="font-sans text-cream antialiased overflow-x-hidden">
+    <!-- ============ FIXED CINEMATIC VIDEO LAYER ============ -->
+    <div class="fixed inset-0 w-full h-full -z-20 bg-charcoal">
+      <canvas
+        id="bg-canvas"
+        class="absolute inset-0 w-full h-full transition-opacity duration-500"
+        style="opacity: 0"
+      ></canvas>
+      <video
+        id="bg-video"
+        class="w-full h-full object-cover opacity-90 transition-opacity duration-500"
+        muted
+        playsinline
+        preload="auto"
+        poster=""
+      >
+        <source src="background.mp4" type="video/mp4" />
+      </video>
+      <!-- ambient vignette, always on, very light -->
+      <div
+        class="absolute inset-0 bg-gradient-to-b from-charcoal/25 via-transparent to-charcoal/40 pointer-events-none"
+      ></div>
+      <div class="absolute inset-0 bg-charcoal/10 pointer-events-none"></div>
     </div>
-    <div class="font-mono text-[10px] tracking-widest2 text-cream/60 rotate-180 [writing-mode:vertical-rl]">SCROLL</div>
-  </div>
 
-  <!-- ============ NAVBAR ============ -->
-  <nav id="navbar" class="fixed top-0 inset-x-0 z-50 transition-all duration-500 ease-out">
-    <div class="max-w-7xl mx-auto px-6 md:px-10 flex items-center justify-between h-32 md:h-40 transition-all duration-500" id="nav-inner">
-      <a href="#home" class="flex items-center gap-3 select-none" id="logo-text">
-        <span class="bg-cream/95 rounded-xl px-4 py-2 flex items-center shadow-[0_4px_20px_rgba(0,0,0,.25)]">
-          <img src="logo-uryu.png" alt="Uryu Imóveis" id="logo-img" class="h-[120px] md:h-36 w-auto object-contain mix-blend-multiply transition-all duration-500">
-        </span>
-      </a>
-
-      <div class="hidden lg:flex items-center gap-7 text-[12px] tracking-widest2 uppercase text-cream/90" id="nav-links">
-        <a href="#home" class="navlink" data-i18n="nav_home">Home</a>
-        <a href="#empresa" class="navlink" data-i18n="nav_empresa">A Empresa</a>
-        <a href="#comprar" class="navlink" data-i18n="nav_comprar">Comprar</a>
-        <a href="#alugar" class="navlink" data-i18n="nav_alugar">Alugar</a>
-        <a href="#anuncie" class="navlink" data-i18n="nav_anuncie">Anuncie seu Imóvel</a>
-        <a href="#contato" class="navlink" data-i18n="nav_contato">Contato</a>
+    <!-- timecode + scroll spine (signature element) -->
+    <div
+      class="fixed right-5 md:right-8 top-0 h-screen z-40 pointer-events-none flex-col items-end justify-between pt-8 pb-32 hidden lg:flex"
+    >
+      <div
+        id="timecode"
+        class="font-mono text-[11px] tracking-widest text-cream/80 [text-shadow:0_1px_6px_rgba(0,0,0,.5)]"
+      >
+        00:00 / 00:00
       </div>
+      <div class="relative w-px h-[55vh] bg-cream/25">
+        <div
+          id="spine-dot"
+          class="absolute -left-[3px] top-0 w-[7px] h-[7px] rounded-full bg-gold shadow-[0_0_10px_rgba(201,188,152,.9)]"
+        ></div>
+      </div>
+      <div
+        class="font-mono text-[10px] tracking-widest2 text-cream/60 rotate-180 [writing-mode:vertical-rl]"
+      >
+        SCROLL
+      </div>
+    </div>
 
-      <div class="flex items-center gap-5">
-        <!-- language switcher -->
-        <div class="flex items-center gap-3 font-mono text-[11px] tracking-widest text-cream" id="lang-switch">
-          <button class="lang-btn uppercase" data-lang="pt">PT</button>
-          <span class="text-cream/30">·</span>
-          <button class="lang-btn uppercase" data-lang="en">EN</button>
-          <span class="text-cream/30">·</span>
-          <button class="lang-btn uppercase" data-lang="es">ES</button>
-        </div>
-
-        <a href="#contato" class="hidden xl:inline-flex btn-line items-center gap-2 border border-cream/70 text-cream px-6 py-2.5 rounded-full text-[12px] tracking-widest2 uppercase whitespace-nowrap">
-          <span data-i18n="nav_cta">Agendar visita</span>
+    <!-- ============ NAVBAR ============ -->
+    <nav
+      id="navbar"
+      class="fixed top-0 inset-x-0 z-50 transition-all duration-500 ease-out"
+    >
+      <div
+        class="max-w-7xl mx-auto px-6 md:px-10 flex items-center justify-between h-32 md:h-40 transition-all duration-500"
+        id="nav-inner"
+      >
+        <a
+          href="#home"
+          class="flex items-center gap-3 select-none"
+          id="logo-text"
+        >
+          <span
+            class="bg-cream/95 rounded-xl px-4 py-2 flex items-center shadow-[0_4px_20px_rgba(0,0,0,.25)]"
+          >
+            <img
+              src="logo-uryu.png"
+              alt="Uryu Imóveis"
+              id="logo-img"
+              class="h-[120px] md:h-36 w-auto object-contain mix-blend-multiply transition-all duration-500"
+            />
+          </span>
         </a>
 
-        <button id="menu-btn" class="lg:hidden text-cream" aria-label="Abrir menu">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
-        </button>
-      </div>
-    </div>
-
-    <!-- mobile menu -->
-    <div id="mobile-menu" class="lg:hidden hidden glass-dark mx-4 rounded-2xl px-6 py-6 flex flex-col gap-5 text-cream text-sm tracking-widest2 uppercase">
-      <a href="#home" data-i18n="nav_home">Home</a>
-      <a href="#empresa" data-i18n="nav_empresa">A Empresa</a>
-      <a href="#comprar" data-i18n="nav_comprar">Comprar</a>
-      <a href="#alugar" data-i18n="nav_alugar">Alugar</a>
-      <a href="#anuncie" data-i18n="nav_anuncie">Anuncie seu Imóvel</a>
-      <a href="#contato" data-i18n="nav_contato">Contato</a>
-      <a href="#contato" class="border border-cream/70 rounded-full text-center py-2.5" data-i18n="nav_cta">Agendar visita</a>
-    </div>
-  </nav>
-
-  <!-- ============ HERO ============ -->
-  <section id="home" class="relative min-h-screen flex items-end md:items-center">
-    <div class="absolute inset-0 bg-gradient-to-t from-charcoal/70 via-charcoal/10 to-transparent pointer-events-none"></div>
-
-    <div class="relative z-10 max-w-7xl mx-auto px-6 md:px-10 pt-44 md:pt-48 pb-24 w-full">
-      <p class="reveal font-mono text-cream/80 text-[11px] tracking-widest2 uppercase mb-6" data-i18n="hero_kicker">Curadoria imobiliária · desde 2009</p>
-      <h1 class="reveal font-serif text-cream text-[13vw] leading-[0.98] md:text-[6.2vw] md:leading-[1.02] max-w-5xl [text-shadow:0_4px_30px_rgba(0,0,0,.35)]" data-i18n-html="hero_title">
-        Onde a vida<br class="hidden md:block"> encontra espaço<br class="hidden md:block"> para respirar.
-      </h1>
-      <p class="reveal mt-8 max-w-md text-cream/85 text-base md:text-lg leading-relaxed font-light" data-i18n="hero_sub">
-        Uma seleção rara de residências, escolhidas por quem entende que morar bem é uma forma de arte — não um endereço.
-      </p>
-      <div class="reveal mt-10 flex items-center gap-6">
-        <a href="#comprar" class="btn-line inline-flex items-center gap-3 bg-cream text-charcoal px-8 py-4 rounded-full text-[12px] tracking-widest2 uppercase">
-          <span data-i18n="hero_cta1">Explorar coleção</span>
-        </a>
-        <a href="#empresa" class="text-cream text-[12px] tracking-widest2 uppercase navlink" data-i18n="hero_cta2">Nossa história</a>
-      </div>
-    </div>
-
-    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 hidden lg:flex [@media(max-height:700px)]:lg:hidden flex-col items-center gap-2 text-cream/70">
-      <span class="font-mono text-[10px] tracking-widest2 uppercase" data-i18n="hero_scroll">Role para explorar</span>
-      <div class="w-px h-10 bg-cream/40 relative overflow-hidden">
-        <div class="absolute top-0 left-0 w-full h-3 bg-cream animate-[scrollpulse_1.8s_ease-in-out_infinite]"></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ BUSCA DE IMÓVEIS ============ -->
-  <section id="busca" class="relative py-28 md:py-36">
-    <div class="max-w-7xl mx-auto px-6 md:px-10">
-      <div class="reveal glass rounded-[32px] p-8 md:p-14">
-        <div class="text-center mb-12">
-          <p class="font-mono text-gold text-[11px] tracking-widest2 uppercase mb-4" data-i18n="srch_kicker">Busca</p>
-          <h2 class="font-serif text-3xl md:text-5xl text-cream" data-i18n="srch_title">Encontre aqui seu imóvel ideal</h2>
-          <div class="hairline max-w-xs mx-auto mt-6"></div>
+        <div
+          class="hidden lg:flex items-center gap-7 text-[12px] tracking-widest2 uppercase text-cream/90"
+          id="nav-links"
+        >
+          <a href="#home" class="navlink" data-i18n="nav_home">Home</a>
+          <a href="#empresa" class="navlink" data-i18n="nav_empresa"
+            >A Empresa</a
+          >
+          <a href="#comprar" class="navlink" data-i18n="nav_comprar">Comprar</a>
+          <a href="#alugar" class="navlink" data-i18n="nav_alugar">Alugar</a>
+          <a href="#anuncie" class="navlink" data-i18n="nav_anuncie"
+            >Anuncie seu Imóvel</a
+          >
+          <a href="#contato" class="navlink" data-i18n="nav_contato">Contato</a>
         </div>
 
-        <!-- categorias -->
-        <p class="font-mono text-cream/60 text-[10px] tracking-widest2 uppercase mb-3" data-i18n="srch_cat">Categorias</p>
-        <div class="flex flex-wrap gap-3 mb-10" id="cat-chips">
-          <button class="cat-chip active border border-cream/40 rounded-full px-6 py-2.5 text-[12px] tracking-widest2 uppercase" data-cat="" data-i18n="opt_all">Todos</button>
-          <button class="cat-chip border border-cream/40 rounded-full px-6 py-2.5 text-[12px] tracking-widest2 uppercase" data-cat="apartamento" data-i18n="cat_ap">Apartamento</button>
-          <button class="cat-chip border border-cream/40 rounded-full px-6 py-2.5 text-[12px] tracking-widest2 uppercase" data-cat="casa" data-i18n="cat_casa">Casa</button>
-          <button class="cat-chip border border-cream/40 rounded-full px-6 py-2.5 text-[12px] tracking-widest2 uppercase" data-cat="comercial" data-i18n="cat_com">Comercial</button>
-          <button class="cat-chip border border-cream/40 rounded-full px-6 py-2.5 text-[12px] tracking-widest2 uppercase" data-cat="terreno" data-i18n="cat_ter">Terreno</button>
-        </div>
+        <div class="flex items-center gap-5">
+          <!-- language switcher -->
+          <div
+            class="flex items-center gap-3 font-mono text-[11px] tracking-widest text-cream"
+            id="lang-switch"
+          >
+            <button class="lang-btn uppercase" data-lang="pt">PT</button>
+            <span class="text-cream/30">·</span>
+            <button class="lang-btn uppercase" data-lang="en">EN</button>
+            <span class="text-cream/30">·</span>
+            <button class="lang-btn uppercase" data-lang="es">ES</button>
+          </div>
 
-        <!-- sliders -->
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
-          <div>
-            <div class="flex items-center justify-between mb-2">
-              <span class="font-mono text-cream/60 text-[10px] tracking-widest2 uppercase" data-i18n="f_quartos">Quartos</span>
-              <span class="font-serif text-gold" id="lbl-quartos">Todos</span>
-            </div>
-            <input type="range" id="f-quartos" min="0" max="5" value="0" class="w-full">
-          </div>
-          <div>
-            <div class="flex items-center justify-between mb-2">
-              <span class="font-mono text-cream/60 text-[10px] tracking-widest2 uppercase" data-i18n="f_banheiros">Banheiros</span>
-              <span class="font-serif text-gold" id="lbl-banheiros">Todos</span>
-            </div>
-            <input type="range" id="f-banheiros" min="0" max="6" value="0" class="w-full">
-          </div>
-          <div>
-            <div class="flex items-center justify-between mb-2">
-              <span class="font-mono text-cream/60 text-[10px] tracking-widest2 uppercase" data-i18n="f_vagas">Vagas na Garagem</span>
-              <span class="font-serif text-gold" id="lbl-vagas">Todos</span>
-            </div>
-            <input type="range" id="f-vagas" min="0" max="6" value="0" class="w-full">
-          </div>
-          <div>
-            <div class="flex items-center justify-between mb-2">
-              <span class="font-mono text-cream/60 text-[10px] tracking-widest2 uppercase" data-i18n="f_tamanho">Tamanho (m²)</span>
-              <span class="font-serif text-gold" id="lbl-tamanho">Todos</span>
-            </div>
-            <input type="range" id="f-tamanho" min="0" max="1000" step="50" value="0" class="w-full">
-          </div>
-        </div>
+          <a
+            href="https://wa.me/5511970508331?text=Ol%C3%A1%2C%20gostaria%20de%20agendar%20uma%20visita."
+            target="_blank"
+            rel="noopener"
+            class="hidden xl:inline-flex btn-line items-center gap-2 border border-cream/70 text-cream px-6 py-2.5 rounded-full text-[12px] tracking-widest2 uppercase whitespace-nowrap"
+          >
+            <span data-i18n="nav_cta">Agendar visita</span>
+          </a>
 
-        <!-- selects -->
-        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-          <div>
-            <label class="font-mono text-cream/60 text-[10px] tracking-widest2 uppercase block mb-2" data-i18n="f_estado">Estado</label>
-            <select id="f-estado" class="w-full bg-white/10 border border-cream/30 rounded-full px-5 py-3 text-sm focus:outline-none focus:border-gold"></select>
-          </div>
-          <div>
-            <label class="font-mono text-cream/60 text-[10px] tracking-widest2 uppercase block mb-2" data-i18n="f_cidade">Cidade</label>
-            <select id="f-cidade" class="w-full bg-white/10 border border-cream/30 rounded-full px-5 py-3 text-sm focus:outline-none focus:border-gold"></select>
-          </div>
-          <div>
-            <label class="font-mono text-cream/60 text-[10px] tracking-widest2 uppercase block mb-2" data-i18n="f_bairro">Bairro</label>
-            <select id="f-bairro" class="w-full bg-white/10 border border-cream/30 rounded-full px-5 py-3 text-sm focus:outline-none focus:border-gold"></select>
-          </div>
-          <div>
-            <label class="font-mono text-cream/60 text-[10px] tracking-widest2 uppercase block mb-2" data-i18n="f_neg">Negociação</label>
-            <select id="f-neg" class="w-full bg-white/10 border border-cream/30 rounded-full px-5 py-3 text-sm focus:outline-none focus:border-gold"></select>
-          </div>
-          <div>
-            <label class="font-mono text-cream/60 text-[10px] tracking-widest2 uppercase block mb-2" data-i18n="f_valor">Valor</label>
-            <select id="f-valor" class="w-full bg-white/10 border border-cream/30 rounded-full px-5 py-3 text-sm focus:outline-none focus:border-gold"></select>
-          </div>
-          <div>
-            <label class="font-mono text-cream/60 text-[10px] tracking-widest2 uppercase block mb-2" data-i18n="f_fase">Fase do imóvel</label>
-            <select id="f-fase" class="w-full bg-white/10 border border-cream/30 rounded-full px-5 py-3 text-sm focus:outline-none focus:border-gold"></select>
-          </div>
-        </div>
-
-        <div class="text-center">
-          <button id="btn-search" class="btn-line inline-flex items-center gap-3 bg-cream text-charcoal px-10 py-4 rounded-full text-[12px] tracking-widest2 uppercase">
-            <span data-i18n="srch_btn">Pesquisar imóveis</span>
+          <button
+            aria-expanded="false"
+            aria-controls="mobile-menu"
+            id="menu-btn"
+            class="lg:hidden text-cream"
+            aria-label="Abrir menu"
+          >
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M4 7h16M4 12h16M4 17h16"
+                stroke="currentColor"
+                stroke-width="1.4"
+                stroke-linecap="round"
+              />
+            </svg>
           </button>
         </div>
-
-        <!-- resultados -->
-        <div class="mt-14 hidden" id="results-wrap">
-          <p class="font-mono text-gold text-[11px] tracking-widest2 uppercase mb-8" id="results-count"></p>
-          <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8" id="results-grid"></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ GRID DE CATEGORIAS ============ -->
-  <section id="comprar" class="relative py-28 md:py-40">
-    <div class="max-w-7xl mx-auto px-6 md:px-10">
-      <div class="reveal flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-14 md:mb-20">
-        <div>
-          <p class="font-mono text-gold text-[11px] tracking-widest2 uppercase mb-4" data-i18n="cat_kicker">Categorias</p>
-          <h2 class="font-serif text-4xl md:text-5xl text-cream max-w-xl" data-i18n="cat_title">Três formas de habitar a exclusividade</h2>
-        </div>
-        <p class="max-w-sm text-cream/70 font-light leading-relaxed" data-i18n="cat_desc">Cada categoria carrega uma curadoria própria — geografia, arquitetura e ritmo de vida distintos.</p>
       </div>
 
-      <div class="grid md:grid-cols-3 gap-6">
-        <!-- card 1 -->
-        <a href="#" class="reveal group relative rounded-[28px] overflow-hidden glass card-lift h-[440px] block">
-          <div class="absolute inset-0 overflow-hidden">
-            <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=1200&auto=format&fit=crop" alt="Residência urbana contemporânea" class="img-zoom w-full h-full object-cover">
-            <div class="absolute inset-0 bg-gradient-to-t from-charcoal/80 via-charcoal/10 to-transparent"></div>
-          </div>
-          <div class="absolute inset-x-0 bottom-0 p-8">
-            <p class="font-mono text-cream/70 text-[10px] tracking-widest2 uppercase mb-2" data-i18n="cat1_kicker">01 — Metrópole</p>
-            <h3 class="font-serif text-2xl text-cream mb-3" data-i18n="cat1_title">Residências Urbanas</h3>
-            <span class="text-cream/90 text-[12px] tracking-widest2 uppercase border-b border-cream/50 pb-1" data-i18n="discover">Descobrir</span>
-          </div>
-        </a>
-
-        <!-- card 2 -->
-        <a href="#" class="reveal group relative rounded-[28px] overflow-hidden glass card-lift h-[440px] block md:mt-10">
-          <div class="absolute inset-0 overflow-hidden">
-            <img src="https://images.unsplash.com/photo-1613977257363-707ba9348227?q=80&w=1200&auto=format&fit=crop" alt="Casa de praia sofisticada" class="img-zoom w-full h-full object-cover">
-            <div class="absolute inset-0 bg-gradient-to-t from-charcoal/80 via-charcoal/10 to-transparent"></div>
-          </div>
-          <div class="absolute inset-x-0 bottom-0 p-8">
-            <p class="font-mono text-cream/70 text-[10px] tracking-widest2 uppercase mb-2" data-i18n="cat2_kicker">02 — Litoral</p>
-            <h3 class="font-serif text-2xl text-cream mb-3" data-i18n="cat2_title">Refúgios Litorâneos</h3>
-            <span class="text-cream/90 text-[12px] tracking-widest2 uppercase border-b border-cream/50 pb-1" data-i18n="discover">Descobrir</span>
-          </div>
-        </a>
-
-        <!-- card 3 -->
-        <a href="#" class="reveal group relative rounded-[28px] overflow-hidden glass card-lift h-[440px] block">
-          <div class="absolute inset-0 overflow-hidden">
-            <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1200&auto=format&fit=crop" alt="Propriedade de campo com arquitetura moderna" class="img-zoom w-full h-full object-cover">
-            <div class="absolute inset-0 bg-gradient-to-t from-charcoal/80 via-charcoal/10 to-transparent"></div>
-          </div>
-          <div class="absolute inset-x-0 bottom-0 p-8">
-            <p class="font-mono text-cream/70 text-[10px] tracking-widest2 uppercase mb-2" data-i18n="cat3_kicker">03 — Interior</p>
-            <h3 class="font-serif text-2xl text-cream mb-3" data-i18n="cat3_title">Propriedades de Campo</h3>
-            <span class="text-cream/90 text-[12px] tracking-widest2 uppercase border-b border-cream/50 pb-1" data-i18n="discover">Descobrir</span>
-          </div>
-        </a>
+      <!-- mobile menu -->
+      <div
+        id="mobile-menu"
+        class="lg:hidden hidden glass-dark mx-4 rounded-2xl px-6 py-6 flex flex-col gap-5 text-cream text-sm tracking-widest2 uppercase"
+      >
+        <a href="#home" data-i18n="nav_home">Home</a>
+        <a href="#empresa" data-i18n="nav_empresa">A Empresa</a>
+        <a href="#comprar" data-i18n="nav_comprar">Comprar</a>
+        <a href="#alugar" data-i18n="nav_alugar">Alugar</a>
+        <a href="#anuncie" data-i18n="nav_anuncie">Anuncie seu Imóvel</a>
+        <a href="#contato" data-i18n="nav_contato">Contato</a>
+        <a
+          href="https://wa.me/5511970508331?text=Ol%C3%A1%2C%20gostaria%20de%20agendar%20uma%20visita."
+          target="_blank"
+          rel="noopener"
+          class="border border-cream/70 rounded-full text-center py-2.5"
+          data-i18n="nav_cta"
+          >Agendar visita</a
+        >
       </div>
-    </div>
-  </section>
+    </nav>
 
-  <!-- ============ DESTAQUES ============ -->
-  <section class="relative py-28 md:py-40">
-    <div class="max-w-7xl mx-auto px-6 md:px-10">
-      <div class="reveal glass rounded-[32px] p-8 md:p-14">
-        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-14">
-          <div>
-            <p class="font-mono text-gold text-[11px] tracking-widest2 uppercase mb-4" data-i18n="sel_kicker">À venda · Seleção atual</p>
-            <h2 class="font-serif text-4xl md:text-5xl text-cream max-w-xl" data-i18n="sel_title">Três endereços que definem o momento</h2>
-          </div>
-          <a href="#" class="btn-line inline-flex w-fit items-center gap-3 border border-cream/60 px-7 py-3.5 rounded-full text-[12px] tracking-widest2 uppercase">
-            <span data-i18n="sel_cta">Ver todo o portfólio</span>
+    <!-- ============ HERO ============ -->
+    <section
+      id="home"
+      class="relative min-h-screen flex items-end md:items-center"
+    >
+      <div
+        class="absolute inset-0 bg-gradient-to-t from-charcoal/70 via-charcoal/10 to-transparent pointer-events-none"
+      ></div>
+
+      <div
+        class="relative z-10 max-w-7xl mx-auto px-6 md:px-10 pt-44 md:pt-48 pb-24 w-full"
+      >
+        <p
+          class="reveal font-mono text-cream/80 text-[11px] tracking-widest2 uppercase mb-6"
+          data-i18n="hero_kicker"
+        >
+          Uryu Imóveis · Compra, venda e locação
+        </p>
+        <h1
+          class="reveal font-serif text-cream text-[13vw] leading-[0.98] md:text-[6.2vw] md:leading-[1.02] max-w-5xl [text-shadow:0_4px_30px_rgba(0,0,0,.35)]"
+          data-i18n-html="hero_title"
+        >
+          Seu próximo endereço<br class="hidden md:block" />
+          começa aqui.
+        </h1>
+        <p
+          class="reveal mt-8 max-w-md text-cream/85 text-base md:text-lg leading-relaxed font-light"
+          data-i18n="hero_sub"
+        >
+          Encontre imóveis para comprar ou alugar com orientação próxima em cada
+          etapa da negociação.
+        </p>
+        <div class="reveal mt-10 flex items-center gap-6">
+          <a
+            href="https://wa.me/5511970508331?text=Ol%C3%A1%2C%20estou%20procurando%20um%20im%C3%B3vel."
+            target="_blank"
+            rel="noopener"
+            class="btn-line inline-flex items-center gap-3 bg-cream text-charcoal px-8 py-4 rounded-full text-[12px] tracking-widest2 uppercase"
+          >
+            <span data-i18n="hero_cta1">Encontrar meu imóvel</span>
           </a>
-        </div>
-
-        <div class="grid md:grid-cols-3 gap-8">
-          <!-- imovel 1 -->
-          <div class="reveal card-lift bg-white/[0.07] rounded-2xl overflow-hidden">
-            <div class="h-64 overflow-hidden">
-              <img src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=1000&auto=format&fit=crop" alt="Casa Jardins Altos" class="img-zoom w-full h-full object-cover">
-            </div>
-            <div class="p-7">
-              <h3 class="font-serif text-xl text-cream mb-1">Casa Jardins Altos</h3>
-              <p class="text-cream/60 text-sm mb-4">Jardins, São Paulo</p>
-              <div class="flex items-center justify-between">
-                <span class="font-serif text-lg text-gold">R$ 4.200.000</span>
-                <a href="#contato" class="text-[11px] tracking-widest2 uppercase border-b border-cream/40 pb-0.5" data-i18n="know">Conhecer</a>
-              </div>
-            </div>
-          </div>
-
-          <!-- imovel 2 -->
-          <div class="reveal card-lift bg-white/[0.07] rounded-2xl overflow-hidden md:-translate-y-6">
-            <div class="h-64 overflow-hidden">
-              <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=1000&auto=format&fit=crop" alt="Villa Vale Verde" class="img-zoom w-full h-full object-cover">
-            </div>
-            <div class="p-7">
-              <h3 class="font-serif text-xl text-cream mb-1">Villa Vale Verde</h3>
-              <p class="text-cream/60 text-sm mb-4">Vale do Paraíba, SP</p>
-              <div class="flex items-center justify-between">
-                <span class="font-serif text-lg text-gold">R$ 6.800.000</span>
-                <a href="#contato" class="text-[11px] tracking-widest2 uppercase border-b border-cream/40 pb-0.5" data-i18n="know">Conhecer</a>
-              </div>
-            </div>
-          </div>
-
-          <!-- imovel 3 -->
-          <div class="reveal card-lift bg-white/[0.07] rounded-2xl overflow-hidden">
-            <div class="h-64 overflow-hidden">
-              <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=1000&auto=format&fit=crop" alt="Cobertura Aurora" class="img-zoom w-full h-full object-cover">
-            </div>
-            <div class="p-7">
-              <h3 class="font-serif text-xl text-cream mb-1">Cobertura Aurora</h3>
-              <p class="text-cream/60 text-sm mb-4">Itaim Bibi, São Paulo</p>
-              <div class="flex items-center justify-between">
-                <span class="font-serif text-lg text-gold">R$ 8.950.000</span>
-                <a href="#contato" class="text-[11px] tracking-widest2 uppercase border-b border-cream/40 pb-0.5" data-i18n="know">Conhecer</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ ALUGAR ============ -->
-  <section id="alugar" class="relative py-28 md:py-40">
-    <div class="max-w-7xl mx-auto px-6 md:px-10">
-      <div class="reveal flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-14 md:mb-20">
-        <div>
-          <p class="font-mono text-gold text-[11px] tracking-widest2 uppercase mb-4" data-i18n="rent_kicker">Alugar</p>
-          <h2 class="font-serif text-4xl md:text-5xl text-cream max-w-xl" data-i18n="rent_title">Morar bem, sem pressa de comprar</h2>
-        </div>
-        <p class="max-w-sm text-cream/70 font-light leading-relaxed" data-i18n="rent_desc">Locações selecionadas com o mesmo rigor do portfólio de venda — contratos claros e atendimento dedicado.</p>
-      </div>
-
-      <div class="grid md:grid-cols-3 gap-8">
-        <div class="reveal card-lift glass rounded-2xl overflow-hidden">
-          <div class="h-64 overflow-hidden group">
-            <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=1000&auto=format&fit=crop" alt="Apartamento Horizonte" class="img-zoom w-full h-full object-cover">
-          </div>
-          <div class="p-7">
-            <h3 class="font-serif text-xl text-cream mb-1">Apartamento Horizonte</h3>
-            <p class="text-cream/60 text-sm mb-4">Alphaville, Barueri</p>
-            <div class="flex items-center justify-between">
-              <span class="font-serif text-lg text-gold">R$ 9.500<span class="text-sm text-cream/50" data-i18n="per_month">/mês</span></span>
-              <a href="#contato" class="text-[11px] tracking-widest2 uppercase border-b border-cream/40 pb-0.5" data-i18n="know">Conhecer</a>
-            </div>
-          </div>
-        </div>
-
-        <div class="reveal card-lift glass rounded-2xl overflow-hidden md:-translate-y-6">
-          <div class="h-64 overflow-hidden group">
-            <img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=1000&auto=format&fit=crop" alt="Studio Bela Vista" class="img-zoom w-full h-full object-cover">
-          </div>
-          <div class="p-7">
-            <h3 class="font-serif text-xl text-cream mb-1">Studio Bela Vista</h3>
-            <p class="text-cream/60 text-sm mb-4">Vila Olímpia, São Paulo</p>
-            <div class="flex items-center justify-between">
-              <span class="font-serif text-lg text-gold">R$ 6.200<span class="text-sm text-cream/50" data-i18n="per_month">/mês</span></span>
-              <a href="#contato" class="text-[11px] tracking-widest2 uppercase border-b border-cream/40 pb-0.5" data-i18n="know">Conhecer</a>
-            </div>
-          </div>
-        </div>
-
-        <div class="reveal card-lift glass rounded-2xl overflow-hidden">
-          <div class="h-64 overflow-hidden group">
-            <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?q=80&w=1000&auto=format&fit=crop" alt="Casa Reserva do Alto" class="img-zoom w-full h-full object-cover">
-          </div>
-          <div class="p-7">
-            <h3 class="font-serif text-xl text-cream mb-1">Casa Reserva do Alto</h3>
-            <p class="text-cream/60 text-sm mb-4">Granja Viana, Cotia</p>
-            <div class="flex items-center justify-between">
-              <span class="font-serif text-lg text-gold">R$ 14.800<span class="text-sm text-cream/50" data-i18n="per_month">/mês</span></span>
-              <a href="#contato" class="text-[11px] tracking-widest2 uppercase border-b border-cream/40 pb-0.5" data-i18n="know">Conhecer</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ A EMPRESA ============ -->
-  <section id="empresa" class="relative py-28 md:py-40">
-    <div class="max-w-7xl mx-auto px-6 md:px-10">
-      <div class="reveal mb-14 md:mb-20 grid md:grid-cols-2 gap-10 md:gap-14 items-center">
-        <div class="rounded-[28px] overflow-hidden shadow-[0_24px_60px_-20px_rgba(42,40,35,0.35)]">
-          <img src="empresa-foto.png" alt="Entrega de chaves — Uryu Imóveis" class="w-full h-full object-cover">
-        </div>
-        <div>
-          <p class="font-mono text-gold text-[11px] tracking-widest2 uppercase mb-4" data-i18n="serv_kicker">A Empresa</p>
-          <h2 class="font-serif text-4xl md:text-5xl text-cream max-w-xl" data-i18n="serv_title">Uma forma mais segura e clara de negociar imóveis</h2>
-          <p class="mt-6 max-w-xl text-cream/70 font-light leading-relaxed" data-i18n-html="serv_desc">Atuamos na compra, venda, locação e administração de imóveis com foco em processos bem conduzidos e decisões seguras. Cada negociação é acompanhada de perto, com atenção aos detalhes e às necessidades de cada cliente.<br><br>Nosso compromisso é oferecer uma experiência direta, transparente e eficiente — do primeiro contato até a conclusão do negócio.</p>
+          <a
+            href="https://wa.me/5511970508331?text=Ol%C3%A1%2C%20estou%20procurando%20um%20im%C3%B3vel."
+            target="_blank"
+            rel="noopener"
+            class="text-cream text-[12px] tracking-widest2 uppercase navlink"
+            data-i18n="hero_cta2"
+            >Falar com um consultor</a
+          >
         </div>
       </div>
 
-      <div class="grid md:grid-cols-3 gap-6">
-        <div class="reveal glass card-lift rounded-2xl p-8 relative">
-          <span class="absolute top-6 right-6 bg-olive text-cream text-[10px] tracking-widest2 uppercase px-3 py-1 rounded-full" data-i18n="badge_new">Novo</span>
-          <div class="w-11 h-11 rounded-full border border-cream/30 flex items-center justify-center mb-8">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 9.5 12 3l9 6.5V20a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1V9.5Z" stroke="currentColor" stroke-width="1.3"/></svg>
-          </div>
-          <h3 class="font-serif text-xl text-cream mb-3" data-i18n="serv1_title">Consultoria de Interiores</h3>
-          <p class="text-cream/65 text-sm leading-relaxed font-light" data-i18n="serv1_desc">Curadoria de ambientes sob medida, do projeto à entrega chaveada, em parceria com arquitetos selecionados.</p>
-        </div>
-
-        <div class="reveal glass card-lift rounded-2xl p-8 relative md:mt-10">
-          <span class="absolute top-6 right-6 bg-olive text-cream text-[10px] tracking-widest2 uppercase px-3 py-1 rounded-full" data-i18n="badge_new">Novo</span>
-          <div class="w-11 h-11 rounded-full border border-cream/30 flex items-center justify-center mb-8">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 3 3 8v13h6v-6h6v6h6V8l-9-5Z" stroke="currentColor" stroke-width="1.3"/><circle cx="12" cy="13" r="2" stroke="currentColor" stroke-width="1.2"/></svg>
-          </div>
-          <h3 class="font-serif text-xl text-cream mb-3" data-i18n="serv2_title">Tour Virtual em 3D</h3>
-          <p class="text-cream/65 text-sm leading-relaxed font-light" data-i18n="serv2_desc">Percorra cada ambiente remotamente, com escala real e qualidade cinematográfica, antes da primeira visita.</p>
-        </div>
-
-        <div class="reveal glass card-lift rounded-2xl p-8 relative">
-          <span class="absolute top-6 right-6 bg-olive text-cream text-[10px] tracking-widest2 uppercase px-3 py-1 rounded-full" data-i18n="badge_new">Novo</span>
-          <div class="w-11 h-11 rounded-full border border-cream/30 flex items-center justify-center mb-8">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 8v4l3 2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.3"/></svg>
-          </div>
-          <h3 class="font-serif text-xl text-cream mb-3" data-i18n="serv3_title">Agenda VIP de Visitas</h3>
-          <p class="text-cream/65 text-sm leading-relaxed font-light" data-i18n="serv3_desc">Horários privativos, sem sobreposição de clientes, com consultor dedicado do início ao fim.</p>
+      <div
+        class="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 hidden lg:flex [@media(max-height:700px)]:lg:hidden flex-col items-center gap-2 text-cream/70"
+      >
+        <span
+          class="font-mono text-[10px] tracking-widest2 uppercase"
+          data-i18n="hero_scroll"
+          >Role para explorar</span
+        >
+        <div class="w-px h-10 bg-cream/40 relative overflow-hidden">
+          <div
+            class="absolute top-0 left-0 w-full h-3 bg-cream animate-[scrollpulse_1.8s_ease-in-out_infinite]"
+          ></div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- ============ ANUNCIE SEU IMÓVEL ============ -->
-  <section id="anuncie" class="relative py-28 md:py-36">
-    <div class="max-w-4xl mx-auto px-6 md:px-10">
-      <div class="reveal glass rounded-[32px] p-10 md:p-16 text-center">
-        <p class="font-mono text-gold text-[11px] tracking-widest2 uppercase mb-5" data-i18n="adv_kicker">Anuncie seu imóvel</p>
-        <h2 class="font-serif text-3xl md:text-4xl text-cream mb-5 max-w-lg mx-auto" data-i18n="adv_title">Seu imóvel merece a apresentação certa</h2>
-        <p class="text-cream/65 font-light mb-10 max-w-md mx-auto" data-i18n="adv_desc">Avaliação criteriosa, fotografia profissional e divulgação para uma carteira qualificada de compradores e inquilinos.</p>
-        <a href="mailto:contato@uryuimoveis.com.br?subject=Anunciar%20im%C3%B3vel" class="btn-line inline-flex items-center gap-3 bg-cream text-charcoal px-9 py-4 rounded-full text-[12px] tracking-widest2 uppercase">
-          <span data-i18n="adv_cta">Quero anunciar</span>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ CONTATO + NEWSLETTER ============ -->
-  <section id="contato" class="relative py-28 md:py-36">
-    <div class="max-w-7xl mx-auto px-6 md:px-10">
-
-      <!-- contact info -->
-      <div class="reveal mb-8 grid md:grid-cols-3 gap-6">
-        <a href="tel:+5511959821054" class="glass card-lift rounded-2xl p-8 block">
-          <div class="w-11 h-11 rounded-full border border-cream/30 flex items-center justify-center mb-6">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
-          </div>
-          <p class="font-mono text-gold text-[10px] tracking-widest2 uppercase mb-2" data-i18n="contact_phone">Telefone</p>
-          <p class="font-serif text-xl text-cream">(11) 95982-1054</p>
-        </a>
-
-        <a href="mailto:contato@uryuimoveis.com.br" class="glass card-lift rounded-2xl p-8 block">
-          <div class="w-11 h-11 rounded-full border border-cream/30 flex items-center justify-center mb-6">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.3"/><path d="m3 7 9 6 9-6" stroke="currentColor" stroke-width="1.3"/></svg>
-          </div>
-          <p class="font-mono text-gold text-[10px] tracking-widest2 uppercase mb-2" data-i18n="contact_email">Email</p>
-          <p class="font-serif text-lg text-cream break-all">contato@uryuimoveis.com.br</p>
-        </a>
-
-        <div class="glass card-lift rounded-2xl p-8">
-          <div class="w-11 h-11 rounded-full border border-cream/30 flex items-center justify-center mb-6">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 21s7-5.5 7-11a7 7 0 1 0-14 0c0 5.5 7 11 7 11Z" stroke="currentColor" stroke-width="1.3"/><circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="1.3"/></svg>
-          </div>
-          <p class="font-mono text-gold text-[10px] tracking-widest2 uppercase mb-2" data-i18n="contact_address">Endereço</p>
-          <p class="text-cream/80 text-sm leading-relaxed mb-5">Rua Agudos, 316 – Sala 4<br>Rochdale – Osasco/SP<br>CEP: 06223-140</p>
-          <a href="https://www.google.com/maps/search/?api=1&query=Rua+Agudos%2C+316+-+Rochdale%2C+Osasco+-+SP%2C+06223-140" target="_blank" rel="noopener"
-            class="btn-line inline-flex items-center gap-2 border border-cream/60 px-6 py-2.5 rounded-full text-[11px] tracking-widest2 uppercase">
-            <span data-i18n="contact_maps">Ver no Google Maps</span>
-          </a>
+    <main id="catalogo" class="site-section">
+      <div class="section-shell">
+        <p class="eyebrow">Encontre seu lugar</p>
+        <div class="section-heading">
+          <h2>Um endereço para<br />cada novo capítulo.</h2>
+          <p>
+            Compare opções para comprar ou alugar e conte com orientação em cada
+            etapa.
+          </p>
         </div>
-      </div>
-
-      <!-- newsletter -->
-      <div class="reveal glass rounded-[32px] p-10 md:p-16 text-center">
-        <p class="font-mono text-gold text-[11px] tracking-widest2 uppercase mb-5" data-i18n="news_kicker">Lista privada</p>
-        <h2 class="font-serif text-3xl md:text-4xl text-cream mb-5 max-w-lg mx-auto" data-i18n="news_title">Receba oportunidades antes de todos</h2>
-        <p class="text-cream/65 font-light mb-10 max-w-md mx-auto" data-i18n="news_desc">Um envio mensal, curto e sem ruído — apenas os imóveis que realmente merecem sua atenção.</p>
-
-        <form class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto" onsubmit="event.preventDefault()">
-          <input type="email" required placeholder="seu@email.com" data-i18n-ph="news_ph"
-            class="flex-1 text-cream bg-transparent border border-cream/30 rounded-full px-6 py-3.5 text-sm placeholder:text-cream/40 focus:outline-none focus:border-gold transition-colors">
-          <button type="submit" class="btn-line bg-cream text-charcoal px-8 py-3.5 rounded-full text-[12px] tracking-widest2 uppercase whitespace-nowrap">
-            <span data-i18n="news_cta">Inscrever-se</span>
-          </button>
+        <form id="property-search" class="search-panel">
+          <div class="primary-filters">
+            <label
+              >Quero<select name="negociacao">
+                <option value="">Comprar ou alugar</option>
+                <option value="venda">Comprar</option>
+                <option value="aluguel">Alugar</option>
+              </select></label
+            >
+            <label
+              >Cidade<select name="cidade">
+                <option value="">Todas as cidades</option>
+              </select></label
+            >
+            <label
+              >Preço máximo<input
+                name="preco"
+                type="number"
+                min="0"
+                step="100"
+                placeholder="Sem limite · R$"
+            /></label>
+            <button class="action" type="submit">Encontrar imóveis ↗</button>
+          </div>
+          <details class="extra-filters">
+            <summary>Mais filtros</summary>
+            <div class="filter-grid">
+              <label
+                >Tipo<select name="categoria">
+                  <option value="">Todos</option>
+                  <option value="apartamento">Apartamento</option>
+                  <option value="casa">Casa</option>
+                  <option value="comercial">Comercial</option>
+                  <option value="terreno">Terreno</option>
+                </select></label
+              >
+              <label
+                >Bairro<select name="bairro">
+                  <option value="">Todos os bairros</option>
+                </select></label
+              >
+              <label
+                >Quartos mínimos<input
+                  name="quartos"
+                  type="number"
+                  min="0"
+                  max="30"
+                  placeholder="Todos"
+              /></label>
+              <label
+                >Banheiros mínimos<input
+                  name="banheiros"
+                  type="number"
+                  min="0"
+                  max="30"
+                  placeholder="Todos"
+              /></label>
+              <label
+                >Vagas mínimas<input
+                  name="vagas"
+                  type="number"
+                  min="0"
+                  max="30"
+                  placeholder="Todas"
+              /></label>
+              <label
+                >Área mínima · m²<input
+                  name="tamanho"
+                  type="number"
+                  min="0"
+                  placeholder="Sem limite"
+              /></label>
+              <label
+                >Fase<select name="fase">
+                  <option value="">Todas</option>
+                  <option value="pronto">Pronto</option>
+                  <option value="obras">Em obras</option>
+                  <option value="planta">Na planta</option>
+                </select></label
+              >
+              <button type="reset" class="text-button">Limpar filtros</button>
+            </div>
+          </details>
         </form>
+        <div class="catalog-toolbar">
+          <p id="catalog-status" role="status">Carregando imóveis…</p>
+          <label
+            >Ordenar<select id="sort-properties">
+              <option value="recentes">Mais recentes</option>
+              <option value="menor">Menor preço</option>
+              <option value="maior">Maior preço</option>
+              <option value="area">Maior área</option>
+            </select></label
+          >
+        </div>
+        <p id="catalog-notice" class="notice" hidden></p>
+        <div id="catalog-grid" class="property-grid"></div>
       </div>
-    </div>
-  </section>
-
-  <!-- ============ FOOTER CINEMATOGRÁFICO ============ -->
-  <footer class="relative min-h-screen flex items-center justify-center overflow-hidden py-24">
-    <div class="absolute inset-0 bg-gradient-to-t from-charcoal/60 via-transparent to-transparent pointer-events-none"></div>
-    <div class="relative z-10 text-center px-6" id="footer-content">
-      <span class="inline-flex bg-cream/95 rounded-2xl px-5 py-3 mb-8 shadow-[0_4px_24px_rgba(0,0,0,.3)]">
-        <img src="logo-uryu.png" alt="Uryu Imóveis" class="h-48 w-auto object-contain mix-blend-multiply">
-      </span>
-      <p class="font-mono text-cream/70 text-[11px] tracking-widest2 uppercase mb-8 [text-shadow:0_2px_12px_rgba(0,0,0,.5)]" data-i18n="footer_kicker">Uryu · Curadoria Imobiliária</p>
-      <h2 class="font-serif text-cream text-[10vw] md:text-6xl leading-[1.05] [text-shadow:0_6px_40px_rgba(0,0,0,.55)]" data-i18n-html="footer_title">
-        Vem realizar o seu<br>sonho com a gente.
-      </h2>
-      <a href="#contato" class="btn-line mt-12 inline-flex items-center gap-3 border border-cream/70 text-cream px-9 py-4 rounded-full text-[12px] tracking-widest2 uppercase">
-        <span data-i18n="footer_cta">Fale com um consultor</span>
-      </a>
-
-      <div class="mt-14 flex flex-col md:flex-row items-center justify-center gap-3 md:gap-8 text-cream/80 text-[12px] font-light [text-shadow:0_1px_8px_rgba(0,0,0,.6)]">
-        <a href="tel:+5511959821054" class="navlink">(11) 95982-1054</a>
-        <span class="hidden md:inline text-cream/30">·</span>
-        <a href="mailto:contato@uryuimoveis.com.br" class="navlink">contato@uryuimoveis.com.br</a>
-        <span class="hidden md:inline text-cream/30">·</span>
-        <a href="https://www.google.com/maps/search/?api=1&query=Rua+Agudos%2C+316+-+Rochdale%2C+Osasco+-+SP%2C+06223-140" target="_blank" rel="noopener" class="navlink">Rua Agudos, 316 – Sala 4, Rochdale – Osasco/SP</a>
+    </main>
+    <section id="comprar" class="site-section">
+      <div class="section-shell">
+        <p class="eyebrow">Comprar</p>
+        <div class="section-heading">
+          <h2>Imóveis em destaque.</h2>
+          <a href="#catalogo" data-purpose="venda" class="text-button"
+            >Ver imóveis à venda ↗</a
+          >
+        </div>
+        <div id="sale-grid" class="property-grid"></div>
       </div>
-    </div>
-    <div class="absolute bottom-6 inset-x-0 text-center text-cream/50 text-[11px] font-mono tracking-widest2 z-10" data-i18n="footer_copy">
-      © 2026 URYU IMÓVEIS — TODOS OS DIREITOS RESERVADOS
-    </div>
-  </footer>
+    </section>
+    <section id="alugar" class="site-section">
+      <div class="section-shell">
+        <p class="eyebrow">Alugar</p>
+        <div class="section-heading">
+          <h2>Seu próximo lugar<br />para morar.</h2>
+          <a href="#catalogo" data-purpose="aluguel" class="text-button"
+            >Ver imóveis para alugar ↗</a
+          >
+        </div>
+        <div id="rent-grid" class="property-grid"></div>
+      </div>
+    </section>
+    <!-- ============ A EMPRESA ============ -->
+    <section id="empresa" class="relative py-28 md:py-40">
+      <div class="max-w-7xl mx-auto px-6 md:px-10">
+        <div
+          class="reveal mb-14 md:mb-20 grid md:grid-cols-2 gap-10 md:gap-14 items-center"
+        >
+          <div
+            class="rounded-[28px] overflow-hidden shadow-[0_24px_60px_-20px_rgba(42,40,35,0.35)]"
+          >
+            <img
+              src="empresa-foto.png"
+              alt="Entrega de chaves — Uryu Imóveis"
+              class="w-full h-full object-cover"
+            />
+          </div>
+          <div>
+            <p
+              class="font-mono text-gold text-[11px] tracking-widest2 uppercase mb-4"
+              data-i18n="serv_kicker"
+            >
+              A Empresa
+            </p>
+            <h2
+              class="font-serif text-4xl md:text-5xl text-cream max-w-xl"
+              data-i18n="serv_title"
+            >
+              Clareza em cada etapa. Cuidado em cada escolha.
+            </h2>
+            <p
+              class="mt-6 max-w-xl text-cream/70 font-light leading-relaxed"
+              data-i18n-html="serv_desc"
+            >
+              Atuamos na compra, venda, locação e administração de imóveis com
+              foco em processos bem conduzidos e decisões seguras. Cada
+              negociação é acompanhada de perto, com atenção aos detalhes e às
+              necessidades de cada cliente.<br /><br />Nosso compromisso é
+              oferecer uma experiência direta, transparente e eficiente — do
+              primeiro contato até a conclusão do negócio.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
 
-  <!-- ============ WHATSAPP FLUTUANTE ============ -->
-  <a id="whats-btn" href="https://wa.me/5511959821054" target="_blank" rel="noopener" aria-label="WhatsApp"
-    class="fixed bottom-6 right-5 md:bottom-8 md:right-8 z-[60] w-14 h-14 md:w-16 md:h-16 rounded-full bg-[#25D366] flex items-center justify-center shadow-[0_8px_28px_rgba(37,211,102,.45)]">
-    <svg viewBox="0 0 24 24" class="w-8 h-8 md:w-9 md:h-9" fill="#fff" aria-hidden="true">
-      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-    </svg>
-  </a>
+    <!-- ============ ANUNCIE SEU IMÓVEL ============ -->
+    <section id="anuncie" class="relative py-28 md:py-36">
+      <div class="max-w-4xl mx-auto px-6 md:px-10">
+        <div class="reveal glass rounded-[32px] p-10 md:p-16 text-center">
+          <p
+            class="font-mono text-gold text-[11px] tracking-widest2 uppercase mb-5"
+            data-i18n="adv_kicker"
+          >
+            Anuncie seu imóvel
+          </p>
+          <h2
+            class="font-serif text-3xl md:text-4xl text-cream mb-5 max-w-lg mx-auto"
+            data-i18n="adv_title"
+          >
+            Seu imóvel, apresentado a quem procura.
+          </h2>
+          <p
+            class="text-cream/65 font-light mb-10 max-w-md mx-auto"
+            data-i18n="adv_desc"
+          >
+            Conte com a Uryu para avaliar, divulgar e acompanhar a negociação do
+            seu imóvel.
+          </p>
+          <a
+            href="https://wa.me/5511970508331?text=Ol%C3%A1%2C%20gostaria%20de%20anunciar%20meu%20im%C3%B3vel."
+            target="_blank"
+            rel="noopener"
+            class="btn-line inline-flex items-center gap-3 bg-cream text-charcoal px-9 py-4 rounded-full text-[12px] tracking-widest2 uppercase"
+          >
+            <span data-i18n="adv_cta">Quero anunciar</span>
+          </a>
+        </div>
+      </div>
+    </section>
 
-<style>
-  @keyframes scrollpulse { 0% { transform: translateY(-100%);} 100% { transform: translateY(300%);} }
-</style>
+    <!-- ============ CONTATO + NEWSLETTER ============ -->
+    <section id="contato" class="relative py-28 md:py-36">
+      <div class="max-w-7xl mx-auto px-6 md:px-10">
+        <!-- contact info -->
+        <div class="reveal mb-8 grid md:grid-cols-3 gap-6">
+          <a
+            href="https://wa.me/5511970508331"
+            target="_blank"
+            rel="noopener"
+            class="glass card-lift rounded-2xl p-8 block"
+          >
+            <div
+              class="w-11 h-11 rounded-full border border-cream/30 flex items-center justify-center mb-6"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"
+                  stroke="currentColor"
+                  stroke-width="1.3"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </div>
+            <p
+              class="font-mono text-gold text-[10px] tracking-widest2 uppercase mb-2"
+              data-i18n="contact_phone"
+            >
+              WhatsApp
+            </p>
+            <p class="font-serif text-xl text-cream">(11) 97050-8331</p>
+          </a>
 
-<script>
-  gsap.registerPlugin(ScrollTrigger);
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          <div class="glass rounded-2xl p-8">
+            <div
+              class="w-11 h-11 rounded-full border border-cream/30 flex items-center justify-center mb-6"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <rect
+                  x="3"
+                  y="5"
+                  width="18"
+                  height="14"
+                  rx="2"
+                  stroke="currentColor"
+                  stroke-width="1.3"
+                />
+                <path
+                  d="m3 7 9 6 9-6"
+                  stroke="currentColor"
+                  stroke-width="1.3"
+                />
+              </svg>
+            </div>
+            <p
+              class="font-mono text-gold text-[10px] tracking-widest2 uppercase mb-2"
+              data-i18n="contact_email"
+            >
+              WhatsApp
+            </p>
+            <p class="font-serif text-lg text-cream break-all">
+              contato@uryuimoveis.com.br
+            </p>
+          </div>
 
-  /* ---------------- I18N ---------------- */
-  const I18N = {
-    pt: {
-      nav_home: 'Home', nav_empresa: 'A Empresa', nav_comprar: 'Comprar', nav_alugar: 'Alugar', nav_anuncie: 'Anuncie seu Imóvel', nav_contato: 'Contato', nav_cta: 'Agendar visita',
-      hero_kicker: 'Curadoria imobiliária · desde 2009',
-      hero_title: 'Onde a vida<br class="hidden md:block"> encontra espaço<br class="hidden md:block"> para respirar.',
-      hero_sub: 'Uma seleção rara de residências, escolhidas por quem entende que morar bem é uma forma de arte — não um endereço.',
-      hero_cta1: 'Explorar coleção', hero_cta2: 'Nossa história', hero_scroll: 'Role para explorar',
-      cat_kicker: 'Categorias', cat_title: 'Três formas de habitar a exclusividade',
-      cat_desc: 'Cada categoria carrega uma curadoria própria — geografia, arquitetura e ritmo de vida distintos.',
-      cat1_kicker: '01 — Metrópole', cat1_title: 'Residências Urbanas',
-      cat2_kicker: '02 — Litoral', cat2_title: 'Refúgios Litorâneos',
-      cat3_kicker: '03 — Interior', cat3_title: 'Propriedades de Campo',
-      discover: 'Descobrir', know: 'Conhecer',
-      sel_kicker: 'À venda · Seleção atual', sel_title: 'Três endereços que definem o momento', sel_cta: 'Ver todo o portfólio',
-      rent_kicker: 'Alugar', rent_title: 'Morar bem, sem pressa de comprar',
-      rent_desc: 'Locações selecionadas com o mesmo rigor do portfólio de venda — contratos claros e atendimento dedicado.',
-      per_month: '/mês',
-      serv_kicker: 'A Empresa', serv_title: 'Uma forma mais segura e clara de negociar imóveis',
-      serv_desc: 'Atuamos na compra, venda, locação e administração de imóveis com foco em processos bem conduzidos e decisões seguras. Cada negociação é acompanhada de perto, com atenção aos detalhes e às necessidades de cada cliente.<br><br>Nosso compromisso é oferecer uma experiência direta, transparente e eficiente — do primeiro contato até a conclusão do negócio.',
-      badge_new: 'Novo',
-      serv1_title: 'Consultoria de Interiores', serv1_desc: 'Curadoria de ambientes sob medida, do projeto à entrega chaveada, em parceria com arquitetos selecionados.',
-      serv2_title: 'Tour Virtual em 3D', serv2_desc: 'Percorra cada ambiente remotamente, com escala real e qualidade cinematográfica, antes da primeira visita.',
-      serv3_title: 'Agenda VIP de Visitas', serv3_desc: 'Horários privativos, sem sobreposição de clientes, com consultor dedicado do início ao fim.',
-      adv_kicker: 'Anuncie seu imóvel', adv_title: 'Seu imóvel merece a apresentação certa',
-      adv_desc: 'Avaliação criteriosa, fotografia profissional e divulgação para uma carteira qualificada de compradores e inquilinos.',
-      adv_cta: 'Quero anunciar',
-      srch_kicker: 'Busca', srch_title: 'Encontre aqui seu imóvel ideal', srch_cat: 'Categorias',
-      opt_all: 'Todos', opt_all_f: 'Todas',
-      cat_ap: 'Apartamento', cat_casa: 'Casa', cat_com: 'Comercial', cat_ter: 'Terreno',
-      f_quartos: 'Quartos', f_banheiros: 'Banheiros', f_vagas: 'Vagas na Garagem', f_tamanho: 'Tamanho (m²)',
-      f_estado: 'Estado', f_cidade: 'Cidade', f_bairro: 'Bairro', f_neg: 'Negociação', f_valor: 'Valor', f_fase: 'Fase do imóvel',
-      neg_venda: 'Venda', neg_aluguel: 'Aluguel',
-      fase_pronto: 'Pronto', fase_obras: 'Em obras', fase_planta: 'Na planta',
-      val_v1: 'Até R$ 1.000.000', val_v2: 'R$ 1 a 3 milhões', val_v3: 'R$ 3 a 7 milhões', val_v4: 'Acima de R$ 7 milhões',
-      val_a1: 'Até R$ 8.000/mês', val_a2: 'R$ 8.000 a 15.000/mês', val_a3: 'Acima de R$ 15.000/mês',
-      srch_btn: 'Pesquisar imóveis',
-      results_n: 'imóveis encontrados', results_1: 'imóvel encontrado',
-      no_results: 'Nenhum imóvel encontrado com esses filtros.',
-      contact_phone: 'Telefone', contact_email: 'Email', contact_address: 'Endereço', contact_maps: 'Ver no Google Maps',
-      news_kicker: 'Lista privada', news_title: 'Receba oportunidades antes de todos',
-      news_desc: 'Um envio mensal, curto e sem ruído — apenas os imóveis que realmente merecem sua atenção.',
-      news_ph: 'seu@email.com', news_cta: 'Inscrever-se',
-      footer_kicker: 'Uryu · Curadoria Imobiliária',
-      footer_title: 'Vem realizar o seu<br>sonho com a gente.',
-      footer_cta: 'Fale com um consultor',
-      footer_copy: '© 2026 URYU IMÓVEIS — TODOS OS DIREITOS RESERVADOS',
-    },
-    en: {
-      nav_home: 'Home', nav_empresa: 'About Us', nav_comprar: 'Buy', nav_alugar: 'Rent', nav_anuncie: 'List Your Property', nav_contato: 'Contact', nav_cta: 'Book a visit',
-      hero_kicker: 'Real estate curation · since 2009',
-      hero_title: 'Where life<br class="hidden md:block"> finds room<br class="hidden md:block"> to breathe.',
-      hero_sub: 'A rare selection of residences, chosen by those who understand that living well is an art form — not an address.',
-      hero_cta1: 'Explore collection', hero_cta2: 'Our story', hero_scroll: 'Scroll to explore',
-      cat_kicker: 'Categories', cat_title: 'Three ways to inhabit exclusivity',
-      cat_desc: 'Each category carries its own curation — distinct geography, architecture and pace of life.',
-      cat1_kicker: '01 — Metropolis', cat1_title: 'Urban Residences',
-      cat2_kicker: '02 — Coast', cat2_title: 'Coastal Retreats',
-      cat3_kicker: '03 — Countryside', cat3_title: 'Country Estates',
-      discover: 'Discover', know: 'View',
-      sel_kicker: 'For sale · Current selection', sel_title: 'Three addresses that define the moment', sel_cta: 'View full portfolio',
-      rent_kicker: 'Rent', rent_title: 'Live well, with no rush to buy',
-      rent_desc: 'Rentals selected with the same rigor as our sales portfolio — clear contracts and dedicated service.',
-      per_month: '/month',
-      serv_kicker: 'About Us', serv_title: 'A safer, clearer way to negotiate real estate',
-      serv_desc: 'We work in buying, selling, renting and managing properties, focused on well-run processes and confident decisions. Every negotiation is closely followed, with attention to detail and to each client\u2019s needs.<br><br>Our commitment is to deliver a direct, transparent and efficient experience — from first contact to closing.',
-      badge_new: 'New',
-      serv1_title: 'Interior Consulting', serv1_desc: 'Tailor-made interior curation, from design to turnkey delivery, in partnership with selected architects.',
-      serv2_title: '3D Virtual Tour', serv2_desc: 'Walk through every room remotely, at real scale and cinematic quality, before your first visit.',
-      serv3_title: 'VIP Visit Schedule', serv3_desc: 'Private time slots, no overlapping clients, with a dedicated consultant from start to finish.',
-      adv_kicker: 'List your property', adv_title: 'Your property deserves the right presentation',
-      adv_desc: 'Careful appraisal, professional photography and exposure to a qualified portfolio of buyers and tenants.',
-      adv_cta: 'List my property',
-      srch_kicker: 'Search', srch_title: 'Find your ideal property here', srch_cat: 'Categories',
-      opt_all: 'All', opt_all_f: 'All',
-      cat_ap: 'Apartment', cat_casa: 'House', cat_com: 'Commercial', cat_ter: 'Land',
-      f_quartos: 'Bedrooms', f_banheiros: 'Bathrooms', f_vagas: 'Parking Spaces', f_tamanho: 'Size (m²)',
-      f_estado: 'State', f_cidade: 'City', f_bairro: 'Neighborhood', f_neg: 'Deal type', f_valor: 'Price', f_fase: 'Property stage',
-      neg_venda: 'For sale', neg_aluguel: 'For rent',
-      fase_pronto: 'Ready', fase_obras: 'Under construction', fase_planta: 'Off-plan',
-      val_v1: 'Up to R$ 1,000,000', val_v2: 'R$ 1 to 3 million', val_v3: 'R$ 3 to 7 million', val_v4: 'Above R$ 7 million',
-      val_a1: 'Up to R$ 8,000/month', val_a2: 'R$ 8,000 to 15,000/month', val_a3: 'Above R$ 15,000/month',
-      srch_btn: 'Search properties',
-      results_n: 'properties found', results_1: 'property found',
-      no_results: 'No properties found with these filters.',
-      contact_phone: 'Phone', contact_email: 'Email', contact_address: 'Address', contact_maps: 'Open in Google Maps',
-      news_kicker: 'Private list', news_title: 'Receive opportunities before anyone else',
-      news_desc: 'One short, noise-free monthly email — only the properties that truly deserve your attention.',
-      news_ph: 'your@email.com', news_cta: 'Subscribe',
-      footer_kicker: 'Uryu · Real Estate Curation',
-      footer_title: 'Come make your<br>dream real with us.',
-      footer_cta: 'Talk to a consultant',
-      footer_copy: '© 2026 URYU REAL ESTATE — ALL RIGHTS RESERVED',
-    },
-    es: {
-      nav_home: 'Inicio', nav_empresa: 'La Empresa', nav_comprar: 'Comprar', nav_alugar: 'Alquilar', nav_anuncie: 'Publica tu Propiedad', nav_contato: 'Contacto', nav_cta: 'Agendar visita',
-      hero_kicker: 'Curaduría inmobiliaria · desde 2009',
-      hero_title: 'Donde la vida<br class="hidden md:block"> encuentra espacio<br class="hidden md:block"> para respirar.',
-      hero_sub: 'Una selección única de residencias, elegidas por quienes entienden que vivir bien es un arte — no una dirección.',
-      hero_cta1: 'Explorar colección', hero_cta2: 'Nuestra historia', hero_scroll: 'Desliza para explorar',
-      cat_kicker: 'Categorías', cat_title: 'Tres formas de habitar la exclusividad',
-      cat_desc: 'Cada categoría tiene su propia curaduría — geografía, arquitectura y ritmo de vida distintos.',
-      cat1_kicker: '01 — Metrópolis', cat1_title: 'Residencias Urbanas',
-      cat2_kicker: '02 — Costa', cat2_title: 'Refugios Costeros',
-      cat3_kicker: '03 — Campo', cat3_title: 'Propiedades de Campo',
-      discover: 'Descubrir', know: 'Conocer',
-      sel_kicker: 'En venta · Selección actual', sel_title: 'Tres direcciones que definen el momento', sel_cta: 'Ver todo el portafolio',
-      rent_kicker: 'Alquilar', rent_title: 'Vivir bien, sin prisa por comprar',
-      rent_desc: 'Alquileres seleccionados con el mismo rigor que el portafolio de venta — contratos claros y atención dedicada.',
-      per_month: '/mes',
-      serv_kicker: 'La Empresa', serv_title: 'Una forma más segura y clara de negociar propiedades',
-      serv_desc: 'Trabajamos en la compra, venta, alquiler y administración de propiedades, con foco en procesos bien conducidos y decisiones seguras. Cada negociación se acompaña de cerca, con atención a los detalles y a las necesidades de cada cliente.<br><br>Nuestro compromiso es ofrecer una experiencia directa, transparente y eficiente — del primer contacto hasta el cierre del negocio.',
-      badge_new: 'Nuevo',
-      serv1_title: 'Consultoría de Interiores', serv1_desc: 'Curaduría de ambientes a medida, del proyecto a la entrega llave en mano, junto a arquitectos seleccionados.',
-      serv2_title: 'Tour Virtual en 3D', serv2_desc: 'Recorre cada ambiente de forma remota, a escala real y con calidad cinematográfica, antes de la primera visita.',
-      serv3_title: 'Agenda VIP de Visitas', serv3_desc: 'Horarios privados, sin superposición de clientes, con un consultor dedicado de principio a fin.',
-      adv_kicker: 'Publica tu propiedad', adv_title: 'Tu propiedad merece la presentación adecuada',
-      adv_desc: 'Tasación rigurosa, fotografía profesional y difusión a una cartera calificada de compradores e inquilinos.',
-      adv_cta: 'Quiero publicar',
-      srch_kicker: 'Búsqueda', srch_title: 'Encuentra aquí tu propiedad ideal', srch_cat: 'Categorías',
-      opt_all: 'Todos', opt_all_f: 'Todas',
-      cat_ap: 'Apartamento', cat_casa: 'Casa', cat_com: 'Comercial', cat_ter: 'Terreno',
-      f_quartos: 'Habitaciones', f_banheiros: 'Baños', f_vagas: 'Plazas de Garaje', f_tamanho: 'Tamaño (m²)',
-      f_estado: 'Estado', f_cidade: 'Ciudad', f_bairro: 'Barrio', f_neg: 'Negociación', f_valor: 'Valor', f_fase: 'Fase del inmueble',
-      neg_venda: 'Venta', neg_aluguel: 'Alquiler',
-      fase_pronto: 'Listo', fase_obras: 'En obras', fase_planta: 'En plano',
-      val_v1: 'Hasta R$ 1.000.000', val_v2: 'R$ 1 a 3 millones', val_v3: 'R$ 3 a 7 millones', val_v4: 'Más de R$ 7 millones',
-      val_a1: 'Hasta R$ 8.000/mes', val_a2: 'R$ 8.000 a 15.000/mes', val_a3: 'Más de R$ 15.000/mes',
-      srch_btn: 'Buscar propiedades',
-      results_n: 'propiedades encontradas', results_1: 'propiedad encontrada',
-      no_results: 'No se encontraron propiedades con estos filtros.',
-      contact_phone: 'Teléfono', contact_email: 'Email', contact_address: 'Dirección', contact_maps: 'Ver en Google Maps',
-      news_kicker: 'Lista privada', news_title: 'Recibe oportunidades antes que nadie',
-      news_desc: 'Un envío mensual, breve y sin ruido — solo las propiedades que realmente merecen tu atención.',
-      news_ph: 'tu@email.com', news_cta: 'Suscribirse',
-      footer_kicker: 'Uryu · Curaduría Inmobiliaria',
-      footer_title: 'Ven a realizar tu<br>sueño con nosotros.',
-      footer_cta: 'Habla con un consultor',
-      footer_copy: '© 2026 URYU INMUEBLES — TODOS LOS DERECHOS RESERVADOS',
-    },
-  };
+          <div class="glass card-lift rounded-2xl p-8">
+            <div
+              class="w-11 h-11 rounded-full border border-cream/30 flex items-center justify-center mb-6"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M12 21s7-5.5 7-11a7 7 0 1 0-14 0c0 5.5 7 11 7 11Z"
+                  stroke="currentColor"
+                  stroke-width="1.3"
+                />
+                <circle
+                  cx="12"
+                  cy="10"
+                  r="2.5"
+                  stroke="currentColor"
+                  stroke-width="1.3"
+                />
+              </svg>
+            </div>
+            <p
+              class="font-mono text-gold text-[10px] tracking-widest2 uppercase mb-2"
+              data-i18n="contact_address"
+            >
+              Endereço
+            </p>
+            <p class="text-cream/80 text-sm leading-relaxed mb-5">
+              Rua Agudos, 316 – Sala 4<br />Rochdale – Osasco/SP<br />CEP:
+              06223-140
+            </p>
+            <a
+              href="https://www.google.com/maps/search/?api=1&query=Rua+Agudos%2C+316+-+Rochdale%2C+Osasco+-+SP%2C+06223-140"
+              target="_blank"
+              rel="noopener"
+              class="btn-line inline-flex items-center gap-2 border border-cream/60 px-6 py-2.5 rounded-full text-[11px] tracking-widest2 uppercase"
+            >
+              <span data-i18n="contact_maps">Ver no Google Maps</span>
+            </a>
+          </div>
+        </div>
 
-  function setLang(lang) {
-    const dict = I18N[lang] || I18N.pt;
-    document.documentElement.lang = lang === 'pt' ? 'pt-BR' : lang;
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-      const k = el.getAttribute('data-i18n');
-      if (dict[k] != null) el.textContent = dict[k];
-    });
-    document.querySelectorAll('[data-i18n-html]').forEach(el => {
-      const k = el.getAttribute('data-i18n-html');
-      if (dict[k] != null) el.innerHTML = dict[k];
-    });
-    document.querySelectorAll('[data-i18n-ph]').forEach(el => {
-      const k = el.getAttribute('data-i18n-ph');
-      if (dict[k] != null) el.setAttribute('placeholder', dict[k]);
-    });
-    document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
-    try { localStorage.setItem('uryu-lang', lang); } catch (e) {}
-    window.__lang = lang;
-    if (window.__searchRefresh) window.__searchRefresh();
-  }
+        <!-- newsletter -->
+        <div class="contact-invite">
+          <p class="eyebrow">Vamos conversar</p>
+          <h2>Conte o que você procura.</h2>
+          <p>
+            Fale com um consultor e receba opções de acordo com suas
+            preferências.
+          </p>
+          <a
+            class="action"
+            href="https://wa.me/5511970508331?text=Ol%C3%A1%2C%20procuro%20um%20im%C3%B3vel%20e%20gostaria%20de%20orienta%C3%A7%C3%A3o."
+            target="_blank"
+            rel="noopener"
+            >Conversar pelo WhatsApp ↗</a
+          >
+        </div>
+      </div>
+    </section>
 
-  document.querySelectorAll('.lang-btn').forEach(btn => {
-    btn.addEventListener('click', () => setLang(btn.dataset.lang));
-  });
+    <!-- ============ FOOTER CINEMATOGRÁFICO ============ -->
+    <footer
+      class="relative min-h-screen flex items-center justify-center overflow-hidden py-24"
+    >
+      <div
+        class="absolute inset-0 bg-gradient-to-t from-charcoal/60 via-transparent to-transparent pointer-events-none"
+      ></div>
+      <div class="relative z-10 text-center px-6" id="footer-content">
+        <span
+          class="inline-flex bg-cream/95 rounded-2xl px-5 py-3 mb-8 shadow-[0_4px_24px_rgba(0,0,0,.3)]"
+        >
+          <img
+            src="logo-uryu.png"
+            alt="Uryu Imóveis"
+            class="h-48 w-auto object-contain mix-blend-multiply"
+          />
+        </span>
+        <p
+          class="font-mono text-cream/70 text-[11px] tracking-widest2 uppercase mb-8 [text-shadow:0_2px_12px_rgba(0,0,0,.5)]"
+          data-i18n="footer_kicker"
+        >
+          Uryu Imóveis · Seu próximo endereço
+        </p>
+        <h2
+          class="font-serif text-cream text-[10vw] md:text-6xl leading-[1.05] [text-shadow:0_6px_40px_rgba(0,0,0,.55)]"
+          data-i18n-html="footer_title"
+        >
+          Vamos encontrar seu<br />próximo endereço?
+        </h2>
+        <a
+          href="https://wa.me/5511970508331?text=Ol%C3%A1%2C%20gostaria%20de%20falar%20com%20um%20consultor."
+          target="_blank"
+          rel="noopener"
+          class="btn-line mt-12 inline-flex items-center gap-3 border border-cream/70 text-cream px-9 py-4 rounded-full text-[12px] tracking-widest2 uppercase"
+        >
+          <span data-i18n="footer_cta">Fale com um consultor</span>
+        </a>
 
-  let savedLang = 'pt';
-  try { savedLang = localStorage.getItem('uryu-lang') || 'pt'; } catch (e) {}
-  setLang(savedLang);
+        <div
+          class="mt-14 flex flex-col md:flex-row items-center justify-center gap-3 md:gap-8 text-cream/80 text-[12px] font-light [text-shadow:0_1px_8px_rgba(0,0,0,.6)]"
+        >
+          <a href="https://wa.me/5511970508331" target="_blank" rel="noopener" class="navlink">(11) 97050-8331</a>
+          <span class="hidden md:inline text-cream/30">·</span>
+          <span class="navlink">contato@uryuimoveis.com.br</span>
+          <span class="hidden md:inline text-cream/30">·</span>
+          <a
+            href="https://www.google.com/maps/search/?api=1&query=Rua+Agudos%2C+316+-+Rochdale%2C+Osasco+-+SP%2C+06223-140"
+            target="_blank"
+            rel="noopener"
+            class="navlink"
+            >Rua Agudos, 316 – Sala 4, Rochdale – Osasco/SP</a
+          >
+        </div>
+      </div>
+      <div
+        class="absolute bottom-6 inset-x-0 text-center text-cream/50 text-[11px] font-mono tracking-widest2 z-10"
+        data-i18n="footer_copy"
+      >
+        © 2026 URYU IMÓVEIS — TODOS OS DIREITOS RESERVADOS
+      </div>
+    </footer>
 
-  /* ---------------- BUSCA DE IMÓVEIS ---------------- */
-  (function () {
-    const DB = window.IMOVEIS || [];
-    const $ = id => document.getElementById(id);
-    const dict = () => I18N[window.__lang || 'pt'] || I18N.pt;
+    <!-- ============ WHATSAPP FLUTUANTE ============ -->
+    <a
+      id="whats-btn"
+      href="https://wa.me/5511970508331"
+      target="_blank"
+      rel="noopener"
+      aria-label="WhatsApp"
+      class="fixed bottom-6 right-5 md:bottom-8 md:right-8 z-[60] w-14 h-14 md:w-16 md:h-16 rounded-full bg-[#25D366] flex items-center justify-center shadow-[0_8px_28px_rgba(37,211,102,.45)]"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        class="w-8 h-8 md:w-9 md:h-9"
+        fill="#fff"
+        aria-hidden="true"
+      >
+        <path
+          d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"
+        />
+      </svg>
+    </a>
 
-    const state = { cat: '', quartos: 0, banheiros: 0, vagas: 0, tamanho: 0 };
-    let searched = false;
-
-    /* category chips */
-    document.querySelectorAll('#cat-chips .cat-chip').forEach(chip => {
-      chip.addEventListener('click', () => {
-        state.cat = chip.dataset.cat;
-        document.querySelectorAll('#cat-chips .cat-chip').forEach(c => c.classList.toggle('active', c === chip));
-      });
-    });
-
-    /* sliders */
-    [['quartos', v => v + '+'], ['banheiros', v => v + '+'], ['vagas', v => v + '+'], ['tamanho', v => v + ' m²+']].forEach(([k, fmtV]) => {
-      $('f-' + k).addEventListener('input', e => {
-        state[k] = +e.target.value;
-        $('lbl-' + k).textContent = state[k] === 0 ? dict().opt_all : fmtV(state[k]);
-      });
-    });
-
-    function fillSelect(sel, options, keepValue) {
-      const prev = keepValue ? sel.value : '';
-      sel.innerHTML = '';
-      options.forEach(([val, label]) => {
-        const o = document.createElement('option');
-        o.value = val; o.textContent = label;
-        sel.appendChild(o);
-      });
-      if (keepValue && [...sel.options].some(o => o.value === prev)) sel.value = prev;
-    }
-
-    function uniq(arr) { return [...new Set(arr)].sort((a, b) => a.localeCompare(b, 'pt')); }
-
-    function refreshSelects(keep) {
-      const d = dict();
-      const all = ['', '-- ' + d.opt_all + ' --'];
-      const allF = ['', '-- ' + d.opt_all_f + ' --'];
-
-      fillSelect($('f-estado'), [all, ...uniq(DB.map(i => i.estado)).map(v => [v, v])], keep);
-      const est = $('f-estado').value;
-      const cities = DB.filter(i => !est || i.estado === est);
-      fillSelect($('f-cidade'), [allF, ...uniq(cities.map(i => i.cidade)).map(v => [v, v])], keep);
-      const cid = $('f-cidade').value;
-      const hoods = cities.filter(i => !cid || i.cidade === cid);
-      fillSelect($('f-bairro'), [all, ...uniq(hoods.map(i => i.bairro)).map(v => [v, v])], keep);
-
-      fillSelect($('f-neg'), [all, ['venda', d.neg_venda], ['aluguel', d.neg_aluguel]], keep);
-
-      const neg = $('f-neg').value;
-      let valOpts = [all];
-      if (neg === 'venda') {
-        valOpts = [all, ['0-1000000', d.val_v1], ['1000000-3000000', d.val_v2], ['3000000-7000000', d.val_v3], ['7000000-', d.val_v4]];
-      } else if (neg === 'aluguel') {
-        valOpts = [all, ['0-8000', d.val_a1], ['8000-15000', d.val_a2], ['15000-', d.val_a3]];
+    <style>
+      @keyframes scrollpulse {
+        0% {
+          transform: translateY(-100%);
+        }
+        100% {
+          transform: translateY(300%);
+        }
       }
-      fillSelect($('f-valor'), valOpts, keep);
+    </style>
 
-      fillSelect($('f-fase'), [all, ['pronto', d.fase_pronto], ['obras', d.fase_obras], ['planta', d.fase_planta]], keep);
-    }
+    <script>
+      if (window.gsap && window.ScrollTrigger)
+        gsap.registerPlugin(ScrollTrigger);
+      const reduceMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
 
-    $('f-estado').addEventListener('change', () => { $('f-cidade').value = ''; $('f-bairro').value = ''; refreshSelects(true); });
-    $('f-cidade').addEventListener('change', () => { $('f-bairro').value = ''; refreshSelects(true); });
-    $('f-neg').addEventListener('change', () => { $('f-valor').value = ''; refreshSelects(true); });
+      /* ---------------- I18N ---------------- */
+      const I18N = {
+        pt: {
+          nav_home: "Home",
+          nav_empresa: "A Empresa",
+          nav_comprar: "Comprar",
+          nav_alugar: "Alugar",
+          nav_anuncie: "Anuncie seu Imóvel",
+          nav_contato: "Contato",
+          nav_cta: "Agendar visita",
+          hero_kicker: "Uryu Imóveis · Compra, venda e locação",
+          hero_title:
+            'Seu próximo endereço<br class="hidden md:block"> começa aqui.',
+          hero_sub:
+            "Encontre imóveis para comprar ou alugar com orientação próxima em cada etapa da negociação.",
+          hero_cta1: "Encontrar meu imóvel",
+          hero_cta2: "Falar com um consultor",
+          hero_scroll: "Role para explorar",
+          cat_kicker: "Categorias",
+          cat_title: "Três formas de habitar a exclusividade",
+          cat_desc:
+            "Cada categoria carrega uma curadoria própria — geografia, arquitetura e ritmo de vida distintos.",
+          cat1_kicker: "01 — Metrópole",
+          cat1_title: "Residências Urbanas",
+          cat2_kicker: "02 — Litoral",
+          cat2_title: "Refúgios Litorâneos",
+          cat3_kicker: "03 — Interior",
+          cat3_title: "Propriedades de Campo",
+          discover: "Descobrir",
+          know: "Conhecer",
+          sel_kicker: "À venda · Seleção atual",
+          sel_title: "Três endereços que definem o momento",
+          sel_cta: "Ver todo o portfólio",
+          rent_kicker: "Alugar",
+          rent_title: "Morar bem, sem pressa de comprar",
+          rent_desc:
+            "Locações selecionadas com o mesmo rigor do portfólio de venda — contratos claros e atendimento dedicado.",
+          per_month: "/mês",
+          serv_kicker: "A Empresa",
+          serv_title: "Clareza em cada etapa. Cuidado em cada escolha.",
+          serv_desc:
+            "Atuamos na compra, venda, locação e administração de imóveis com foco em processos bem conduzidos e decisões seguras. Cada negociação é acompanhada de perto, com atenção aos detalhes e às necessidades de cada cliente.<br><br>Nosso compromisso é oferecer uma experiência direta, transparente e eficiente — do primeiro contato até a conclusão do negócio.",
+          badge_new: "Novo",
+          serv1_title: "Consultoria de Interiores",
+          serv1_desc:
+            "Curadoria de ambientes sob medida, do projeto à entrega chaveada, em parceria com arquitetos selecionados.",
+          serv2_title: "Tour Virtual em 3D",
+          serv2_desc:
+            "Percorra cada ambiente remotamente, com escala real e qualidade cinematográfica, antes da primeira visita.",
+          serv3_title: "Agenda VIP de Visitas",
+          serv3_desc:
+            "Horários privativos, sem sobreposição de clientes, com consultor dedicado do início ao fim.",
+          adv_kicker: "Anuncie seu imóvel",
+          adv_title: "Seu imóvel, apresentado a quem procura.",
+          adv_desc:
+            "Conte com a Uryu para avaliar, divulgar e acompanhar a negociação do seu imóvel.",
+          adv_cta: "Quero anunciar",
+          srch_kicker: "Busca",
+          srch_title: "Encontre aqui seu imóvel ideal",
+          srch_cat: "Categorias",
+          opt_all: "Todos",
+          opt_all_f: "Todas",
+          cat_ap: "Apartamento",
+          cat_casa: "Casa",
+          cat_com: "Comercial",
+          cat_ter: "Terreno",
+          f_quartos: "Quartos",
+          f_banheiros: "Banheiros",
+          f_vagas: "Vagas na Garagem",
+          f_tamanho: "Tamanho (m²)",
+          f_estado: "Estado",
+          f_cidade: "Cidade",
+          f_bairro: "Bairro",
+          f_neg: "Negociação",
+          f_valor: "Valor",
+          f_fase: "Fase do imóvel",
+          neg_venda: "Venda",
+          neg_aluguel: "Aluguel",
+          fase_pronto: "Pronto",
+          fase_obras: "Em obras",
+          fase_planta: "Na planta",
+          val_v1: "Até R$ 1.000.000",
+          val_v2: "R$ 1 a 3 milhões",
+          val_v3: "R$ 3 a 7 milhões",
+          val_v4: "Acima de R$ 7 milhões",
+          val_a1: "Até R$ 8.000/mês",
+          val_a2: "R$ 8.000 a 15.000/mês",
+          val_a3: "Acima de R$ 15.000/mês",
+          srch_btn: "Pesquisar imóveis",
+          results_n: "imóveis encontrados",
+          results_1: "imóvel encontrado",
+          no_results: "Nenhum imóvel encontrado com esses filtros.",
+          contact_phone: "WhatsApp",
+          contact_email: "Email",
+          contact_address: "Endereço",
+          contact_maps: "Ver no Google Maps",
+          news_kicker: "Lista privada",
+          news_title: "Receba oportunidades antes de todos",
+          news_desc:
+            "Um envio mensal, curto e sem ruído — apenas os imóveis que realmente merecem sua atenção.",
+          news_ph: "seu@email.com",
+          news_cta: "Inscrever-se",
+          footer_kicker: "Uryu Imóveis · Seu próximo endereço",
+          footer_title: "Vamos encontrar seu<br>próximo endereço?",
+          footer_cta: "Fale com um consultor",
+          footer_copy: "© 2026 URYU IMÓVEIS — TODOS OS DIREITOS RESERVADOS",
+        },
+        en: {
+          nav_home: "Home",
+          nav_empresa: "About Us",
+          nav_comprar: "Buy",
+          nav_alugar: "Rent",
+          nav_anuncie: "List Your Property",
+          nav_contato: "Contact",
+          nav_cta: "Book a visit",
+          hero_kicker: "Uryu Real Estate · Buy, sell and rent",
+          hero_title:
+            'Your next address<br class="hidden md:block"> starts here.',
+          hero_sub:
+            "Find properties to buy or rent with personal guidance at every step.",
+          hero_cta1: "Find a property",
+          hero_cta2: "Talk to an advisor",
+          hero_scroll: "Scroll to explore",
+          cat_kicker: "Categories",
+          cat_title: "Three ways to inhabit exclusivity",
+          cat_desc:
+            "Each category carries its own curation — distinct geography, architecture and pace of life.",
+          cat1_kicker: "01 — Metropolis",
+          cat1_title: "Urban Residences",
+          cat2_kicker: "02 — Coast",
+          cat2_title: "Coastal Retreats",
+          cat3_kicker: "03 — Countryside",
+          cat3_title: "Country Estates",
+          discover: "Discover",
+          know: "View",
+          sel_kicker: "For sale · Current selection",
+          sel_title: "Three addresses that define the moment",
+          sel_cta: "View full portfolio",
+          rent_kicker: "Rent",
+          rent_title: "Live well, with no rush to buy",
+          rent_desc:
+            "Rentals selected with the same rigor as our sales portfolio — clear contracts and dedicated service.",
+          per_month: "/month",
+          serv_kicker: "About Us",
+          serv_title: "Clarity at every step. Care in every choice.",
+          serv_desc:
+            "We work in buying, selling, renting and managing properties, focused on well-run processes and confident decisions. Every negotiation is closely followed, with attention to detail and to each client\u2019s needs.<br><br>Our commitment is to deliver a direct, transparent and efficient experience — from first contact to closing.",
+          badge_new: "New",
+          serv1_title: "Interior Consulting",
+          serv1_desc:
+            "Tailor-made interior curation, from design to turnkey delivery, in partnership with selected architects.",
+          serv2_title: "3D Virtual Tour",
+          serv2_desc:
+            "Walk through every room remotely, at real scale and cinematic quality, before your first visit.",
+          serv3_title: "VIP Visit Schedule",
+          serv3_desc:
+            "Private time slots, no overlapping clients, with a dedicated consultant from start to finish.",
+          adv_kicker: "List your property",
+          adv_title: "Your property, presented to the right audience.",
+          adv_desc:
+            "Count on Uryu to evaluate, market and guide your property negotiation.",
+          adv_cta: "List my property",
+          srch_kicker: "Search",
+          srch_title: "Find your ideal property here",
+          srch_cat: "Categories",
+          opt_all: "All",
+          opt_all_f: "All",
+          cat_ap: "Apartment",
+          cat_casa: "House",
+          cat_com: "Commercial",
+          cat_ter: "Land",
+          f_quartos: "Bedrooms",
+          f_banheiros: "Bathrooms",
+          f_vagas: "Parking Spaces",
+          f_tamanho: "Size (m²)",
+          f_estado: "State",
+          f_cidade: "City",
+          f_bairro: "Neighborhood",
+          f_neg: "Deal type",
+          f_valor: "Price",
+          f_fase: "Property stage",
+          neg_venda: "For sale",
+          neg_aluguel: "For rent",
+          fase_pronto: "Ready",
+          fase_obras: "Under construction",
+          fase_planta: "Off-plan",
+          val_v1: "Up to R$ 1,000,000",
+          val_v2: "R$ 1 to 3 million",
+          val_v3: "R$ 3 to 7 million",
+          val_v4: "Above R$ 7 million",
+          val_a1: "Up to R$ 8,000/month",
+          val_a2: "R$ 8,000 to 15,000/month",
+          val_a3: "Above R$ 15,000/month",
+          srch_btn: "Search properties",
+          results_n: "properties found",
+          results_1: "property found",
+          no_results: "No properties found with these filters.",
+          contact_phone: "WhatsApp",
+          contact_email: "Email",
+          contact_address: "Address",
+          contact_maps: "Open in Google Maps",
+          news_kicker: "Private list",
+          news_title: "Receive opportunities before anyone else",
+          news_desc:
+            "One short, noise-free monthly email — only the properties that truly deserve your attention.",
+          news_ph: "your@email.com",
+          news_cta: "Subscribe",
+          footer_kicker: "Uryu Real Estate · Your next address",
+          footer_title: "Let’s find your<br>next address.",
+          footer_cta: "Talk to a consultant",
+          footer_copy: "© 2026 URYU REAL ESTATE — ALL RIGHTS RESERVED",
+        },
+        es: {
+          nav_home: "Inicio",
+          nav_empresa: "La Empresa",
+          nav_comprar: "Comprar",
+          nav_alugar: "Alquilar",
+          nav_anuncie: "Publica tu Propiedad",
+          nav_contato: "Contacto",
+          nav_cta: "Agendar visita",
+          hero_kicker: "Uryu Inmuebles · Compra, venta y alquiler",
+          hero_title:
+            'Tu próxima dirección<br class="hidden md:block"> empieza aquí.',
+          hero_sub:
+            "Encuentra inmuebles para comprar o alquilar con asesoramiento cercano en cada etapa.",
+          hero_cta1: "Encontrar mi inmueble",
+          hero_cta2: "Hablar con un asesor",
+          hero_scroll: "Desliza para explorar",
+          cat_kicker: "Categorías",
+          cat_title: "Tres formas de habitar la exclusividad",
+          cat_desc:
+            "Cada categoría tiene su propia curaduría — geografía, arquitectura y ritmo de vida distintos.",
+          cat1_kicker: "01 — Metrópolis",
+          cat1_title: "Residencias Urbanas",
+          cat2_kicker: "02 — Costa",
+          cat2_title: "Refugios Costeros",
+          cat3_kicker: "03 — Campo",
+          cat3_title: "Propiedades de Campo",
+          discover: "Descubrir",
+          know: "Conocer",
+          sel_kicker: "En venta · Selección actual",
+          sel_title: "Tres direcciones que definen el momento",
+          sel_cta: "Ver todo el portafolio",
+          rent_kicker: "Alquilar",
+          rent_title: "Vivir bien, sin prisa por comprar",
+          rent_desc:
+            "Alquileres seleccionados con el mismo rigor que el portafolio de venta — contratos claros y atención dedicada.",
+          per_month: "/mes",
+          serv_kicker: "La Empresa",
+          serv_title: "Claridad en cada etapa. Cuidado en cada elección.",
+          serv_desc:
+            "Trabajamos en la compra, venta, alquiler y administración de propiedades, con foco en procesos bien conducidos y decisiones seguras. Cada negociación se acompaña de cerca, con atención a los detalles y a las necesidades de cada cliente.<br><br>Nuestro compromiso es ofrecer una experiencia directa, transparente y eficiente — del primer contacto hasta el cierre del negocio.",
+          badge_new: "Nuevo",
+          serv1_title: "Consultoría de Interiores",
+          serv1_desc:
+            "Curaduría de ambientes a medida, del proyecto a la entrega llave en mano, junto a arquitectos seleccionados.",
+          serv2_title: "Tour Virtual en 3D",
+          serv2_desc:
+            "Recorre cada ambiente de forma remota, a escala real y con calidad cinematográfica, antes de la primera visita.",
+          serv3_title: "Agenda VIP de Visitas",
+          serv3_desc:
+            "Horarios privados, sin superposición de clientes, con un consultor dedicado de principio a fin.",
+          adv_kicker: "Publica tu propiedad",
+          adv_title: "Tu inmueble, presentado a quien lo busca.",
+          adv_desc:
+            "Cuenta con Uryu para evaluar, divulgar y acompañar la negociación de tu inmueble.",
+          adv_cta: "Quiero publicar",
+          srch_kicker: "Búsqueda",
+          srch_title: "Encuentra aquí tu propiedad ideal",
+          srch_cat: "Categorías",
+          opt_all: "Todos",
+          opt_all_f: "Todas",
+          cat_ap: "Apartamento",
+          cat_casa: "Casa",
+          cat_com: "Comercial",
+          cat_ter: "Terreno",
+          f_quartos: "Habitaciones",
+          f_banheiros: "Baños",
+          f_vagas: "Plazas de Garaje",
+          f_tamanho: "Tamaño (m²)",
+          f_estado: "Estado",
+          f_cidade: "Ciudad",
+          f_bairro: "Barrio",
+          f_neg: "Negociación",
+          f_valor: "Valor",
+          f_fase: "Fase del inmueble",
+          neg_venda: "Venta",
+          neg_aluguel: "Alquiler",
+          fase_pronto: "Listo",
+          fase_obras: "En obras",
+          fase_planta: "En plano",
+          val_v1: "Hasta R$ 1.000.000",
+          val_v2: "R$ 1 a 3 millones",
+          val_v3: "R$ 3 a 7 millones",
+          val_v4: "Más de R$ 7 millones",
+          val_a1: "Hasta R$ 8.000/mes",
+          val_a2: "R$ 8.000 a 15.000/mes",
+          val_a3: "Más de R$ 15.000/mes",
+          srch_btn: "Buscar propiedades",
+          results_n: "propiedades encontradas",
+          results_1: "propiedad encontrada",
+          no_results: "No se encontraron propiedades con estos filtros.",
+          contact_phone: "WhatsApp",
+          contact_email: "Email",
+          contact_address: "Dirección",
+          contact_maps: "Ver en Google Maps",
+          news_kicker: "Lista privada",
+          news_title: "Recibe oportunidades antes que nadie",
+          news_desc:
+            "Un envío mensual, breve y sin ruido — solo las propiedades que realmente merecen tu atención.",
+          news_ph: "tu@email.com",
+          news_cta: "Suscribirse",
+          footer_kicker: "Uryu Inmuebles · Tu próxima dirección",
+          footer_title: "¿Encontramos tu<br>próxima dirección?",
+          footer_cta: "Habla con un consultor",
+          footer_copy: "© 2026 URYU INMUEBLES — TODOS LOS DERECHOS RESERVADOS",
+        },
+      };
 
-    function fmtPrice(i) {
-      const d = dict();
-      const p = 'R$ ' + i.preco.toLocaleString('pt-BR');
-      return i.negociacao === 'aluguel' ? p + (d.per_month || '/mês') : p;
-    }
-
-    function catLabel(c) {
-      const d = dict();
-      return { apartamento: d.cat_ap, casa: d.cat_casa, comercial: d.cat_com, terreno: d.cat_ter }[c] || c;
-    }
-
-    function runSearch() {
-      searched = true;
-      const d = dict();
-      const est = $('f-estado').value, cid = $('f-cidade').value, bai = $('f-bairro').value;
-      const neg = $('f-neg').value, fase = $('f-fase').value, val = $('f-valor').value;
-
-      let [vmin, vmax] = [0, Infinity];
-      if (val) {
-        const parts = val.split('-');
-        vmin = +parts[0] || 0;
-        vmax = parts[1] ? +parts[1] : Infinity;
+      function setLang(lang) {
+        const dict = I18N[lang] || I18N.pt;
+        document.documentElement.lang = lang === "pt" ? "pt-BR" : lang;
+        document.querySelectorAll("[data-i18n]").forEach((el) => {
+          const k = el.getAttribute("data-i18n");
+          if (dict[k] != null) el.textContent = dict[k];
+        });
+        document.querySelectorAll("[data-i18n-html]").forEach((el) => {
+          const k = el.getAttribute("data-i18n-html");
+          if (dict[k] != null) el.innerHTML = dict[k];
+        });
+        document.querySelectorAll("[data-i18n-ph]").forEach((el) => {
+          const k = el.getAttribute("data-i18n-ph");
+          if (dict[k] != null) el.setAttribute("placeholder", dict[k]);
+        });
+        document
+          .querySelectorAll(".lang-btn")
+          .forEach((b) =>
+            b.classList.toggle("active", b.dataset.lang === lang),
+          );
+        try {
+          localStorage.setItem("uryu-lang", lang);
+        } catch (e) {}
+        window.__lang = lang;
+        if (window.__searchRefresh) window.__searchRefresh();
       }
 
-      const results = DB.filter(i =>
-        (!state.cat || i.categoria === state.cat) &&
-        i.quartos >= state.quartos &&
-        i.banheiros >= state.banheiros &&
-        i.vagas >= state.vagas &&
-        i.tamanho >= state.tamanho &&
-        (!est || i.estado === est) &&
-        (!cid || i.cidade === cid) &&
-        (!bai || i.bairro === bai) &&
-        (!neg || i.negociacao === neg) &&
-        (!fase || i.fase === fase) &&
-        i.preco >= vmin && i.preco <= vmax
+      document.querySelectorAll(".lang-btn").forEach((btn) => {
+        btn.addEventListener("click", () => setLang(btn.dataset.lang));
+      });
+
+      let savedLang = "pt";
+      try {
+        savedLang = localStorage.getItem("uryu-lang") || "pt";
+      } catch (e) {}
+      setLang(savedLang);
+
+      /* ---------------- BUSCA DE IMÓVEIS ---------------- */
+      /* ---------------- NAVBAR STATE ---------------- */
+      const navbar = document.getElementById("navbar");
+
+      function updateNavbar() {
+        const logoImg = document.getElementById("logo-img");
+        const navInner = document.getElementById("nav-inner");
+        if (window.scrollY > 60) {
+          navbar.classList.add("glass-dark");
+          // shrink nav + logo while scrolling so the bar doesn't cover content
+          navInner.classList.remove("h-32", "md:h-40");
+          navInner.classList.add("h-20", "md:h-24");
+          logoImg.classList.remove("h-[120px]", "md:h-36");
+          logoImg.classList.add("h-12", "md:h-14");
+        } else {
+          navbar.classList.remove("glass-dark");
+          navInner.classList.add("h-32", "md:h-40");
+          navInner.classList.remove("h-20", "md:h-24");
+          logoImg.classList.add("h-[120px]", "md:h-36");
+          logoImg.classList.remove("h-12", "md:h-14");
+        }
+      }
+      window.addEventListener("scroll", updateNavbar, { passive: true });
+      updateNavbar();
+
+      /* ---------------- MOBILE MENU ---------------- */
+      const menuBtn = document.getElementById("menu-btn");
+      const mobileMenu = document.getElementById("mobile-menu");
+      menuBtn.addEventListener("click", () => {
+        mobileMenu.classList.toggle("hidden");
+        menuBtn.setAttribute(
+          "aria-expanded",
+          String(!mobileMenu.classList.contains("hidden")),
+        );
+      });
+      mobileMenu.querySelectorAll("a").forEach((a) =>
+        a.addEventListener("click", () => {
+          mobileMenu.classList.add("hidden");
+          menuBtn.setAttribute("aria-expanded", "false");
+        }),
       );
 
-      $('results-wrap').classList.remove('hidden');
-      $('results-count').textContent = results.length === 0 ? d.no_results
-        : results.length + ' ' + (results.length === 1 ? d.results_1 : d.results_n);
+      /* ---------------- SECTION REVEAL ANIMATIONS ---------------- */
+      if (window.gsap && window.ScrollTrigger)
+        document.querySelectorAll(".reveal").forEach((el) => {
+          gsap.fromTo(
+            el,
+            { opacity: 0, y: reduceMotion ? 0 : 28 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 1,
+              ease: "power3.out",
+              scrollTrigger: { trigger: el, start: "top 88%", once: true },
+            },
+          );
+        });
 
-      const grid = $('results-grid');
-      grid.innerHTML = '';
-      results.forEach(i => {
-        const card = document.createElement('div');
-        card.className = 'card-lift bg-white/[0.07] rounded-2xl overflow-hidden';
-        card.innerHTML =
-          '<div class="h-56 overflow-hidden relative group">' +
-            '<img src="' + i.img + '" alt="' + i.titulo + '" class="img-zoom w-full h-full object-cover">' +
-            '<span class="absolute top-4 left-4 bg-charcoal/80 text-cream text-[10px] tracking-widest2 uppercase px-3 py-1 rounded-full">' +
-              (i.negociacao === 'venda' ? d.neg_venda : d.neg_aluguel) + ' · ' + catLabel(i.categoria) +
-            '</span>' +
-          '</div>' +
-          '<div class="p-6">' +
-            '<h3 class="font-serif text-xl text-cream mb-1">' + i.titulo + '</h3>' +
-            '<p class="text-cream/60 text-sm mb-3">' + i.bairro + ', ' + i.cidade + '/' + i.estado + '</p>' +
-            '<p class="text-cream/60 text-xs mb-4 font-mono tracking-wide">' +
-              (i.quartos ? i.quartos + ' · ' + d.f_quartos.toLowerCase() + ' &nbsp; ' : '') +
-              (i.banheiros ? i.banheiros + ' · ' + d.f_banheiros.toLowerCase() + ' &nbsp; ' : '') +
-              (i.vagas ? i.vagas + ' · ' + d.f_vagas.toLowerCase().split(' ')[0] + ' &nbsp; ' : '') +
-              i.tamanho + ' m²' +
-            '</p>' +
-            '<div class="flex items-center justify-between">' +
-              '<span class="font-serif text-lg text-gold">' + fmtPrice(i) + '</span>' +
-              '<a href="#contato" class="text-[11px] tracking-widest2 uppercase border-b border-cream/40 pb-0.5">' + d.know + '</a>' +
-            '</div>' +
-          '</div>';
-        grid.appendChild(card);
-      });
-    }
-
-    $('btn-search').addEventListener('click', runSearch);
-
-    /* re-render on language change */
-    window.__searchRefresh = function () {
-      refreshSelects(true);
-      [['quartos', v => v + '+'], ['banheiros', v => v + '+'], ['vagas', v => v + '+'], ['tamanho', v => v + ' m²+']].forEach(([k, fmtV]) => {
-        $('lbl-' + k).textContent = state[k] === 0 ? dict().opt_all : fmtV(state[k]);
-      });
-      if (searched) runSearch();
-    };
-
-    refreshSelects(false);
-  })();
-
-  /* ---------------- NAVBAR STATE ---------------- */
-  const navbar = document.getElementById('navbar');
-
-  function updateNavbar() {
-    const logoImg = document.getElementById('logo-img');
-    const navInner = document.getElementById('nav-inner');
-    if (window.scrollY > 60) {
-      navbar.classList.add('glass-dark');
-      // shrink nav + logo while scrolling so the bar doesn't cover content
-      navInner.classList.remove('h-32', 'md:h-40');
-      navInner.classList.add('h-20', 'md:h-24');
-      logoImg.classList.remove('h-[120px]', 'md:h-36');
-      logoImg.classList.add('h-12', 'md:h-14');
-    } else {
-      navbar.classList.remove('glass-dark');
-      navInner.classList.add('h-32', 'md:h-40');
-      navInner.classList.remove('h-20', 'md:h-24');
-      logoImg.classList.add('h-[120px]', 'md:h-36');
-      logoImg.classList.remove('h-12', 'md:h-14');
-    }
-  }
-  window.addEventListener('scroll', updateNavbar, { passive: true });
-  updateNavbar();
-
-  /* ---------------- MOBILE MENU ---------------- */
-  const menuBtn = document.getElementById('menu-btn');
-  const mobileMenu = document.getElementById('mobile-menu');
-  menuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
-  mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mobileMenu.classList.add('hidden')));
-
-  /* ---------------- VIDEO SCROLL SCRUBBING (cache de quadros + canvas) ---------------- */
-  const video = document.getElementById('bg-video');
-  const canvas = document.getElementById('bg-canvas');
-  const ctx = canvas.getContext('2d');
-  const timecodeEl = document.getElementById('timecode');
-  const spineDot = document.getElementById('spine-dot');
-  const spineTrack = spineDot ? spineDot.parentElement : null;
-
-  const FPS = 30, MAX_W = 1280;
-  const frames = [];
-  let totalFrames = 0, duration = 0, lastDrawn = -1, smoothed = 0;
-
-  function fmt(t) {
-    if (!isFinite(t) || isNaN(t)) t = 0;
-    return String(Math.floor(t / 60)).padStart(2, '0') + ':' + String(Math.floor(t % 60)).padStart(2, '0');
-  }
-  function getScrollProgress() {
-    const se = document.scrollingElement || document.documentElement;
-    const max = se.scrollHeight - window.innerHeight;
-    if (max <= 0) return 0;
-    return Math.min(Math.max((window.scrollY || se.scrollTop || 0) / max, 0), 1);
-  }
-  function sizeCanvas() {
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    canvas.width = Math.round(window.innerWidth * dpr);
-    canvas.height = Math.round(window.innerHeight * dpr);
-    lastDrawn = -1;
-  }
-  sizeCanvas();
-
-  function drawCover(src) {
-    const cw = canvas.width, ch = canvas.height, sw = src.width, sh = src.height;
-    const s = Math.max(cw / sw, ch / sh), dw = sw * s, dh = sh * s;
-    ctx.drawImage(src, (cw - dw) / 2, (ch - dh) / 2, dw, dh);
-  }
-  function nearestFrame(i) {
-    for (let d = 0; d < totalFrames; d++) {
-      if (frames[i - d]) return i - d;
-      if (frames[i + d]) return i + d;
-    }
-    return -1;
-  }
-
-  function render(progress) {
-    if (totalFrames) {
-      const want = Math.round(progress * (totalFrames - 1));
-      const idx = nearestFrame(want);
-      if (idx >= 0 && idx !== lastDrawn) { drawCover(frames[idx]); lastDrawn = idx; }
-      timecodeEl.textContent = fmt(progress * duration) + ' / ' + fmt(duration);
-    }
-    if (spineTrack) spineDot.style.top = (progress * (spineTrack.clientHeight - 7)) + 'px';
-  }
-
-  /* Extrai os quadros: 1ª passada grossa (cobre o vídeo inteiro rápido), depois preenche os intermediários */
-  async function extractFrames(url) {
-    const ex = document.createElement('video');
-    ex.muted = true; ex.playsInline = true; ex.preload = 'auto'; ex.src = url;
-    ex.style.cssText = 'position:fixed;width:2px;height:2px;opacity:0;pointer-events:none;left:0;top:0';
-    document.body.appendChild(ex);
-    await new Promise((res, rej) => { if (ex.readyState >= 2) return res(); ex.onloadeddata = res; ex.onerror = rej; });
-    duration = ex.duration;
-    totalFrames = Math.max(2, Math.floor(duration * FPS));
-    const scale = Math.min(1, MAX_W / ex.videoWidth);
-    const off = document.createElement('canvas');
-    off.width = Math.round(ex.videoWidth * scale); off.height = Math.round(ex.videoHeight * scale);
-    const octx = off.getContext('2d');
-    const seekTo = t => new Promise(res => {
-      const done = () => { ex.removeEventListener('seeked', done); res(); };
-      ex.addEventListener('seeked', done);
-      ex.currentTime = t;
-    });
-    async function grab(i) {
-      if (frames[i]) return;
-      await seekTo(Math.min(duration - 0.02, i / FPS));
-      octx.drawImage(ex, 0, 0, off.width, off.height);
-      frames[i] = window.createImageBitmap ? await createImageBitmap(off) : (() => { const c = document.createElement('canvas'); c.width = off.width; c.height = off.height; c.getContext('2d').drawImage(off, 0, 0); return c; })();
-      lastDrawn = -1;
-    }
-    let first = true;
-    for (const step of [16, 4, 1]) {
-      for (let i = 0; i < totalFrames; i += step) {
-        await grab(i);
-        if (first) { first = false; canvas.style.opacity = '0.9'; video.style.opacity = '0'; }
-      }
-      await grab(totalFrames - 1);
-    }
-    ex.remove();
-  }
-
-  fetch('background.mp4')
-    .then(r => r.blob())
-    .then(b => extractFrames(URL.createObjectURL(b)))
-    .catch(e => console.warn('extração de quadros falhou', e));
-
-  /* suavização leve + render no evento de scroll e a cada frame */
-  window.addEventListener('scroll', () => render(smoothed = getScrollProgress()), { passive: true });
-  window.addEventListener('resize', () => { sizeCanvas(); render(smoothed); });
-  function tick() {
-    const p = getScrollProgress();
-    smoothed += (p - smoothed) * (reduceMotion ? 1 : 0.25);
-    if (Math.abs(smoothed - p) < 0.0005) smoothed = p;
-    render(smoothed);
-    requestAnimationFrame(tick);
-  }
-  requestAnimationFrame(tick);
-
-  /* ---------------- SECTION REVEAL ANIMATIONS ---------------- */
-  document.querySelectorAll('.reveal').forEach((el) => {
-    gsap.fromTo(el,
-      { opacity: 0, y: reduceMotion ? 0 : 28 },
-      {
-        opacity: 1, y: 0, duration: 1, ease: 'power3.out',
-        scrollTrigger: { trigger: el, start: 'top 88%', once: true }
-      }
-    );
-  });
-
-  /* footer entrance emphasis */
-  gsap.fromTo('#footer-content',
-    { opacity: 0, y: reduceMotion ? 0 : 40 },
-    {
-      opacity: 1, y: 0, duration: 1.4, ease: 'power3.out',
-      scrollTrigger: { trigger: 'footer', start: 'top 70%', once: true }
-    }
-  );
-</script>
-</body>
+      /* footer entrance emphasis */
+      if (window.gsap && window.ScrollTrigger)
+        gsap.fromTo(
+          "#footer-content",
+          { opacity: 0, y: reduceMotion ? 0 : 40 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 1.4,
+            ease: "power3.out",
+            scrollTrigger: { trigger: "footer", start: "top 70%", once: true },
+          },
+        );
+    </script>
+    <script type="module" src="app.js"></script>
+    <script type="module" src="video-scroll.js"></script>
+  </body>
 </html>
