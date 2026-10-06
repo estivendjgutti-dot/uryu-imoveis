@@ -1,0 +1,7 @@
+server/
+tests/
+design/
+deploy/
+uploads/
+.env*
+tmp/

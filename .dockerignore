@@ -1,0 +1,11 @@
+.env*
+tmp/
+node_modules/
+uploads/
+.git/
+.vercel/
+dist/
+design/
+*.png
+*.mp4
+*.zip
