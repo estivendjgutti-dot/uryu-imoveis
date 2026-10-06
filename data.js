@@ -73,7 +73,7 @@ export function money(value) {
 }
 export function whatsapp(i) {
   return (
-    "https://wa.me/5511959821054?text=" +
+    "https://wa.me/5511970508331?text=" +
     encodeURIComponent(
       `Olá! Tenho interesse no imóvel ${i.codigo}: ${i.titulo}. ${location.href.split("?")[0].replace(/[^/]*$/, "")}imovel.html?id=${i.id}`,
     )

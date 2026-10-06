@@ -111,8 +111,10 @@ try {
     contact.href = whatsapp(i);
     contact.target = "_blank";
     contact.rel = "noopener";
-    const phone = el("a", "action secondary", "Ligar para a Uryu");
-    phone.href = "tel:+5511959821054";
+    const phone = el("a", "action secondary", "Falar pelo WhatsApp");
+    phone.href = "https://wa.me/5511970508331";
+    phone.target = "_blank";
+    phone.rel = "noopener";
     aside.append(
       contact,
       phone,
@@ -127,7 +129,7 @@ try {
     el(
       "p",
       "muted",
-      "Tente novamente ou fale com a Uryu pelo telefone (11) 95982-1054.",
+      "Tente novamente ou fale com a Uryu pelo WhatsApp (11) 97050-8331.",
     ),
   );
 }
