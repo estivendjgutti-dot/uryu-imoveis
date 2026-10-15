@@ -21,9 +21,9 @@ export function checkPassword(password, hash) {
     return false;
   }
 }
-export function issueToken(secret, now = Date.now()) {
+export function issueToken(secret, now = Date.now(), account = {}) {
   const body = Buffer.from(
-    JSON.stringify({ role: "admin", exp: Math.floor(now / 1000) + 28800 }),
+    JSON.stringify({ ...account, role: "admin", exp: Math.floor(now / 1000) + 28800 }),
   ).toString("base64url");
   return (
     body + "." + createHmac("sha256", secret).update(body).digest("base64url")

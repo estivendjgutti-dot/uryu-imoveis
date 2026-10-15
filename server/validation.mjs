@@ -97,6 +97,7 @@ export function validateProperty(input) {
   if (out.preco <= 0 || out.tamanho <= 0)
     throw new Error("Preço e área devem ser maiores que zero.");
   out.destaque = input.destaque === true;
+  out.demonstrativo = input.demonstrativo === true;
   if (
     !Array.isArray(input.fotos) ||
     input.fotos.length > 30 ||

@@ -2,7 +2,7 @@ import express from "express";
 import helmet from "helmet";
 import { rateLimit } from "express-rate-limit";
 import multer from "multer";
-import sharp from "sharp";
+import { watermarkPhoto } from "./photos.mjs";
 import pg from "pg";
 import { randomUUID, createHmac } from "node:crypto";
 import { mkdir, readFile, writeFile, unlink } from "node:fs/promises";
@@ -83,14 +83,25 @@ app.use(
     message: { error: "Muitas requisições. Aguarde um minuto." },
   }),
 );
-const admin = (req, res, next) => {
+const admin = async (req, res, next) => {
+  const token = (req.headers.authorization || "").replace(/^Bearer /, "");
   if (
     !verifyToken(
-      (req.headers.authorization || "").replace(/^Bearer /, ""),
+      token,
       secret,
     )
   )
     return res.status(401).json({ error: "Entre novamente no painel." });
+  const claims = JSON.parse(Buffer.from(token.split(".")[0], "base64url"));
+  if (claims.sub) {
+    if (!/^[a-f0-9-]{36}$/i.test(claims.sub))
+      return res.status(401).json({ error: "Entre novamente no painel." });
+    const { rows } = await pool.query(
+      "select session_version from admin_users where id=$1 and active=true", [claims.sub],
+    );
+    if (!rows.length || rows[0].session_version !== claims.version)
+      return res.status(401).json({ error: "Entre novamente no painel." });
+  }
   next();
 };
 const uuid = (id) =>
@@ -116,15 +127,21 @@ app.post(
     legacyHeaders: false,
     message: { error: "Muitas tentativas. Aguarde 15 minutos." },
   }),
-  (req, res) => {
+  async (req, res) => {
     const { email, password } = req.body || {};
+    const normalizedEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
+    const { rows } = await pool.query(
+      "select id,password_hash,session_version from admin_users where email=$1 and active=true",
+      [normalizedEmail],
+    );
+    const account = rows[0];
     const valid =
       typeof password === "string" &&
       password.length <= 256 &&
-      checkPassword(password, ADMIN_PASSWORD_HASH);
-    if (email !== ADMIN_EMAIL || !valid)
+      checkPassword(password, account?.password_hash || ADMIN_PASSWORD_HASH);
+    if ((!account && normalizedEmail !== ADMIN_EMAIL.toLowerCase()) || !valid)
       return res.status(401).json({ error: "E-mail ou senha inválidos." });
-    res.json({ token: issueToken(secret), expiresIn: 28800 });
+    res.json({ token: issueToken(secret, Date.now(), account ? { sub: account.id, version: account.session_version } : {}), expiresIn: 28800 });
   },
 );
 app.get("/api/properties", async (_req, res) => {
@@ -245,16 +262,7 @@ app.post(
         .json({ error: "Envie uma foto JPG, PNG ou WebP de até 12 MB." });
     let buffer;
     try {
-      buffer = await sharp(req.file.buffer, { limitInputPixels: 40000000 })
-        .rotate()
-        .resize({
-          width: 2400,
-          height: 2400,
-          fit: "inside",
-          withoutEnlargement: true,
-        })
-        .webp({ quality: 85 })
-        .toBuffer();
+      buffer = await watermarkPhoto(req.file.buffer);
     } catch {
       return res
         .status(400)

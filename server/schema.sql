@@ -12,3 +12,12 @@ create table if not exists media (
  filename text primary key,
  created_at timestamptz not null default now()
 );
+create table if not exists admin_users (
+ id uuid primary key,
+ name text not null,
+ email text not null unique,
+ password_hash text not null,
+ session_version uuid not null,
+ active boolean not null default true,
+ created_at timestamptz not null default now()
+);
