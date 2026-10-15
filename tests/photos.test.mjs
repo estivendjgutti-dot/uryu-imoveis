@@ -2,6 +2,8 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import sharp from "sharp";
 import { watermarkPhoto } from "../server/photos.mjs";
+import { validateProperty } from "../server/validation.mjs";
+import { examples } from "../presentation/properties.mjs";
 
 test("upload grava WebP com marca na imagem e mantém proporção", async () => {
   const source = await sharp({ create: { width: 800, height: 600, channels: 3, background: "#a0a0a0" } }).png().toBuffer();
@@ -16,4 +18,7 @@ test("upload grava WebP com marca na imagem e mantém proporção", async () => 
 
 test("upload inválido é recusado antes de salvar", async () => {
   await assert.rejects(watermarkPhoto(Buffer.from("não é imagem")));
+});
+test("URL externa não contorna a marca d’água do upload", () => {
+  assert.throws(() => validateProperty({ ...examples[0], fotos: ["https://images.unsplash.com/photo-ficticia"] }), /marca d’água/);
 });

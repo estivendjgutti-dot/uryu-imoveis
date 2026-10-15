@@ -1,0 +1,75 @@
+{
+  "checkedAt": "2026-10-15T17:46:00.310Z",
+  "origin": "https://uryuimoveis.com.br",
+  "routes": [
+    {
+      "path": "/",
+      "status": 200,
+      "finalUrl": "https://uryuimoveis.com.br/",
+      "ms": 455,
+      "bytes": 50912,
+      "contentType": "text/html; charset=utf-8",
+      "xRobotsTag": null
+    },
+    {
+      "path": "/robots.txt",
+      "status": 200,
+      "finalUrl": "https://uryuimoveis.com.br/robots.txt",
+      "ms": 40,
+      "bytes": 50912,
+      "contentType": "text/html; charset=utf-8",
+      "xRobotsTag": null
+    },
+    {
+      "path": "/sitemap.xml",
+      "status": 200,
+      "finalUrl": "https://uryuimoveis.com.br/sitemap.xml",
+      "ms": 19,
+      "bytes": 50912,
+      "contentType": "text/html; charset=utf-8",
+      "xRobotsTag": null
+    },
+    {
+      "path": "/admin",
+      "status": 200,
+      "finalUrl": "https://uryuimoveis.com.br/admin",
+      "ms": 187,
+      "bytes": 7155,
+      "contentType": "text/html; charset=utf-8",
+      "xRobotsTag": "noindex, nofollow"
+    },
+    {
+      "path": "/imovel?id=inexistente",
+      "status": 200,
+      "finalUrl": "https://uryuimoveis.com.br/imovel?id=inexistente",
+      "ms": 179,
+      "bytes": 1119,
+      "contentType": "text/html; charset=utf-8",
+      "xRobotsTag": null
+    }
+  ],
+  "www": {
+    "status": 200,
+    "redirect": null
+  },
+  "html": {
+    "title": "Uryu Imóveis | Comprar, alugar e anunciar",
+    "description": "Encontre imóveis para comprar ou alugar com a Uryu. Atendimento próximo em cada etapa da negociação.",
+    "h1Count": 1,
+    "canonical": false,
+    "openGraph": false,
+    "structuredData": false,
+    "hreflang": false,
+    "privacy": false,
+    "creci": false,
+    "tailwindRuntime": true,
+    "sampleDataScript": true
+  },
+  "productionListings": 0,
+  "videoLocalBytes": 2237701,
+  "limits": [
+    "Não foi acessado Search Console ou Google Business Profile.",
+    "Não foi medida pontuação Lighthouse ou métricas reais de usuários.",
+    "HTTP 200 na ficha inválida é evidência de potencial soft 404, não confirmação do relatório do Google."
+  ]
+}

@@ -120,11 +120,11 @@ try {
           ),
         );
   }
-  if (isDemo) {
+  if (isDemo || properties.some((property) => property.demonstrativo)) {
     const notice = document.querySelector("#catalog-notice");
     notice.hidden = false;
     notice.textContent =
-      "Prévia demonstrativa: imóveis e valores do protótipo, sujeitos à substituição pelo cadastro real.";
+      "APRESENTAÇÃO: imóveis, preços e medidas fictícios. Imagens geradas por IA. Os exemplos não representam ofertas reais.";
   }
 } catch (e) {
   status.textContent = "Não foi possível carregar o catálogo.";

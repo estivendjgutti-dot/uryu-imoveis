@@ -104,13 +104,10 @@ export function validateProperty(input) {
     input.fotos.some(
       (p) =>
         typeof p !== "string" ||
-        !(
-          /^[a-f0-9-]{36}\.webp$/.test(p) ||
-          /^https:\/\/images\.unsplash\.com\//.test(p)
-        ),
+        !/^[a-f0-9-]{36}\.webp$/.test(p),
     )
   )
-    throw new Error("Fotos inválidas.");
+    throw new Error("Envie as fotos pelo painel para aplicar a marca d’água.");
   out.fotos = [...new Set(input.fotos)];
   if (
     !Array.isArray(input.caracteristicas) ||
