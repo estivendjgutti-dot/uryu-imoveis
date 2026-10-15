@@ -46,9 +46,6 @@
       };
     </script>
 
-    <!-- GSAP -->
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
     <script src="config.js"></script>
     <script src="imoveis.js"></script>
     <link rel="stylesheet" href="site.css" />
@@ -58,7 +55,7 @@
         scroll-behavior: smooth;
       }
       body {
-        background-color: #eae2d3;
+        background-color: #24231f;
       }
 
       /* glass panel utility */
@@ -91,8 +88,8 @@
 
       /* reveal defaults (GSAP overrides via JS, this is fallback / reduced-motion safe) */
       .reveal {
-        opacity: 0;
-        transform: translateY(28px);
+        opacity: 1;
+        transform: none;
       }
       .reveal.is-visible {
         opacity: 1;
@@ -446,13 +443,14 @@
 
     <main id="catalogo" class="site-section">
       <div class="section-shell">
-        <p class="eyebrow">Encontre seu lugar</p>
+        <div class="section-caption"><p class="eyebrow">Encontre seu lugar</p>
         <div class="section-heading">
           <h2>Um endereço para<br />cada novo capítulo.</h2>
           <p>
             Compare opções para comprar ou alugar e conte com orientação em cada
             etapa.
           </p>
+        </div>
         </div>
         <form id="property-search" class="search-panel">
           <div class="primary-filters">
@@ -560,28 +558,31 @@
         </div>
         <p id="catalog-notice" class="notice" hidden></p>
         <div id="catalog-grid" class="property-grid"></div>
+        <nav id="catalog-pagination" class="catalog-pagination" aria-label="Páginas do catálogo"></nav>
       </div>
     </main>
     <section id="comprar" class="site-section">
       <div class="section-shell">
-        <p class="eyebrow">Comprar</p>
+        <div class="section-caption"><p class="eyebrow">Comprar</p>
         <div class="section-heading">
           <h2>Imóveis em destaque.</h2>
           <a href="#catalogo" data-purpose="venda" class="text-button"
             >Ver imóveis à venda ↗</a
           >
         </div>
+        </div>
         <div id="sale-grid" class="property-grid"></div>
       </div>
     </section>
     <section id="alugar" class="site-section">
       <div class="section-shell">
-        <p class="eyebrow">Alugar</p>
+        <div class="section-caption"><p class="eyebrow">Alugar</p>
         <div class="section-heading">
           <h2>Seu próximo lugar<br />para morar.</h2>
           <a href="#catalogo" data-purpose="aluguel" class="text-button"
             >Ver imóveis para alugar ↗</a
           >
+        </div>
         </div>
         <div id="rent-grid" class="property-grid"></div>
       </div>
@@ -601,7 +602,7 @@
               class="w-full h-full object-cover"
             />
           </div>
-          <div>
+          <div class="readable-panel">
             <p
               class="font-mono text-gold text-[11px] tracking-widest2 uppercase mb-4"
               data-i18n="serv_kicker"
@@ -898,8 +899,7 @@
     </style>
 
     <script>
-      if (window.gsap && window.ScrollTrigger)
-        gsap.registerPlugin(ScrollTrigger);
+
       const reduceMotion = window.matchMedia(
         "(prefers-reduced-motion: reduce)",
       ).matches;
@@ -1290,6 +1290,7 @@
       const mobileMenu = document.getElementById("mobile-menu");
       menuBtn.addEventListener("click", () => {
         mobileMenu.classList.toggle("hidden");
+        if (!mobileMenu.classList.contains('hidden') && !reduceMotion) mobileMenu.animate([{opacity:0,transform:'translateY(-10px)'},{opacity:1,transform:'translateY(0)'}],{duration:240,easing:'ease-out'});
         menuBtn.setAttribute(
           "aria-expanded",
           String(!mobileMenu.classList.contains("hidden")),
@@ -1302,35 +1303,6 @@
         }),
       );
 
-      /* ---------------- SECTION REVEAL ANIMATIONS ---------------- */
-      if (window.gsap && window.ScrollTrigger)
-        document.querySelectorAll(".reveal").forEach((el) => {
-          gsap.fromTo(
-            el,
-            { opacity: 0, y: reduceMotion ? 0 : 28 },
-            {
-              opacity: 1,
-              y: 0,
-              duration: 1,
-              ease: "power3.out",
-              scrollTrigger: { trigger: el, start: "top 88%", once: true },
-            },
-          );
-        });
-
-      /* footer entrance emphasis */
-      if (window.gsap && window.ScrollTrigger)
-        gsap.fromTo(
-          "#footer-content",
-          { opacity: 0, y: reduceMotion ? 0 : 40 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 1.4,
-            ease: "power3.out",
-            scrollTrigger: { trigger: "footer", start: "top 70%", once: true },
-          },
-        );
     </script>
     <script type="module" src="app.js"></script>
     <script type="module" src="video-scroll.js"></script>

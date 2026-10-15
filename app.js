@@ -1,11 +1,32 @@
+const motionPreference=matchMedia('(prefers-reduced-motion: reduce)');
+const entryObserver=new IntersectionObserver(entries=>{for(const entry of entries) if(entry.isIntersecting){entryObserver.unobserve(entry.target);if(!motionPreference.matches) entry.target.animate([{opacity:.2,transform:'translateY(18px)'},{opacity:1,transform:'translateY(0)'}],{duration:500,easing:'cubic-bezier(.2,.7,.2,1)'});}}, {threshold:.08});
+function animateEntries(nodes){for(const node of nodes)entryObserver.observe(node);}
+const railHandlers=new WeakMap();
+function setupFeaturedRails(){
+ for(const id of ['sale-grid','rent-grid']){
+  const rail=document.getElementById(id); let controls=document.getElementById(id+'-controls');
+  if(controls)controls.remove();
+  if(rail.children.length<2)continue;
+  controls=document.createElement('div');controls.id=id+'-controls';controls.className='rail-controls';
+  const previous=document.createElement('button'),next=document.createElement('button'),count=document.createElement('span');
+  previous.type=next.type='button';previous.textContent='←';next.textContent='→';
+  previous.setAttribute('aria-label',label('Imóvel anterior','Previous property','Inmueble anterior')); next.setAttribute('aria-label',label('Próximo imóvel','Next property','Siguiente inmueble'));
+  const update=()=>{const step=rail.children[1].offsetLeft-rail.children[0].offsetLeft;const index=step?Math.round(rail.scrollLeft/step):0;count.textContent=(index+1)+' / '+rail.children.length+' · '+label('Deslize para explorar','Swipe to explore','Desliza para explorar');previous.disabled=index===0;next.disabled=index>=rail.children.length-1;};
+  for(const [button,direction] of [[previous,-1],[next,1]])button.addEventListener('click',()=>rail.scrollBy({left:direction*(rail.children[1].offsetLeft-rail.children[0].offsetLeft),behavior:motionPreference.matches?'instant':'smooth'}));
+  if(railHandlers.has(rail))rail.removeEventListener('scroll',railHandlers.get(rail));
+  railHandlers.set(rail,update);rail.addEventListener('scroll',update,{passive:true});controls.append(previous,count,next);rail.after(controls);update();animateEntries(rail.querySelectorAll('.property-card'));
+ }
+}
 import { getProperties, isDemo, propertyCard, featuredCompare, el } from "./data.js";
 import { translateCatalog, label } from "./catalog-i18n.js";
 const form = document.querySelector("#property-search");
 let properties = [];
 const searchKey = 'uryu-search-v2';
+const smallScreen = matchMedia('(max-width: 760px)');
+let page = 1;
 const savedSearch = (()=>{try{return JSON.parse(sessionStorage.getItem(searchKey)||'null')}catch{return null}})();
 function rememberSearch() {
-  try {sessionStorage.setItem(searchKey,JSON.stringify({fields:Object.fromEntries(new FormData(form)),sort:sort.value,y:scrollY}));} catch {}
+  try {sessionStorage.setItem(searchKey,JSON.stringify({fields:Object.fromEntries(new FormData(form)),sort:sort.value,y:scrollY,page}));} catch {}
 }
 document.addEventListener('click', e=> {if(e.target.closest('a[href*="imovel.html?id="]')) rememberSearch();});
 const status = document.querySelector("#catalog-status");
@@ -34,7 +55,8 @@ function neighborhoods() {
     label("Todos os bairros", "All neighborhoods", "Todos los barrios"),
   );
 }
-function render() {
+function render(resetPage = true) {
+  if (resetPage) page = 1;
   const q = Object.fromEntries(new FormData(form));
   const items = properties.filter(
     (i) =>
@@ -57,7 +79,24 @@ function render() {
     `${items.length} inmuebles encontrados`,
   );
   const grid = document.querySelector("#catalog-grid");
-  grid.replaceChildren(...items.map(propertyCard));
+  const pageSize=smallScreen.matches?2:9;
+  const pageCount=Math.max(1,Math.ceil(items.length/pageSize));
+  page=Math.min(Math.max(1,page),pageCount);
+  for(const child of grid.children)entryObserver.unobserve(child);
+  grid.replaceChildren(...items.slice((page-1)*pageSize,page*pageSize).map(propertyCard));
+  animateEntries(grid.querySelectorAll('.property-card'));
+  const paging=document.querySelector('#catalog-pagination');
+  paging.replaceChildren();
+  if(pageCount>1) {
+    const previous=el('button','page-arrow',label('← Anterior','← Previous','← Anterior'));
+    const next=el('button','page-arrow',label('Próxima →','Next →','Siguiente →'));
+    previous.type=next.type='button'; previous.disabled=page===1; next.disabled=page===pageCount;
+    const info=el('span','',label('Página','Page','Página')+' '+page+' / '+pageCount);
+    info.setAttribute('aria-live','polite');
+    const go=direction=>{page+=direction;render(false);const top=document.querySelector('#catalog-grid').getBoundingClientRect().top+scrollY-100;scrollTo({top,behavior:motionPreference.matches?'instant':'smooth'});document.querySelector('#catalog-grid a')?.focus({preventScroll:true});};
+    previous.addEventListener('click',()=>go(-1));next.addEventListener('click',()=>go(1));
+    paging.append(previous,info,next);
+  }
   if (!items.length)
     grid.append(
       el(
@@ -85,7 +124,8 @@ form.addEventListener("reset", () =>
     render();
   }, 0),
 );
-sort.addEventListener("change", render);
+sort.addEventListener("change", () => render());
+smallScreen.addEventListener("change", () => {render();setupFeaturedRails();});
 document.querySelectorAll("[data-purpose]").forEach((link) =>
   link.addEventListener("click", () => {
     form.reset();
@@ -105,8 +145,9 @@ try {
   neighborhoods();
   if(savedSearch?.fields?.bairro) form.elements.bairro.value=savedSearch.fields.bairro;
   if(savedSearch?.sort) sort.value=savedSearch.sort;
+  if(savedSearch?.page) page=savedSearch.page;
   translateCatalog();
-  render();
+  render(false);
   if(savedSearch && location.hash === '#catalogo') requestAnimationFrame(()=>scrollTo({top:savedSearch.y||0,behavior:'instant'}));
   for (const [selector, purpose] of [
     ["#sale-grid", "venda"],
@@ -130,6 +171,8 @@ try {
           ),
         );
   }
+  setupFeaturedRails();
+  animateEntries(document.querySelectorAll(".section-caption,.readable-panel,.planning-shell,.contact-invite,.reveal,#footer-content"));
   if (isDemo || properties.some((property) => property.demonstrativo)) {
     const notice = document.querySelector("#catalog-notice");
     notice.hidden = false;
@@ -178,4 +221,5 @@ window.__searchRefresh = () => {
         .slice(0, 3)
         .map(propertyCard),
     );
+  setupFeaturedRails();
 };
