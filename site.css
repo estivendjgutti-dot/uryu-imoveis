@@ -669,6 +669,23 @@ footer img {
     padding-right: 20px;
   }
 }
+.demo-label { font-size: .72rem; letter-spacing: .06em; font-weight: 700; color: #5f6850; margin-bottom: .7rem; }
+.planning-section { position: relative; padding: 6rem 1.5rem; color: #f6f1e9; }
+.planning-shell { max-width: 1200px; margin: auto; background: rgba(31,30,26,.94); border: 1px solid rgba(246,241,233,.16); border-radius: 28px; padding: clamp(1.5rem,4vw,4rem); }
+.planning-shell h2 { font-family: Fraunces, Georgia, serif; font-size: clamp(2rem,4vw,3.6rem); line-height: 1.12; max-width: 850px; margin: 1rem 0 1.5rem; }
+.planning-intro { color: #d5d0c7; max-width: 750px; line-height: 1.8; }
+.planning-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 1.5rem; margin: 3rem 0; }
+.planning-grid article { border-top: 1px solid #605e52; padding-top: 1.5rem; }
+.planning-number { color: #c9bc98; font-family: monospace; font-size: .8rem; }
+.planning-shell h3 { font-family: Fraunces, Georgia, serif; font-size: 1.45rem; margin: 1rem 0 .75rem; }
+.planning-grid p,.planning-details p,.planning-contact p { color: #d5d0c7; line-height: 1.75; }
+.planning-details { border-block: 1px solid #605e52; padding: 1.5rem 0; }
+.planning-details summary { cursor: pointer; font-weight: 600; }
+.planning-details p { margin-top: 1rem; }
+.planning-sources a { text-decoration: underline; text-underline-offset: 4px; }
+.planning-contact { display: flex; justify-content: space-between; align-items: center; gap: 2rem; margin-top: 2rem; }
+.planning-contact .action { white-space: normal; text-align: center; }
+@media (max-width: 760px) { .planning-grid { grid-template-columns: 1fr; } .planning-contact { align-items: flex-start; flex-direction: column; } }
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto !important;

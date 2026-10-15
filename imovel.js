@@ -15,9 +15,9 @@ try {
   } else {
     document.title = `${i.titulo} | Uryu Imóveis`;
     root.replaceChildren();
-    if (isDemo)
+    if (isDemo || i.demonstrativo)
       root.append(
-        el("p", "notice", "Prévia demonstrativa: dados do protótipo."),
+        el("p", "notice", "IMÓVEL DEMONSTRATIVO. Dados e valores fictícios; imagens geradas por IA. Não representa uma oferta real."),
       );
     const heading = el("header", "detail-heading");
     heading.append(

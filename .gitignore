@@ -6,6 +6,8 @@ dist/
 !.env.example
 uploads/
 tmp/
+acessos/
+assets/demo/
 *.log
 test-results/
 

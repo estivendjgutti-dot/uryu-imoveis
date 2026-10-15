@@ -285,6 +285,7 @@ editor.addEventListener("submit", async (e) => {
   ])
     body[k] = Number(body[k]);
   body.destaque = editor.elements.destaque.checked;
+  body.demonstrativo = editor.elements.demonstrativo.checked;
   body.caracteristicas = body.caracteristicas
     .split(",")
     .map((s) => s.trim())

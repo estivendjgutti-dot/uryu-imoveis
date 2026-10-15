@@ -1,4 +1,4 @@
-const categories = ["apartamento", "casa", "comercial", "terreno"],
+const categories = ["apartamento", "casa", "comercial", "terreno", "studio", "kitnet", "cobertura", "sobrado", "casa_condominio", "sala_comercial", "ponto_comercial", "galpao", "chacara"],
   purposes = ["venda", "aluguel"],
   phases = ["pronto", "obras", "planta"];
 export const statuses = [

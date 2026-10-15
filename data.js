@@ -108,6 +108,8 @@ export function propertyCard(i) {
     ),
   );
   const body = el("div", "property-body");
+  if (i.demonstrativo)
+    body.append(el("p", "demo-label", "DEMONSTRAÇÃO · Imagens geradas por IA"));
   body.append(
     el("p", "property-code", i.codigo),
     el("h3", "", i.titulo),
