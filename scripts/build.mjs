@@ -14,6 +14,8 @@ const files = [
   "logo-uryu.png",
   "empresa-foto.png",
   "background.mp4",
+  "background-poster.webp",
+  "background-mobile.webp",
 ];
 const apiUrl = process.env.PUBLIC_API_URL || "";
 if (apiUrl && !/^https:\/\/[^\s]+$/.test(apiUrl))

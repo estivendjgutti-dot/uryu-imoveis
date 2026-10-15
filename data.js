@@ -85,6 +85,9 @@ export function el(tag, className, text) {
   if (text !== undefined) n.textContent = text;
   return n;
 }
+export function featuredCompare(a,b) {
+  return Number(b.destaque)-Number(a.destaque) || (Number(a.ordem_destaque)||9999)-(Number(b.ordem_destaque)||9999);
+}
 export function propertyCard(i) {
   const card = el("article", "property-card");
   const link = el("a", "property-image");

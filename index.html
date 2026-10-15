@@ -225,7 +225,8 @@
 
   <body class="font-sans text-cream antialiased overflow-x-hidden">
     <!-- ============ FIXED CINEMATIC VIDEO LAYER ============ -->
-    <div class="fixed inset-0 w-full h-full -z-20 bg-charcoal">
+    <div class="cinema-background fixed inset-0 w-full h-full -z-20 bg-charcoal">
+      <picture class="cinema-poster"><source media="(max-width: 760px)" srcset="background-mobile.webp"><img src="background-poster.webp" alt="" fetchpriority="high"></picture>
       <canvas
         id="bg-canvas"
         class="absolute inset-0 w-full h-full transition-opacity duration-500"
@@ -236,10 +237,10 @@
         class="w-full h-full object-cover opacity-90 transition-opacity duration-500"
         muted
         playsinline
-        preload="auto"
-        poster=""
+        preload="none"
+        poster="background-poster.webp"
       >
-        <source src="background.mp4" type="video/mp4" />
+        <source data-src="background.mp4" type="video/mp4" />
       </video>
       <!-- ambient vignette, always on, very light -->
       <div

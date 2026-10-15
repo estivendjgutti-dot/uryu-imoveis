@@ -1,7 +1,13 @@
-import { getProperties, isDemo, propertyCard, el } from "./data.js";
+import { getProperties, isDemo, propertyCard, featuredCompare, el } from "./data.js";
 import { translateCatalog, label } from "./catalog-i18n.js";
 const form = document.querySelector("#property-search");
 let properties = [];
+const searchKey = 'uryu-search-v2';
+const savedSearch = (()=>{try{return JSON.parse(sessionStorage.getItem(searchKey)||'null')}catch{return null}})();
+function rememberSearch() {
+  try {sessionStorage.setItem(searchKey,JSON.stringify({fields:Object.fromEntries(new FormData(form)),sort:sort.value,y:scrollY}));} catch {}
+}
+document.addEventListener('click', e=> {if(e.target.closest('a[href*="imovel.html?id="]')) rememberSearch();});
 const status = document.querySelector("#catalog-status");
 const sort = document.querySelector("#sort-properties");
 function options(name, values, label) {
@@ -95,16 +101,20 @@ try {
     properties.map((i) => i.cidade),
     label("Todas as cidades", "All cities", "Todas las ciudades"),
   );
+  if(savedSearch?.fields) for(const [key,value] of Object.entries(savedSearch.fields)) {if(form.elements[key]) form.elements[key].value=value;}
   neighborhoods();
+  if(savedSearch?.fields?.bairro) form.elements.bairro.value=savedSearch.fields.bairro;
+  if(savedSearch?.sort) sort.value=savedSearch.sort;
   translateCatalog();
   render();
+  if(savedSearch && location.hash === '#catalogo') requestAnimationFrame(()=>scrollTo({top:savedSearch.y||0,behavior:'instant'}));
   for (const [selector, purpose] of [
     ["#sale-grid", "venda"],
     ["#rent-grid", "aluguel"],
   ]) {
     const items = properties
       .filter((i) => i.negociacao === purpose)
-      .sort((a, b) => Number(b.destaque) - Number(a.destaque))
+      .sort(featuredCompare)
       .slice(0, 3);
     document
       .querySelector(selector)
@@ -164,7 +174,7 @@ window.__searchRefresh = () => {
     document.querySelector(selector).replaceChildren(
       ...properties
         .filter((i) => i.negociacao === purpose)
-        .sort((a, b) => Number(b.destaque) - Number(a.destaque))
+        .sort(featuredCompare)
         .slice(0, 3)
         .map(propertyCard),
     );

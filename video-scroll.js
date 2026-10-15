@@ -1,6 +1,12 @@
 const video = document.querySelector("#bg-video");
 const canvas = document.querySelector("#bg-canvas");
 if (canvas) canvas.hidden = true;
+const compact = matchMedia("(max-width: 760px)");
+function loadVideo() {
+  if (!video || compact.matches || reduced.matches) return;
+  const source = video.querySelector("source[data-src]");
+  if (source && !source.src) { source.src = source.dataset.src; video.load(); }
+}
 const reduced = matchMedia("(prefers-reduced-motion: reduce)");
 let frame = 0,
   settled = 0,
@@ -11,7 +17,7 @@ function progress() {
 }
 function update() {
   frame = 0;
-  if (!ready || document.hidden || reduced.matches) return;
+  if (!ready || document.hidden || reduced.matches || compact.matches) return;
   const wanted = progress();
   settled += (wanted - settled) * 0.24;
   if (Math.abs(wanted - settled) < 0.001) settled = wanted;
@@ -46,6 +52,9 @@ reduced.addEventListener("change", () => {
     video.currentTime = 0;
   } else schedule();
 });
+compact.addEventListener("change", () => { loadVideo(); schedule(); });
+reduced.addEventListener("change", loadVideo);
+loadVideo();
 if (video?.readyState >= 2) {
   ready = true;
   schedule();

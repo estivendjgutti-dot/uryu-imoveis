@@ -96,6 +96,11 @@ export function validateProperty(input) {
   }
   if (out.preco <= 0 || out.tamanho <= 0)
     throw new Error("Preço e área devem ser maiores que zero.");
+  const order = Number(input.ordem_destaque || 0);
+  if (!Number.isInteger(order) || order < 0 || order > 9999) throw new Error("Ordem de destaque inválida.");
+  out.ordem_destaque = order;
+  if (!["", "privativa", "construida", "lote"].includes(input.tipo_area || "")) throw new Error("Tipo de área inválido.");
+  out.tipo_area = input.tipo_area || "";
   out.destaque = input.destaque === true;
   out.demonstrativo = input.demonstrativo === true;
   if (

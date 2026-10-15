@@ -284,6 +284,8 @@ editor.addEventListener("submit", async (e) => {
     "iptu",
   ])
     body[k] = Number(body[k]);
+  body.ordem_destaque = Number(editor.elements.ordem_destaque.value)||0;
+  body.tipo_area = editor.elements.tipo_area.value;
   body.destaque = editor.elements.destaque.checked;
   body.demonstrativo = editor.elements.demonstrativo.checked;
   body.caracteristicas = body.caracteristicas
