@@ -818,3 +818,53 @@ footer { min-height:0!important; padding:64px 24px 26px!important; display:flex;
   #whats-btn svg { width:24px; height:24px; }
 }
 @media(prefers-reduced-motion:reduce) { *,html { scroll-behavior:auto!important; } }
+/* Warm daylight palette for the public mobile experience. */
+@media(max-width:760px) {
+  body.public-site { background:#f3efe6!important; color:#29352d; }
+  .public-site #navbar { background:#f9f6eff5; color:#29352d; border-bottom:1px solid #ded9cc; box-shadow:0 2px 18px #2b352d0a; }
+  .public-site #navbar.glass-dark { background:#f9f6eff5; }
+  .public-site #navbar [class*="text-cream"],.public-site #mobile-menu { color:#29352d; }
+  .public-site #mobile-menu { background:#fffdf8; border:1px solid #ddd8cb; box-shadow:0 14px 30px #2b352d1a; }
+  .public-site #home { color:#f6f1e9; }
+  .public-site :is(#catalogo,#comprar,#alugar,#empresa,#anuncie,#planejamento,#contato,footer) [class*="text-cream"] { color:#29352d; }
+  .public-site :is(.section-caption,.search-panel,.catalog-toolbar,.property-card,.readable-panel,.planning-shell,.contact-invite,#anuncie .glass,#footer-content) { background:#fffdf8; border-color:#ddd8cb; color:#29352d; box-shadow:0 8px 24px #29352d07; }
+  .public-site .section-caption { background:transparent; border:0; box-shadow:none; padding:0 2px; }
+  .public-site :is(.eyebrow,.section-caption .eyebrow,.property-code,.demo-label,.planning-number,#footer-content [data-i18n="footer_kicker"]) { color:#5e6a4e; }
+  .public-site :is(.muted,.property-specs,.section-heading > p,.planning-intro,.planning-grid p,.planning-details p,.planning-contact p,.readable-panel [data-i18n-html="serv_desc"],.footer-description,.footer-contact) { color:#596052; }
+  .public-site :is(.catalog-toolbar p,.catalog-toolbar label,label,.extra-filters summary) { color:#394334; }
+  .public-site :is(input,select,textarea) { background:#f5f3ec; color:#29352d; border-color:#c5c8b9; font-size:16px; }
+  .public-site :is(input,textarea)::placeholder { color:#697061; }
+  .public-site select option { color:#29352d; background:#fffdf8; }
+  .public-site :is(.action,.footer-cta,#anuncie .btn-line) { background:#536348; color:#fffdf8; }
+  .public-site .action.secondary { color:#536348; border-color:#aab39b; background:transparent; }
+  .public-site .btn-line::before { background:#3d5036; }
+  .public-site #catalog-notice { background:#e6ebdc; color:#4b5941; border-color:#ccd5bf; }
+  .public-site :is(.property-bottom,.extra-filters,.planning-grid article,.planning-details) { border-color:#d9ddcf; }
+  .public-site .property-badge { color:#fffdf8; }
+  .public-site :is(.page-arrow,.rail-controls button) { background:#fffdf8; color:#46563a; border-color:#b3bea6; }
+  .public-site .catalog-pagination { color:#29352d; }
+  .public-site .catalog-pagination span { background:#e6ebdc; color:#46563a; }
+  .public-site .rail-controls span { color:#596052; }
+  .public-site :is(#sale-grid,#rent-grid) { scrollbar-color:#a4b091 #e5e7df; }
+  .public-site #anuncie .glass { backdrop-filter:none; -webkit-backdrop-filter:none; }
+  .public-site .contact-grid { display:block; padding:0 18px; background:#fffdf8; border:1px solid #ddd8cb; border-radius:24px; margin-bottom:22px; }
+  .public-site .contact-grid > * { display:grid; grid-template-columns:34px minmax(0,1fr); gap:3px 12px; padding:16px 0; border:0; border-radius:0; background:transparent; box-shadow:none; backdrop-filter:none; -webkit-backdrop-filter:none; }
+  .public-site .contact-grid > * + * { border-top:1px solid #e5e2d8; }
+  .public-site .contact-grid > * > div:first-child { grid-column:1; grid-row:1/4; width:32px; height:32px; margin:0; border-color:#c7cdbb; color:#5e6a4e; }
+  .public-site .contact-grid > * > p { grid-column:2; margin:0; font-size:14px; line-height:1.5; color:#394334; }
+  .public-site .contact-grid > * > p[data-i18n] { font-size:9px; letter-spacing:.16em; color:#687259; }
+  .public-site .contact-grid .break-all { overflow-wrap:anywhere; word-break:normal; }
+  .public-site .contact-grid .btn-line { grid-column:2; justify-self:start; padding:5px 0; font-size:10px; letter-spacing:.08em; border:0; border-radius:0; text-decoration:underline; text-underline-offset:4px; }
+  .public-site .contact-grid .btn-line::before { display:none; }
+  .public-site .contact-grid > *:hover { transform:none; }
+  .public-site .contact-invite { margin-top:22px; }
+  .public-site .footer-copy { color:#64705a; }
+  .public-site .footer-contact { gap:8px; }
+  .public-site #whats-btn { color:#fff; }
+  .public-site.property-page { background:linear-gradient(145deg,#edf0e5,#faf7ef); }
+  .public-site .simple-header { border-color:#d7ddce; }
+  .public-site :is(.detail-aside,.detail-facts div,.mobile-property-contact,.notice) { background:#fffdf8; color:#29352d; border-color:#d7ddce; }
+  .public-site .detail-facts span { color:#596052; }
+  .public-site .gallery-counter,.public-site .gallery-arrow { color:#fffdf8; }
+  .public-site .detail-photo { background:#e1e5da; }
+}
