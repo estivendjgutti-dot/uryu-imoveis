@@ -841,6 +841,8 @@ footer { min-height:0!important; padding:64px 24px 26px!important; display:flex;
   .public-site #catalog-notice { background:#e6ebdc; color:#4b5941; border-color:#ccd5bf; }
   .public-site :is(.property-bottom,.extra-filters,.planning-grid article,.planning-details) { border-color:#d9ddcf; }
   .public-site .property-badge { color:#fffdf8; }
+  .public-site .property-bottom strong { color:#46563a; }
+  .public-site .property-image { background:#e1e5da; }
   .public-site :is(.page-arrow,.rail-controls button) { background:#fffdf8; color:#46563a; border-color:#b3bea6; }
   .public-site .catalog-pagination { color:#29352d; }
   .public-site .catalog-pagination span { background:#e6ebdc; color:#46563a; }
