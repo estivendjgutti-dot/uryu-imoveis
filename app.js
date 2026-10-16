@@ -118,6 +118,10 @@ function render(resetPage = true) {
         ),
       ),
     );
+  if(!items.length) {
+    const contact=el('a','action empty-contact',label('Falar com um consultor ↗','Talk to an advisor ↗','Hablar con un asesor ↗'));
+    contact.href='https://wa.me/5511970508331?text='+encodeURIComponent('Olá! Não encontrei um imóvel com os filtros que procurei e gostaria de ajuda.');contact.target='_blank';contact.rel='noopener';grid.querySelector('.empty-state').append(contact);
+  }
 }
 form.addEventListener("submit", (e) => {
   e.preventDefault();
