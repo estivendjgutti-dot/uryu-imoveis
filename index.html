@@ -804,66 +804,16 @@
       </div>
     </section>
 
-    <!-- ============ FOOTER CINEMATOGRÁFICO ============ -->
-    <footer
-      class="relative min-h-screen flex items-center justify-center overflow-hidden py-24"
-    >
-      <div
-        class="absolute inset-0 bg-gradient-to-t from-charcoal/60 via-transparent to-transparent pointer-events-none"
-      ></div>
+    <!-- ============ ENCERRAMENTO ============ -->
+    <footer class="relative flex items-center justify-center py-16 md:py-24">
       <div class="relative z-10 text-center px-6" id="footer-content">
-        <span
-          class="inline-flex bg-cream/95 rounded-2xl px-5 py-3 mb-8 shadow-[0_4px_24px_rgba(0,0,0,.3)]"
-        >
-          <img
-            src="logo-uryu.png"
-            alt="Uryu Imóveis"
-            class="h-48 w-auto object-contain mix-blend-multiply"
-          />
-        </span>
-        <p
-          class="font-mono text-cream/70 text-[11px] tracking-widest2 uppercase mb-8 [text-shadow:0_2px_12px_rgba(0,0,0,.5)]"
-          data-i18n="footer_kicker"
-        >
-          Uryu Imóveis · Seu próximo endereço
-        </p>
-        <h2
-          class="font-serif text-cream text-[10vw] md:text-6xl leading-[1.05] [text-shadow:0_6px_40px_rgba(0,0,0,.55)]"
-          data-i18n-html="footer_title"
-        >
-          Vamos encontrar seu<br />próximo endereço?
-        </h2>
-        <a
-          href="https://wa.me/5511970508331?text=Ol%C3%A1%2C%20gostaria%20de%20falar%20com%20um%20consultor."
-          target="_blank"
-          rel="noopener"
-          class="btn-line mt-12 inline-flex items-center gap-3 border border-cream/70 text-cream px-9 py-4 rounded-full text-[12px] tracking-widest2 uppercase"
-        >
-          <span data-i18n="footer_cta">Fale com um consultor</span>
-        </a>
-
-        <div
-          class="mt-14 flex flex-col md:flex-row items-center justify-center gap-3 md:gap-8 text-cream/80 text-[12px] font-light [text-shadow:0_1px_8px_rgba(0,0,0,.6)]"
-        >
-          <a href="https://wa.me/5511970508331" target="_blank" rel="noopener" class="navlink">(11) 97050-8331</a>
-          <span class="hidden md:inline text-cream/30">·</span>
-          <span class="navlink">contato@uryuimoveis.com.br</span>
-          <span class="hidden md:inline text-cream/30">·</span>
-          <a
-            href="https://www.google.com/maps/search/?api=1&query=Rua+Agudos%2C+316+-+Rochdale%2C+Osasco+-+SP%2C+06223-140"
-            target="_blank"
-            rel="noopener"
-            class="navlink"
-            >Rua Agudos, 316 – Sala 4, Rochdale – Osasco/SP</a
-          >
-        </div>
+        <p class="font-mono text-gold text-[11px] tracking-widest2 uppercase mb-6" data-i18n="footer_kicker">Anuncie seu imóvel</p>
+        <h2 class="font-serif text-cream text-4xl md:text-6xl leading-[1.05]" data-i18n-html="footer_title">Seu imóvel, apresentado a<br class="hidden md:block" /> quem procura.</h2>
+        <p class="footer-description" data-i18n="footer_description">Conte com a Uryu para avaliar, divulgar e acompanhar a negociação do seu imóvel.</p>
+        <a href="https://wa.me/5511970508331?text=Ol%C3%A1%2C%20gostaria%20de%20anunciar%20meu%20im%C3%B3vel." target="_blank" rel="noopener" class="btn-line footer-cta"><span data-i18n="footer_cta">Quero anunciar</span></a>
+        <div class="footer-contact"><a href="https://wa.me/5511970508331" target="_blank" rel="noopener">(11) 97050-8331</a><span>·</span><a href="mailto:contato@uryuimoveis.com.br">contato@uryuimoveis.com.br</a><span>·</span><a href="https://www.google.com/maps/search/?api=1&query=Rua+Agudos%2C+316+-+Rochdale%2C+Osasco+-+SP%2C+06223-140" target="_blank" rel="noopener">Rua Agudos, 316 – Sala 4, Rochdale – Osasco/SP</a></div>
       </div>
-      <div
-        class="absolute bottom-6 inset-x-0 text-center text-cream/50 text-[11px] font-mono tracking-widest2 z-10"
-        data-i18n="footer_copy"
-      >
-        © 2026 URYU IMÓVEIS — TODOS OS DIREITOS RESERVADOS
-      </div>
+      <p class="footer-copy" data-i18n="footer_copy">© 2026 URYU IMÓVEIS — TODOS OS DIREITOS RESERVADOS</p>
     </footer>
 
     <!-- ============ WHATSAPP FLUTUANTE ============ -->
@@ -1006,9 +956,10 @@
             "Um envio mensal, curto e sem ruído — apenas os imóveis que realmente merecem sua atenção.",
           news_ph: "seu@email.com",
           news_cta: "Inscrever-se",
-          footer_kicker: "Uryu Imóveis · Seu próximo endereço",
-          footer_title: "Vamos encontrar seu<br>próximo endereço?",
-          footer_cta: "Fale com um consultor",
+          footer_kicker: "Anuncie seu imóvel",
+          footer_title: "Seu imóvel, apresentado a<br>quem procura.",
+          footer_cta: "Quero anunciar",
+          footer_description: "Conte com a Uryu para avaliar, divulgar e acompanhar a negociação do seu imóvel.",
           footer_copy: "© 2026 URYU IMÓVEIS — TODOS OS DIREITOS RESERVADOS",
         },
         en: {
@@ -1111,9 +1062,10 @@
             "One short, noise-free monthly email — only the properties that truly deserve your attention.",
           news_ph: "your@email.com",
           news_cta: "Subscribe",
-          footer_kicker: "Uryu Real Estate · Your next address",
-          footer_title: "Let’s find your<br>next address.",
-          footer_cta: "Talk to a consultant",
+          footer_kicker: "List your property",
+          footer_title: "Put your property in front of<br>the right people.",
+          footer_cta: "List my property",
+          footer_description: "Let Uryu assess, present and guide your property through the negotiation.",
           footer_copy: "© 2026 URYU REAL ESTATE — ALL RIGHTS RESERVED",
         },
         es: {
@@ -1216,9 +1168,10 @@
             "Un envío mensual, breve y sin ruido — solo las propiedades que realmente merecen tu atención.",
           news_ph: "tu@email.com",
           news_cta: "Suscribirse",
-          footer_kicker: "Uryu Inmuebles · Tu próxima dirección",
-          footer_title: "¿Encontramos tu<br>próxima dirección?",
-          footer_cta: "Habla con un consultor",
+          footer_kicker: "Anuncia tu inmueble",
+          footer_title: "Tu inmueble, presentado a<br>quienes lo buscan.",
+          footer_cta: "Quiero anunciar",
+          footer_description: "Cuenta con Uryu para evaluar, divulgar y acompañar la negociación de tu inmueble.",
           footer_copy: "© 2026 URYU INMUEBLES — TODOS LOS DERECHOS RESERVADOS",
         },
       };
