@@ -1,4 +1,6 @@
 import { mkdir, copyFile, writeFile, rm, readFile } from "node:fs/promises";
+import { buildStyles } from "./styles.mjs";
+import sharp from "sharp";
 const files = [
   "index.html",
   "imoveis.js",
@@ -27,6 +29,12 @@ if (process.env.VERCEL_ENV === "production" && !apiUrl)
 await rm("dist", { recursive: true, force: true });
 await mkdir("dist");
 for (const file of files) await copyFile(file, `dist/${file}`);
+await buildStyles();
+await sharp("empresa-foto.png").resize({ width:1200, withoutEnlargement:true }).webp({quality:82}).toFile("dist/empresa-foto.webp");
+if(apiUrl) for(const file of ['index.html','imovel.html']) {
+  const html=await readFile('dist/'+file,'utf8');
+  await writeFile('dist/'+file,html.replace('    <script src="imoveis.js"></script>',''));
+}
 const preview = process.env.VERCEL_ENV === "preview" || apiUrl.includes("api-preview.");
 if (preview) {
   for (const file of ["index.html", "imovel.html", "admin.html"]) {

@@ -25,10 +25,10 @@ const searchKey = 'uryu-search-v2';
 const smallScreen = matchMedia('(max-width: 760px)');
 let page = 1;
 const savedSearch = (()=>{try{return JSON.parse(sessionStorage.getItem(searchKey)||'null')}catch{return null}})();
-function rememberSearch() {
-  try {sessionStorage.setItem(searchKey,JSON.stringify({fields:Object.fromEntries(new FormData(form)),sort:sort.value,y:scrollY,page}));} catch {}
+function rememberSearch(link) {
+  try {sessionStorage.setItem(searchKey,JSON.stringify({fields:Object.fromEntries(new FormData(form)),sort:sort.value,y:scrollY,page,viewport:innerWidth,property:link?.closest("#catalog-grid")?new URL(link.href).searchParams.get("id"):null}));} catch {}
 }
-document.addEventListener('click', e=> {if(e.target.closest('a[href*="imovel.html?id="]')) rememberSearch();});
+document.addEventListener('click', e=> {const link=e.target.closest('a[href*="imovel.html?id="]');if(link) rememberSearch(link);});
 const status = document.querySelector("#catalog-status");
 const sort = document.querySelector("#sort-properties");
 function options(name, values, label) {
@@ -78,6 +78,15 @@ function render(resetPage = true) {
     `${items.length} properties found`,
     `${items.length} inmuebles encontrados`,
   );
+  const chips=document.querySelector('#active-filters'); chips.replaceChildren();
+  for(const [key,value] of Object.entries(q)) if(value) {
+    const input=form.elements[key];
+    const name=input.closest('label').childNodes[0].textContent.trim();
+    const valueLabel=input.tagName==='SELECT'?input.selectedOptions[0]?.textContent:value;
+    const chip=el('button','filter-chip',name+': '+valueLabel+' ×');chip.type='button';chip.setAttribute('aria-label',label('Remover filtro: ','Remove filter: ','Quitar filtro: ')+name);
+    chip.addEventListener('click',()=>{input.value='';if(key==='cidade')neighborhoods();render();});chips.append(chip);
+  }
+  if(chips.children.length){const clear=el('button','filter-chip clear-filters',label('Limpar filtros','Clear filters','Limpiar filtros'));clear.type='button';clear.addEventListener('click',()=>form.reset());chips.append(clear);}
   const grid = document.querySelector("#catalog-grid");
   const pageSize=smallScreen.matches?2:9;
   const pageCount=Math.max(1,Math.ceil(items.length/pageSize));
@@ -113,6 +122,8 @@ function render(resetPage = true) {
 form.addEventListener("submit", (e) => {
   e.preventDefault();
   render();
+  if(smallScreen.matches) form.querySelector("details").open=false;
+  status.closest(".catalog-toolbar").scrollIntoView({behavior:motionPreference.matches?"instant":"smooth",block:"start"});
 });
 form.addEventListener("change", (e) => {
   if (e.target.name === "cidade") neighborhoods();
@@ -148,7 +159,7 @@ try {
   if(savedSearch?.page) page=savedSearch.page;
   translateCatalog();
   render(false);
-  if(savedSearch && location.hash === '#catalogo') requestAnimationFrame(()=>scrollTo({top:savedSearch.y||0,behavior:'instant'}));
+
   for (const [selector, purpose] of [
     ["#sale-grid", "venda"],
     ["#rent-grid", "aluguel"],
@@ -179,6 +190,10 @@ try {
     notice.textContent =
       "APRESENTAÇÃO: imóveis, preços e medidas fictícios. Imagens geradas por IA. Os exemplos não representam ofertas reais.";
   }
+  if(savedSearch && location.hash==='#catalogo') requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    if(Math.abs((savedSearch.viewport||innerWidth)-innerWidth)<80) scrollTo({top:savedSearch.y||0,behavior:'instant'});
+    else document.querySelector('#catalog-grid')?.scrollIntoView({block:'start',behavior:'instant'});
+  }));
 } catch (e) {
   status.textContent = "Não foi possível carregar o catálogo.";
   const retry = el("button", "text-button", "Tentar novamente");
@@ -223,3 +238,8 @@ window.__searchRefresh = () => {
     );
   setupFeaturedRails();
 };
+
+const menuButton=document.querySelector('#menu-btn'), mobileMenu=document.querySelector('#mobile-menu');
+function closeMenu(){mobileMenu.classList.add('hidden');menuButton.setAttribute('aria-expanded','false');}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!mobileMenu.classList.contains('hidden')){closeMenu();menuButton.focus();}});
+document.addEventListener('pointerdown',e=>{if(!e.target.closest('#navbar'))closeMenu();});

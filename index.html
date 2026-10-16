@@ -17,35 +17,7 @@
       rel="stylesheet"
     />
 
-    <!-- Tailwind -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              cream: "#F6F1E9",
-              stone: "#EAE2D3",
-              olive: "#818B6E",
-              "olive-deep": "#5F6850",
-              slate: "#9BA8AC",
-              "slate-deep": "#6F7C81",
-              charcoal: "#2A2823",
-              gold: "#C9BC98",
-            },
-            fontFamily: {
-              serif: ["Fraunces", "ui-serif", "Georgia", "serif"],
-              sans: ["Manrope", "ui-sans-serif", "system-ui", "sans-serif"],
-              mono: ['"JetBrains Mono"', "ui-monospace", "monospace"],
-            },
-            letterSpacing: {
-              widest2: ".28em",
-            },
-          },
-        },
-      };
-    </script>
-
+    <link rel="stylesheet" href="theme.css" />
     <script src="config.js"></script>
     <script src="imoveis.js"></script>
     <link rel="stylesheet" href="site.css" />
@@ -235,7 +207,7 @@
         muted
         playsinline
         preload="none"
-        poster="background-poster.webp"
+
       >
         <source data-src="background.mp4" type="video/mp4" />
       </video>
@@ -269,6 +241,7 @@
     </div>
 
     <!-- ============ NAVBAR ============ -->
+    <a class="skip-link" href="#catalogo">Ir para os imóveis</a>
     <nav
       id="navbar"
       class="fixed top-0 inset-x-0 z-50 transition-all duration-500 ease-out"
@@ -405,6 +378,7 @@
           Encontre imóveis para comprar ou alugar com orientação próxima em cada
           etapa da negociação.
         </p>
+        <a class="browse-link" href="#catalogo" data-i18n="browse_catalog">Explorar imóveis disponíveis ↓</a>
         <div class="reveal mt-10 flex items-center gap-6">
           <a
             href="https://wa.me/5511970508331?text=Ol%C3%A1%2C%20estou%20procurando%20um%20im%C3%B3vel."
@@ -441,7 +415,7 @@
       </div>
     </section>
 
-    <main id="catalogo" class="site-section">
+    <main id="catalogo" class="site-section" tabindex="-1">
       <div class="section-shell">
         <div class="section-caption"><p class="eyebrow">Encontre seu lugar</p>
         <div class="section-heading">
@@ -556,6 +530,7 @@
             </select></label
           >
         </div>
+        <div id="active-filters" class="active-filters" aria-label="Filtros aplicados"></div>
         <p id="catalog-notice" class="notice" hidden></p>
         <div id="catalog-grid" class="property-grid"></div>
         <nav id="catalog-pagination" class="catalog-pagination" aria-label="Páginas do catálogo"></nav>
@@ -597,7 +572,7 @@
             class="rounded-[28px] overflow-hidden shadow-[0_24px_60px_-20px_rgba(42,40,35,0.35)]"
           >
             <img
-              src="empresa-foto.png"
+              src="empresa-foto.webp" loading="lazy" decoding="async" width="1080" height="1080"
               alt="Entrega de chaves — Uryu Imóveis"
               class="w-full h-full object-cover"
             />
@@ -859,6 +834,7 @@
         pt: {
           nav_home: "Home",
           nav_empresa: "A Empresa",
+          browse_catalog: "Explorar imóveis disponíveis ↓",
           nav_comprar: "Comprar",
           nav_alugar: "Alugar",
           nav_anuncie: "Anuncie seu Imóvel",
@@ -965,6 +941,7 @@
         en: {
           nav_home: "Home",
           nav_empresa: "About Us",
+          browse_catalog: "Browse available properties ↓",
           nav_comprar: "Buy",
           nav_alugar: "Rent",
           nav_anuncie: "List Your Property",
@@ -1081,6 +1058,7 @@
             'Tu próxima dirección<br class="hidden md:block"> empieza aquí.',
           hero_sub:
             "Encuentra inmuebles para comprar o alquilar con asesoramiento cercano en cada etapa.",
+          browse_catalog: "Explorar inmuebles disponibles ↓",
           hero_cta1: "Encontrar mi inmueble",
           hero_cta2: "Hablar con un asesor",
           hero_scroll: "Desliza para explorar",

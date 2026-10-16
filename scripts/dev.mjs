@@ -1,5 +1,11 @@
 import express from "express";
 import { resolve } from "node:path";
+import { mkdir } from "node:fs/promises";
+import { buildStyles } from "./styles.mjs";
+import sharp from "sharp";
+await mkdir("tmp",{recursive:true});
+await buildStyles("tmp/theme.css");
+await sharp("empresa-foto.png").resize({width:1200,withoutEnlargement:true}).webp({quality:82}).toFile("tmp/empresa-foto.webp");
 const app = express();
 const allowed = new Set([
   "index.html",
@@ -16,7 +22,11 @@ const allowed = new Set([
   "logo-uryu.png",
   "empresa-foto.png",
   "background.mp4",
+  "background-mobile.webp",
+  "background-poster.webp",
 ]);
+app.get("/theme.css", (_req,res)=>res.sendFile(resolve("tmp/theme.css")));
+app.get("/empresa-foto.webp", (_req,res)=>res.sendFile(resolve("tmp/empresa-foto.webp")));
 app.get("/config.js", (_req, res) =>
   res
     .type("js")

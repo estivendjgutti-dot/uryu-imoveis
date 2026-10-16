@@ -35,13 +35,14 @@ try {
       aside = el("aside", "detail-aside");
     const photos = i.fotos.map(photoUrl).filter(Boolean);
     if (photos.length) {
-      let activePhoto = 0;
+      let activePhoto = 0, suppressOpenUntil = 0;
       const img = el("img", "detail-photo");
       img.src = photos[0];
       img.alt = i.titulo;
+      img.fetchPriority="high"; img.decoding="async";
       const stage = el('div','gallery-stage');
       const open = el('button','gallery-open'); open.type='button'; open.setAttribute('aria-label','Ampliar fotos do imóvel'); open.append(img);
-      const counter = el('span','gallery-counter');
+      const counter = el('span','gallery-counter');counter.setAttribute('aria-live','polite');
       const previous = el('button','gallery-arrow gallery-prev','‹'), next = el('button','gallery-arrow gallery-next','›');
       previous.type=next.type='button'; previous.setAttribute('aria-label','Foto anterior'); next.setAttribute('aria-label','Próxima foto');
       stage.append(open,previous,next,counter); gallery.append(stage);
@@ -52,18 +53,19 @@ try {
       dialog.append(full,close,modalPrev,modalNext); document.body.append(dialog);
       function showPhoto(n) {
         activePhoto=(n+photos.length)%photos.length; img.src=full.src=photos[activePhoto];
+        img.alt=full.alt='Foto '+(activePhoto+1)+' de '+photos.length+' · '+i.titulo;
         counter.textContent=(activePhoto+1)+' / '+photos.length+' · Ampliar';
         thumbs.querySelectorAll('button').forEach((b,index)=>b.setAttribute('aria-pressed',String(index===activePhoto)));
       }
       previous.addEventListener('click',()=>showPhoto(activePhoto-1)); next.addEventListener('click',()=>showPhoto(activePhoto+1));
       modalPrev.addEventListener('click',()=>showPhoto(activePhoto-1)); modalNext.addEventListener('click',()=>showPhoto(activePhoto+1));
-      open.addEventListener('click',()=>{dialog.showModal(); document.body.classList.add('gallery-lock'); close.focus();});
+      open.addEventListener('click',()=>{if(Date.now()<suppressOpenUntil)return;dialog.showModal(); document.body.classList.add('gallery-lock'); close.focus();});
       close.addEventListener('click',()=>dialog.close());
       dialog.addEventListener('close',()=>{document.body.classList.remove('gallery-lock');open.focus();});
       dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close();});
       dialog.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'){e.preventDefault();showPhoto(activePhoto-1)}if(e.key==='ArrowRight'){e.preventDefault();showPhoto(activePhoto+1)}});
       let startX=0,startY=0;
-      for(const target of [open,full]) { target.addEventListener('touchstart',e=>{startX=e.changedTouches[0].clientX; startY=e.changedTouches[0].clientY},{passive:true}); target.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-startX,dy=e.changedTouches[0].clientY-startY;if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)){showPhoto(activePhoto+(dx<0?1:-1));}},{passive:true}); }
+      for(const target of [open,full]) { target.addEventListener('touchstart',e=>{startX=e.changedTouches[0].clientX; startY=e.changedTouches[0].clientY},{passive:true}); target.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-startX,dy=e.changedTouches[0].clientY-startY;if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)){suppressOpenUntil=Date.now()+400;showPhoto(activePhoto+(dx<0?1:-1));}},{passive:true}); }
       previous.hidden=next.hidden=modalPrev.hidden=modalNext.hidden=photos.length<2;
       const thumbs = el("div", "thumbnails");
       photos.forEach((url, n) => {
@@ -79,6 +81,7 @@ try {
         b.addEventListener('click', () => showPhoto(n));
         thumbs.append(b);
       });
+      thumbs.hidden=photos.length<2;
       gallery.append(thumbs);
       showPhoto(0);
     } else gallery.append(el("p", "empty-state", "Fotos em preparação."));
