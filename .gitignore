@@ -1,0 +1,16 @@
+node_modules/
+dist/
+.vercel/
+.env
+.env.*
+!.env.example
+uploads/
+tmp/
+acessos/
+assets/demo/
+*.log
+test-results/
+
+.vercel
+.env*
+!.env.example

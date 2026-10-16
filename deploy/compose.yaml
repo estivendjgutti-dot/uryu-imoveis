@@ -1,0 +1,36 @@
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: uryu
+      POSTGRES_DB: uryu_preview
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Configure POSTGRES_PASSWORD}
+    volumes:
+      - database:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U uryu -d uryu_preview"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  api:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    restart: unless-stopped
+    env_file: ../.env
+    environment:
+      APP_ENV: preview
+      HOST: 0.0.0.0
+      PORT: 3001
+      MEDIA_DIR: /app/uploads
+    ports:
+      - "127.0.0.1:3001:3001"
+    volumes:
+      - photos:/app/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+volumes:
+  database:
+  photos:

@@ -1,0 +1,6 @@
+api-preview.seu-dominio.com.br {
+  request_body {
+    max_size 13MB
+  }
+  reverse_proxy 127.0.0.1:3001
+}
