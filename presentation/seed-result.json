@@ -1,0 +1,74 @@
+[
+  {
+    "id": "d22ca52b-c07f-4416-ba4d-359ecdaa6321",
+    "codigo": "URY-DEMO-01",
+    "categoria": "apartamento",
+    "photos": 2
+  },
+  {
+    "id": "38fea23e-ded4-4d4b-9bc4-4ffae7cf3d3d",
+    "codigo": "URY-DEMO-02",
+    "categoria": "studio",
+    "photos": 2
+  },
+  {
+    "id": "8e944cf0-f5d9-402a-bd3d-876bead5b86d",
+    "codigo": "URY-DEMO-03",
+    "categoria": "cobertura",
+    "photos": 2
+  },
+  {
+    "id": "a9e19ed1-ec42-4465-be32-1f54a47d5c7b",
+    "codigo": "URY-DEMO-04",
+    "categoria": "casa",
+    "photos": 2
+  },
+  {
+    "id": "1c6c54e6-52d8-456b-86ee-0c8c9dee26fd",
+    "codigo": "URY-DEMO-05",
+    "categoria": "sobrado",
+    "photos": 2
+  },
+  {
+    "id": "e7a169cc-b232-45ad-bf1b-567fc2a506bc",
+    "codigo": "URY-DEMO-06",
+    "categoria": "casa_condominio",
+    "photos": 2
+  },
+  {
+    "id": "a034bb26-b6ab-4d1d-876f-b546d86dac21",
+    "codigo": "URY-DEMO-07",
+    "categoria": "sala_comercial",
+    "photos": 2
+  },
+  {
+    "id": "6202192b-a82d-4b6a-9115-20fe109ed180",
+    "codigo": "URY-DEMO-08",
+    "categoria": "ponto_comercial",
+    "photos": 2
+  },
+  {
+    "id": "12294b5b-e78f-4df6-969b-62b99b694105",
+    "codigo": "URY-DEMO-09",
+    "categoria": "galpao",
+    "photos": 2
+  },
+  {
+    "id": "449bf90c-ef73-4bde-bb3a-7b4677501cc7",
+    "codigo": "URY-DEMO-10",
+    "categoria": "terreno",
+    "photos": 2
+  },
+  {
+    "id": "9bd3de33-1c76-4037-ac44-c59a3c96d2a3",
+    "codigo": "URY-DEMO-11",
+    "categoria": "kitnet",
+    "photos": 2
+  },
+  {
+    "id": "48d16ca8-e15c-4888-8f16-39724af0535f",
+    "codigo": "URY-DEMO-12",
+    "categoria": "chacara",
+    "photos": 2
+  }
+]

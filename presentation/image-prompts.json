@@ -1,0 +1,102 @@
+{
+  "method": "built-in imagegen",
+  "purpose": "Fictional presentation only; not actual property photographs",
+  "prompts": [
+    {
+      "asset": "01-ext.png",
+      "prompt": "Photorealistic fictional Brazilian real estate exterior: contemporary 12-story midrange condominium in Osasco, pale warm-gray facade, slim dark balcony rails, landscaped entrance and small palms. Soft morning light, realistic street, 24mm architectural photography. No people, text, logos, watermark or address."
+    },
+    {
+      "asset": "01-int.png",
+      "prompt": "Use case: photorealistic-natural. Asset: fictional Brazilian real estate demonstration gallery 01-int. Create ONE landscape architectural photograph, no collage. a 78 sqm two-bedroom midrange apartment living and dining room in Osasco. Warm oak floor, off-white sofa, round dining table, compact open kitchen, small balcony with slim dark railing overlooking midrise Brazilian city. Natural morning light, believable room scale. Believable proportions and realistic materials, professional architectural 24mm perspective, no people, text, logos, watermarks or address."
+    },
+    {
+      "asset": "02-ext.png",
+      "prompt": "Use case: photorealistic-natural. Asset: fictional Brazilian real estate demonstration gallery 02-ext. Create ONE landscape architectural photograph, no collage. a compact contemporary studio apartment building in central Osasco, brick and charcoal facade, eight stories, small square windows, street-level lobby entrance, urban sidewalk and tree. Morning daylight, no signage. Believable proportions and realistic materials, professional architectural 24mm perspective, no people, text, logos, watermarks or address."
+    },
+    {
+      "asset": "02-int.png",
+      "prompt": "Use case: photorealistic-natural. Asset: fictional Brazilian real estate demonstration gallery 02-int. Create ONE landscape architectural photograph, no collage. a 34 sqm studio apartment in central Osasco. Single coherent open room with double bed, compact white and oak kitchen, two-seat table, light gray sofa, large window with slim dark frame. Honest compact proportions, warm daylight. Believable proportions and realistic materials, professional architectural 24mm perspective, no people, text, logos, watermarks or address."
+    },
+    {
+      "asset": "03-ext.png",
+      "prompt": "Use case: photorealistic-natural. Asset: fictional Brazilian real estate demonstration gallery 03-ext. Create ONE landscape architectural photograph, no collage. a rooftop penthouse terrace in Barueri with white and charcoal contemporary apartment facade, glass balcony rail, a small plunge pool and pergola on private terrace, wide city view, afternoon light. Believable proportions and realistic materials, professional architectural 24mm perspective, no people, text, logos, watermarks or address."
+    },
+    {
+      "asset": "03-int.png",
+      "prompt": "Use case: photorealistic-natural. Asset: fictional Brazilian property demo gallery 03-int. Create ONE landscape architectural photograph, no collage. inside a 186 sqm penthouse in Barueri with full-height sliding glass doors opening to a roof terrace with glass railing and small plunge pool. Spacious cream and oak living dining room, dark window frames, refined modern Brazilian furniture, warm late-afternoon daylight. Believable proportions and realistic materials, professional architectural 24mm perspective, no people, text, logos, watermarks or address."
+    },
+    {
+      "asset": "04-ext.png",
+      "prompt": "Use case: photorealistic-natural. Asset: fictional Brazilian property demo gallery 04-ext. Create ONE landscape architectural photograph, no collage. street-facing facade of a modest attractive single-story 110 sqm two-bedroom house in Rochdale Osasco. White stucco, exposed brick detail, terracotta pitched roof, small front garden and gray metal gate, quiet Brazilian residential street, overcast bright daylight. Believable proportions and realistic materials, professional architectural 24mm perspective, no people, text, logos, watermarks or address."
+    },
+    {
+      "asset": "04-int.png",
+      "prompt": "Use case: photorealistic-natural. Asset: fictional Brazilian property demo gallery 04-int. Create ONE landscape architectural photograph, no collage. inside a well-maintained modest single-story two-bedroom house in Rochdale Osasco, 110 sqm total. Comfortable living room with beige sofa, simple wood TV cabinet, porcelain floor, dining area and broad windows facing a small garden, natural daylight, attainable middle-class home. Believable proportions and realistic materials, professional architectural 24mm perspective, no people, text, logos, watermarks or address."
+    },
+    {
+      "asset": "05-ext.png",
+      "prompt": "Use case: photorealistic-natural. Asset: fictional Brazilian property demo gallery 05-ext. Create ONE landscape architectural photograph, no collage. a narrow modern 145 sqm two-story townhouse in Vila Yara Osasco, white stucco, wood slat upper screen and charcoal gate, small two-car driveway, tiny side planting bed, realistic neighboring urban townhouses, soft daylight. Believable proportions and realistic materials, professional architectural 24mm perspective, no people, text, logos, watermarks or address."
+    },
+    {
+      "asset": "05-int.png",
+      "prompt": "Use case: photorealistic-natural. Asset: fictional Brazilian property demo gallery 05-int. Create ONE landscape architectural photograph, no collage. inside a 145 sqm modern two-story townhouse in Vila Yara Osasco. Open-plan living and dining, visible straight concrete staircase with metal railing, sliding doors to small backyard, warm wood accents and gray stone kitchen counter, three-bedroom family home scale, daylight. Believable proportions and realistic materials, professional architectural 24mm perspective, no people, text, logos, watermarks or address."
+    },
+    {
+      "asset": "06-ext.png",
+      "prompt": "Use case: photorealistic-natural. Asset: fictional Brazilian property demonstration gallery 06-ext. Create ONE landscape architectural photograph, no collage. a 240 sqm contemporary detached family house in a gated community near Alphaville Barueri. Low horizontal volumes, white stone and wood accents, broad glass windows, small garden, two-car driveway, modest lawn and native planting, afternoon daylight. Conceptual completed-project visualization. Believable proportions and realistic materials, professional architectural 24mm perspective, no people, text, logos, watermarks or address."
+    },
+    {
+      "asset": "06-int.png",
+      "prompt": "Use case: photorealistic-natural. Asset: fictional Brazilian property demonstration gallery 06-int. Create ONE landscape architectural photograph, no collage. inside a 240 sqm contemporary family house in Alphaville. White stone, warm wood ceiling, airy double-height living room, three-seat sofa and dining table, wide sliding glass windows opening onto a private garden, daylight. Conceptual completed-project visualization. Believable proportions and realistic materials, professional architectural 24mm perspective, no people, text, logos, watermarks or address."
+    },
+    {
+      "asset": "07-ext.png",
+      "prompt": "Use case: photorealistic-natural. Asset: fictional Brazilian property demonstration gallery 07-ext. Create ONE landscape architectural photograph, no collage. a modern midrise commercial office building in central Osasco, blue-gray glass and light concrete facade, clearly visible modest professional lobby, urban sidewalk and street trees. Bright daylight, no signage, no company logo. Believable proportions and realistic materials, professional architectural 24mm perspective, no people, text, logos, watermarks or address."
+    },
+    {
+      "asset": "07-int.png",
+      "prompt": "Use case: photorealistic-natural. Asset: fictional Brazilian property demonstration gallery 07-int. Create ONE landscape architectural photograph, no collage. an unfurnished 42 sqm commercial office suite in central Osasco. Floor-to-ceiling windows, light gray vinyl flooring, white walls, air conditioning, small kitchenette near entrance and closed restroom door, practical realistic corporate space, no people, soft daylight. Believable proportions and realistic materials, professional architectural 24mm perspective, no people, text, logos, watermarks or address."
+    },
+    {
+      "asset": "08-ext.png",
+      "prompt": "Use case: photorealistic-natural. Asset: fictional Brazilian property demonstration gallery 08-ext. Create ONE landscape architectural photograph, no collage. a 95 sqm vacant street-level retail storefront in Osasco, wide glass shop windows and glass entrance under a dark plain awning, neutral beige facade, urban sidewalk, empty windows, no retail branding or text, bright daylight. Believable proportions and realistic materials, professional architectural 24mm perspective, no people, text, logos, watermarks or address."
+    },
+    {
+      "asset": "08-int.png",
+      "prompt": "Use case: photorealistic-natural. Asset: fictional Brazilian property demonstration gallery 08-int. Create ONE landscape architectural photograph, no collage. inside a vacant 95 sqm Brazilian retail shop, large glass storefront toward a calm urban street, open rectangular floor plan, white walls, polished light porcelain floor, simple track lighting, back storage door and restroom door, no merchandise no branding no people, daylight. Believable proportions and realistic materials, professional architectural 24mm perspective, no people, text, logos, watermarks or address."
+    },
+    {
+      "asset": "09-ext.png",
+      "prompt": "Use case: photorealistic-natural. Asset: fictional Brazilian property demonstration gallery 09-ext. Create ONE landscape architectural photograph, no collage. a 480 sqm commercial warehouse in an industrial area of Osasco, practical charcoal and light gray metal facade, high roll-up access gate, small separate pedestrian entrance, concrete truck apron and simple loading area, cloudy bright daylight, no signs. Believable proportions and realistic materials, professional architectural 24mm perspective, no people, text, logos, watermarks or address."
+    },
+    {
+      "asset": "09-int.png",
+      "prompt": "Use case: photorealistic-natural. Asset: fictional Brazilian property demo gallery 09-int. Create ONE landscape architectural photograph, no collage. inside a vacant 480 sqm practical warehouse in Osasco, high steel roof trusses, natural clerestory light, smooth concrete floor, visible wide roll-up loading entrance and small office mezzanine at the back, realistic industrial space, no goods no signage. Believable proportions and realistic materials, professional architectural 24mm perspective, no people, text, logos, watermarks or address."
+    },
+    {
+      "asset": "10-ext.png",
+      "prompt": "Use case: photorealistic-natural. Asset: fictional Brazilian property demo gallery 10-ext. Create ONE landscape architectural photograph, no collage. a vacant flat 360 sqm residential land parcel in Granja Viana Cotia, viewed from quiet street. Low perimeter walls, simple open metal gate, short trimmed green grass, native trees behind neighboring plots. No building on the lot. Bright natural daylight. Believable proportions and realistic materials, professional architectural 24mm perspective, no people, text, logos, watermarks or address."
+    },
+    {
+      "asset": "10-int.png",
+      "prompt": "Use case: photorealistic-natural. Asset: fictional Brazilian property demo gallery 10-int. Create ONE landscape architectural photograph, no collage. view from INSIDE a vacant flat 360 sqm land parcel in Granja Viana Cotia looking toward the same kind of simple metal gate and low perimeter walls. Short grass, quiet residential street beyond, native trees outside the plot. Absolutely no house or interior room: this is the interior area of an empty land parcel, bright daylight. Believable proportions and realistic materials, professional architectural 24mm perspective, no people, text, logos, watermarks or address."
+    },
+    {
+      "asset": "11-ext.png",
+      "prompt": "Use case: photorealistic-natural. Asset: fictional Brazilian property demo gallery 11-ext. Create ONE landscape architectural photograph, no collage. a modest clean two-story building containing small kitnet units in Quitauna Osasco, simple white stucco and muted blue-gray doors, shared exterior stair and individual windows, compact urban residential street, no signs, realistic attainable rental housing not luxury, morning light. Believable proportions and realistic materials, professional architectural 24mm perspective, no people, text, logos, watermarks or address."
+    },
+    {
+      "asset": "11-int.png",
+      "prompt": "Use case: photorealistic-natural. Asset: fictional Brazilian property demo gallery 11-int. Create ONE landscape architectural photograph, no collage. inside a modest 25 sqm kitnet in Quitauna Osasco: simple single main room with a compact double bed and small two-seat table, basic white kitchenette along one wall, tiled floor, separate closed bathroom door, one useful window. Clean practical economical rental apartment, no luxurious staging, natural daylight. Believable proportions and realistic materials, professional architectural 24mm perspective, no people, text, logos, watermarks or address."
+    },
+    {
+      "asset": "12-ext.png",
+      "prompt": "Use case: photorealistic-natural. Asset: fictional Brazilian property demo gallery 12-ext. Create ONE landscape architectural photograph, no collage. a small Brazilian country property in Caucaia do Alto Cotia on 1200 sqm of land: single-story white house with terracotta roof, broad shaded veranda, green lawn and a few mature trees, simple gravel driveway, bright daylight, comfortable rustic proportions. Conceptual completed-project image. Believable proportions and realistic materials, professional architectural 24mm perspective, no people, text, logos, watermarks or address."
+    },
+    {
+      "asset": "12-int.png",
+      "prompt": "Use case: photorealistic-natural. Asset: fictional Brazilian property demo gallery 12-int. Create ONE landscape architectural photograph, no collage. inside a small Brazilian country house with white plaster walls, exposed timber roof beams, terracotta ceramic floor, simple comfortable beige sofa and rustic wooden dining table, double doors opening onto a shaded veranda and green garden. Comfortable realistic rural home, soft daylight. Conceptual completed-project image. Believable proportions and realistic materials, professional architectural 24mm perspective, no people, text, logos, watermarks or address."
+    }
+  ]
+}
