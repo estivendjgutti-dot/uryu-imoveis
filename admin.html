@@ -65,8 +65,16 @@
               pattern="[A-Za-z0-9-]+"
               placeholder="URY-0001" /></label
           ><label class="wide"
-            >Título<input name="titulo" required maxlength="150"
-          /></label>
+            >Título · escolha uma sugestão ou escreva o seu<input
+              name="titulo"
+              required
+              maxlength="150"
+              list="titulo-sugestoes"
+              autocomplete="off"
+              placeholder="Preencha tipo, CEP e área para ver sugestões" /><datalist
+              id="titulo-sugestoes"
+            ></datalist
+          ></label>
           <label
             >Tipo<select name="categoria">
               <option value="apartamento">Apartamento</option>
@@ -92,8 +100,8 @@
           >
           <label
             >Estado do anúncio<select name="status">
-              <option value="rascunho">Rascunho</option>
-              <option value="publicado">Publicado neste ambiente</option>
+              <option value="rascunho">Rascunho · não aparece no site</option>
+              <option value="publicado">Publicado · aparece no site</option>
               <option value="reservado">Reservado</option>
               <option value="vendido">Vendido</option>
               <option value="alugado">Alugado</option>
@@ -125,6 +133,15 @@
               required
           /></label>
           <label
+            >CEP<input
+              name="cep"
+              inputmode="numeric"
+              autocomplete="postal-code"
+              maxlength="9"
+              placeholder="00000-000" /><small id="cep-status" class="field-hint" aria-live="polite"
+              >Preenche cidade, bairro e UF</small
+            ></label
+          ><label
             >UF<input
               name="estado"
               maxlength="2"

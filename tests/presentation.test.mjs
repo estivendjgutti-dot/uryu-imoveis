@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { examples } from "../presentation/properties.mjs";
-import { validateProperty } from "../server/validation.mjs";
+import { validateProperty } from "../validation.js";
 test("os 12 exemplos têm tipos distintos, avisos públicos e duas imagens", () => {
   assert.equal(examples.length,12);
   assert.equal(new Set(examples.map(x=>x.categoria)).size,12);

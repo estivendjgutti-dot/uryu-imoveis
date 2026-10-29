@@ -1,31 +1,59 @@
 import { label } from "./catalog-i18n.js";
-const config = window.URYU_CONFIG || { demo: true, apiUrl: "" };
-let token = "";
-export const isDemo = !!config.demo;
-export const apiBase = (config.apiUrl || "").replace(/\/$/, "");
-export function setToken(value) {
-  token = value || "";
+const config = window.URYU_CONFIG || { demo: true };
+export const dbBase = (config.supabaseUrl || "").replace(/\/$/, "");
+const anonKey = config.supabaseKey || "";
+export const isDemo = !!config.demo || !dbBase;
+let accessToken = "";
+export function setAccessToken(value) {
+  accessToken = value || "";
 }
-export async function request(path, options = {}) {
-  if (!apiBase) throw new Error("O banco ainda não foi conectado.");
-  const headers = { ...options.headers };
-  if (token) headers.Authorization = `Bearer ${token}`;
-  if (options.body && !(options.body instanceof FormData))
+function friendlyError(data, status) {
+  const text = [data.message, data.msg, data.error_description, data.error, data.details]
+    .filter(Boolean).join(" ");
+  if (data.code === "23505") return "Já existe um imóvel com esse código.";
+  if (/publicar_exige/.test(text)) return "Para publicar, informe descrição e ao menos uma foto.";
+  if (/invalid login|invalid_credentials/i.test(text)) return "E-mail ou senha inválidos.";
+  if (status === 401 || /jwt/i.test(text)) return "Sua sessão expirou. Entre novamente no painel.";
+  if (status === 403 || data.code === "42501") return "Este usuário não tem permissão para essa ação.";
+  if (/payload too large|exceeded the maximum/i.test(text)) return "A foto excede o limite de 12 MB.";
+  return "Não foi possível concluir a operação. Tente novamente.";
+}
+export async function sb(path, options = {}) {
+  if (!dbBase) throw new Error("O banco ainda não foi conectado.");
+  const headers = {
+    apikey: anonKey,
+    Authorization: `Bearer ${accessToken || anonKey}`,
+    ...options.headers,
+  };
+  if (typeof options.body === "string" && !headers["Content-Type"])
     headers["Content-Type"] = "application/json";
-  const response = await fetch(apiBase + "/api" + path, {
+  const response = await fetch(dbBase + path, {
     ...options,
     headers,
-    signal: options.signal || AbortSignal.timeout(20000),
+    signal: options.signal || AbortSignal.timeout(60000),
   });
-  const data = await response.json().catch(() => ({}));
+  const text = await response.text();
+  let data = {};
+  try { data = text ? JSON.parse(text) : {}; } catch {}
   if (!response.ok) {
-    const err = new Error(
-      data.error || "Não foi possível concluir a operação.",
-    );
+    const err = new Error(friendlyError(data, response.status));
     err.status = response.status;
     throw err;
   }
   return data;
+}
+const publicColumns = "id,codigo,status,payload,created_at,updated_at";
+export function fromRow(row) {
+  const out = {
+    ...row.payload,
+    id: row.id,
+    codigo: row.codigo,
+    status: row.status,
+    created_at: row.created_at,
+    updated_at: row.updated_at,
+  };
+  if (row.private_notes !== undefined) out.private_notes = row.private_notes;
+  return out;
 }
 export function normalize(i) {
   return {
@@ -47,21 +75,23 @@ export async function getProperties() {
         destaque: [1, 2, 3, 9, 10, 11].includes(i.id),
       }),
     );
-  return (await request("/properties")).map(normalize);
+  const rows = await sb(
+    `/rest/v1/properties?select=${publicColumns}&status=eq.publicado&order=created_at.desc&limit=1000`,
+  );
+  return rows.map(fromRow).map(normalize);
 }
 export async function getProperty(id) {
   if (isDemo) return (await getProperties()).find((i) => String(i.id) === id);
-  try {
-    return normalize(await request("/properties/" + encodeURIComponent(id)));
-  } catch (e) {
-    if (e.status === 404) return null;
-    throw e;
-  }
+  if (!/^[a-f0-9-]{36}$/i.test(id || "")) return null;
+  const rows = await sb(
+    `/rest/v1/properties?select=${publicColumns}&status=eq.publicado&id=eq.${id}`,
+  );
+  return rows.length ? normalize(fromRow(rows[0])) : null;
 }
 export function photoUrl(value) {
   if (/^https:\/\//.test(value || "")) return value;
-  if (/^[a-f0-9-]{36}\.webp$/.test(value || ""))
-    return apiBase + "/api/media/" + value;
+  if (/^[a-f0-9-]{36}\.(webp|jpg)$/.test(value || ""))
+    return dbBase + "/storage/v1/object/public/fotos/" + value;
   return "";
 }
 export function money(value) {

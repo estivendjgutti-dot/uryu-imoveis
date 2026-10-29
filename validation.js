@@ -101,6 +101,9 @@ export function validateProperty(input) {
   out.ordem_destaque = order;
   if (!["", "privativa", "construida", "lote"].includes(input.tipo_area || "")) throw new Error("Tipo de área inválido.");
   out.tipo_area = input.tipo_area || "";
+  const cep = String(input.cep || "").replace(/\D/g, "");
+  if (cep && cep.length !== 8) throw new Error("CEP deve ter 8 dígitos.");
+  out.cep = cep;
   out.destaque = input.destaque === true;
   out.demonstrativo = input.demonstrativo === true;
   if (
@@ -109,7 +112,7 @@ export function validateProperty(input) {
     input.fotos.some(
       (p) =>
         typeof p !== "string" ||
-        !/^[a-f0-9-]{36}\.webp$/.test(p),
+        !/^[a-f0-9-]{36}\.(webp|jpg)$/.test(p),
     )
   )
     throw new Error("Envie as fotos pelo painel para aplicar a marca d’água.");

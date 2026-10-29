@@ -13,18 +13,23 @@ const files = [
   "imovel.js",
   "admin.html",
   "admin.js",
+  "admin-db.js",
+  "photos.js",
+  "validation.js",
   "logo-uryu.png",
   "empresa-foto.png",
   "background.mp4",
   "background-poster.webp",
   "background-mobile.webp",
 ];
-const apiUrl = process.env.PUBLIC_API_URL || "";
-if (apiUrl && !/^https:\/\/[^\s]+$/.test(apiUrl))
-  throw new Error("PUBLIC_API_URL precisa usar HTTPS.");
+const apiUrl = (process.env.PUBLIC_SUPABASE_URL || "").replace(/\/$/, "");
+const anonKey = process.env.PUBLIC_SUPABASE_ANON_KEY || "";
+if (apiUrl && !/^https:\/\/[a-z0-9]+\.supabase\.co$/.test(apiUrl))
+  throw new Error("PUBLIC_SUPABASE_URL precisa ser https://<projeto>.supabase.co.");
+if (apiUrl && !anonKey) throw new Error("Defina PUBLIC_SUPABASE_ANON_KEY junto com a URL.");
 if (process.env.VERCEL_ENV === "production" && !apiUrl)
   throw new Error(
-    "Produção exige API configurada; catálogo demonstrativo não pode ir ao domínio.",
+    "Produção exige banco configurado; catálogo demonstrativo não pode ir ao domínio.",
   );
 await rm("dist", { recursive: true, force: true });
 await mkdir("dist");
@@ -35,7 +40,7 @@ if(apiUrl) for(const file of ['index.html','imovel.html']) {
   const html=await readFile('dist/'+file,'utf8');
   await writeFile('dist/'+file,html.replace('    <script src="imoveis.js"></script>',''));
 }
-const preview = process.env.VERCEL_ENV === "preview" || apiUrl.includes("api-preview.");
+const preview = process.env.VERCEL_ENV === "preview";
 if (preview) {
   for (const file of ["index.html", "imovel.html", "admin.html"]) {
     const html = await readFile(`dist/${file}`, "utf8");
@@ -45,8 +50,8 @@ if (preview) {
 }
 await writeFile(
   "dist/config.js",
-  `window.URYU_CONFIG = ${JSON.stringify({ apiUrl: apiUrl.replace(/\/$/, ""), demo: !apiUrl })};\n`,
+  `window.URYU_CONFIG = ${JSON.stringify({ supabaseUrl: apiUrl, supabaseKey: anonKey, demo: !apiUrl })};\n`,
 );
 console.log(
-  `Site preparado em dist (${apiUrl ? "API configurada" : "prévia demonstrativa"}).`,
+  `Site preparado em dist (${apiUrl ? "banco configurado" : "prévia demonstrativa"}).`,
 );

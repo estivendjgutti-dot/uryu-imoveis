@@ -578,6 +578,15 @@ footer img {
   color: #c9dfb1;
   line-height: 1.6;
 }
+.field-hint {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.78rem;
+  font-weight: 400;
+  opacity: 0.7;
+}
+.field-hint.ok { color: #c9dfb1; opacity: 1; }
+.field-hint.error { color: #ffd2bd; opacity: 1; }
 @media (max-width: 1000px) {
   .primary-filters {
     grid-template-columns: repeat(2, 1fr);

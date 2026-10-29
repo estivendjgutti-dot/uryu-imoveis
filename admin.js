@@ -1,4 +1,5 @@
-import { request, setToken, isDemo, apiBase, el, money } from "./data.js";
+import { isDemo, el, money, photoUrl } from "./data.js";
+import { signIn, signOut, listAll, saveProperty, setStatus, uploadPhoto } from "./admin-db.js";
 const login = document.querySelector("#login-form"),
   panel = document.querySelector("#admin-panel"),
   editor = document.querySelector("#editor"),
@@ -8,8 +9,7 @@ let properties = [],
   photos = [],
   uploading = false,
   saving = false,
-  dirty = false,
-  authToken = "";
+  dirty = false;
 const previews = new Map();
 function notify(text, error = false, target = message) {
   target.textContent = text;
@@ -25,7 +25,7 @@ function lock() {
   document.querySelector("#cancel-edit").disabled = uploading || saving;
 }
 async function refresh() {
-  properties = await request("/admin/properties");
+  properties = await listAll();
   renderList();
 }
 function renderList() {
@@ -56,10 +56,7 @@ function renderList() {
         archive.addEventListener("click", async () => {
           archive.disabled = true;
           try {
-            await request("/admin/properties/" + i.id + "/status", {
-              method: "PATCH",
-              body: JSON.stringify({ status: "arquivado" }),
-            });
+            await setStatus(i, "arquivado");
             await refresh();
             notify("Imóvel arquivado; ele saiu do catálogo deste ambiente.");
           } catch (e) {
@@ -89,27 +86,7 @@ async function renderPhotos() {
     const item = el("div", "upload-item");
     const img = el("img");
     img.alt = `Foto ${index + 1}${index === 0 ? " · capa" : ""}`;
-    if (file.startsWith("https://")) img.src = file;
-    else if (previews.has(file)) img.src = previews.get(file);
-    else {
-      try {
-        const response = await fetch(apiBase + "/api/admin/media/" + file, {
-          headers: { Authorization: "Bearer " + authToken },
-          signal: AbortSignal.timeout(20000),
-        });
-        if (response.ok) {
-          const url = URL.createObjectURL(await response.blob());
-          previews.set(file, url);
-          if (photos.includes(file)) img.src = url;
-          else {
-            URL.revokeObjectURL(url);
-            previews.delete(file);
-          }
-        }
-      } catch {
-        img.alt = "Não foi possível carregar a foto";
-      }
-    }
+    img.src = previews.get(file) || photoUrl(file);
     item.append(
       img,
       el("p", "muted", index === 0 ? "Capa" : `Foto ${index + 1}`),
@@ -144,6 +121,83 @@ async function renderPhotos() {
     list.append(item);
   }
 }
+const typeNames = {
+  apartamento: "Apartamento", casa: "Casa", comercial: "Imóvel comercial", terreno: "Terreno",
+  studio: "Studio", kitnet: "Kitnet", cobertura: "Cobertura", sobrado: "Sobrado",
+  casa_condominio: "Casa em condomínio", sala_comercial: "Sala comercial",
+  ponto_comercial: "Loja", galpao: "Galpão", chacara: "Chácara",
+};
+function updateTitleSuggestions() {
+  const f = editor.elements;
+  const tipo = typeNames[f.categoria.value] || "Imóvel";
+  const fim = f.negociacao.value === "aluguel" ? "para alugar" : "à venda";
+  const bairro = f.bairro.value.trim(), cidade = f.cidade.value.trim();
+  const lugar = [bairro, cidade].filter(Boolean).join(", ");
+  const q = Number(f.quartos.value) || 0, area = Number(f.tamanho.value) || 0;
+  const quartos = q ? `${q} ${q === 1 ? "quarto" : "quartos"}` : "";
+  const m2 = area ? `${area} m²` : "";
+  const em = lugar ? ` em ${lugar}` : "";
+  const ideas = [
+    `${tipo} ${fim}${em}`,
+    `${tipo}${quartos ? " com " + quartos : ""}${m2 ? " · " + m2 : ""}${bairro ? " - " + bairro : ""}`,
+    `${tipo}${m2 ? " de " + m2 : ""} ${fim}${cidade ? " - " + cidade : ""}`,
+    `${tipo}${quartos ? " " + quartos : ""} pronto para morar${bairro ? " no " + bairro : ""}`,
+    `Oportunidade: ${tipo.toLowerCase()} ${fim}${em}`,
+  ];
+  if (["sala_comercial", "ponto_comercial", "comercial", "galpao"].includes(f.categoria.value))
+    ideas[3] = `${tipo}${m2 ? " " + m2 : ""} em ótima localização${bairro ? " - " + bairro : ""}`;
+  const list = document.querySelector("#titulo-sugestoes");
+  list.replaceChildren(
+    ...[...new Set(ideas.map((s) => s.replace(/\s+/g, " ").trim()))].map((s) => {
+      const o = document.createElement("option");
+      o.value = s;
+      return o;
+    }),
+  );
+}
+function nextCode() {
+  const n = properties
+    .map((p) => Number((/^URY-(\d+)$/i.exec(p.codigo) || [])[1] || 0))
+    .reduce((a, b) => Math.max(a, b), 0);
+  return "URY-" + String(n + 1).padStart(4, "0");
+}
+let cepRequest = 0;
+async function lookupCep() {
+  const input = editor.elements.cep, status = document.querySelector("#cep-status");
+  const cep = input.value.replace(/\D/g, "");
+  if (cep.length > 5) input.value = cep.slice(0, 5) + "-" + cep.slice(5, 8);
+  if (cep.length !== 8) {
+    status.textContent = "Preenche cidade, bairro e UF";
+    status.className = "field-hint";
+    return;
+  }
+  const id = ++cepRequest;
+  status.textContent = "Buscando endereço…";
+  status.className = "field-hint";
+  try {
+    const r = await fetch(`https://viacep.com.br/ws/${cep}/json/`, { signal: AbortSignal.timeout(8000) });
+    const d = await r.json();
+    if (id !== cepRequest) return;
+    if (!r.ok || d.erro) throw new Error();
+    const f = editor.elements;
+    f.estado.value = d.uf || f.estado.value;
+    f.cidade.value = d.localidade || f.cidade.value;
+    if (d.bairro) f.bairro.value = d.bairro;
+    if (d.logradouro && !f.private_notes.value.trim())
+      f.private_notes.value = `${d.logradouro}, nº  — ${d.bairro || ""}, ${d.localidade}/${d.uf} · CEP ${cep.slice(0, 5)}-${cep.slice(5)}`;
+    status.textContent = d.bairro ? "Endereço encontrado. Confira e ajuste se precisar." : "Cidade encontrada. Preencha o bairro.";
+    status.className = "field-hint ok";
+    dirty = true;
+    updateTitleSuggestions();
+  } catch {
+    if (id !== cepRequest) return;
+    status.textContent = "CEP não encontrado. Preencha cidade e bairro manualmente.";
+    status.className = "field-hint error";
+  }
+}
+editor.elements.cep.addEventListener("input", lookupCep);
+for (const name of ["categoria", "negociacao", "bairro", "cidade", "quartos", "tamanho"])
+  editor.elements[name].addEventListener("input", updateTitleSuggestions);
 function openEditor(i = null) {
   revoke();
   editing = i;
@@ -158,6 +212,12 @@ function openEditor(i = null) {
           ? (i.caracteristicas || []).join(", ")
           : (i[input.name] ?? "");
   }
+  if (!i) editor.elements.codigo.value = nextCode();
+  if (i?.cep) editor.elements.cep.value = i.cep.slice(0, 5) + "-" + i.cep.slice(5);
+  const status = document.querySelector("#cep-status");
+  status.textContent = "Preenche cidade, bairro e UF";
+  status.className = "field-hint";
+  updateTitleSuggestions();
   panel.hidden = true;
   editor.hidden = false;
   document.querySelector("#editor-title").textContent = i
@@ -173,22 +233,15 @@ login.addEventListener("submit", async (e) => {
   const button = login.querySelector("button");
   button.disabled = true;
   try {
-    const data = await request("/login", {
-      method: "POST",
-      body: JSON.stringify(Object.fromEntries(new FormData(login))),
-    });
-    authToken = data.token;
-    setToken(authToken);
+    const form = Object.fromEntries(new FormData(login));
+    await signIn(form.email, form.password);
     await refresh();
     login.reset();
     login.hidden = true;
     panel.hidden = false;
-    notify(
-      "Painel conectado. Alterações valem somente para o banco deste ambiente.",
-    );
+    notify("Painel conectado.");
   } catch (e) {
-    setToken("");
-    authToken = "";
+    signOut();
     notify(e.message, true);
   } finally {
     button.disabled = false;
@@ -207,8 +260,7 @@ document.querySelector("#cancel-edit").addEventListener("click", () => {
 });
 document.querySelector("#logout").addEventListener("click", () => {
   if (dirty && !confirm("Sair e descartar alterações não salvas?")) return;
-  setToken("");
-  authToken = "";
+  signOut();
   dirty = false;
   properties = [];
   revoke();
@@ -244,16 +296,9 @@ document
     await renderPhotos();
     try {
       for (const file of files) {
-        if (file.size > 12 * 1024 * 1024)
-          throw new Error(`${file.name}: limite de 12 MB.`);
-        const form = new FormData();
-        form.append("photo", file);
-        const uploaded = await request("/admin/media", {
-          method: "POST",
-          body: form,
-        });
-        photos.push(uploaded.filename);
-        previews.set(uploaded.filename, URL.createObjectURL(file));
+        const filename = await uploadPhoto(file);
+        photos.push(filename);
+        previews.set(filename, URL.createObjectURL(file));
         dirty = true;
       }
       notify(
@@ -307,15 +352,20 @@ editor.addEventListener("submit", async (e) => {
   saving = true;
   lock();
   try {
-    const saved = await request(
-      "/admin/properties" + (editing ? "/" + editing.id : ""),
-      { method: editing ? "PUT" : "POST", body: JSON.stringify(body) },
-    );
-    editing = saved;
+    const saved = await saveProperty(body, editing?.id);
+    const wasNew = !editing;
     dirty = false;
-    notify("Imóvel salvo.", false, document.querySelector("#editor-message"));
+    revoke();
+    editing = null;
+    photos = [];
+    editor.reset();
+    document.querySelector("#upload-list").replaceChildren();
+    document.querySelector("#editor-message").textContent = "";
+    editor.hidden = true;
+    panel.hidden = false;
     await refresh();
-    notify("Cadastro atualizado neste ambiente.");
+    notify(`${saved.codigo} · ${saved.titulo} ${wasNew ? "cadastrado" : "atualizado"}.`);
+    panel.scrollIntoView({ behavior: "smooth", block: "start" });
   } catch (err) {
     notify(err.message, true, document.querySelector("#editor-message"));
   } finally {
@@ -326,7 +376,7 @@ editor.addEventListener("submit", async (e) => {
 if (isDemo) {
   login.querySelector("button").disabled = true;
   notify(
-    "O painel ficará disponível quando a API e o PostgreSQL forem conectados. Esta prévia usa os imóveis demonstrativos.",
+    "O painel ficará disponível quando o banco for conectado. Esta prévia usa os imóveis demonstrativos.",
     true,
   );
 }

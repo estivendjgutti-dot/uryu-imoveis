@@ -19,6 +19,9 @@ const allowed = new Set([
   "imovel.js",
   "admin.html",
   "admin.js",
+  "admin-db.js",
+  "photos.js",
+  "validation.js",
   "logo-uryu.png",
   "empresa-foto.png",
   "background.mp4",
@@ -31,7 +34,7 @@ app.get("/config.js", (_req, res) =>
   res
     .type("js")
     .send(
-      `window.URYU_CONFIG=${JSON.stringify({ apiUrl: process.env.PUBLIC_API_URL || "", demo: !process.env.PUBLIC_API_URL })};`,
+      `window.URYU_CONFIG=${JSON.stringify({ supabaseUrl: process.env.PUBLIC_SUPABASE_URL || "", supabaseKey: process.env.PUBLIC_SUPABASE_ANON_KEY || "", demo: !process.env.PUBLIC_SUPABASE_URL })};`,
     ),
 );
 app.get("/{*path}", (req, res) => {

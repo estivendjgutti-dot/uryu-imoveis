@@ -1,12 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import {
-  hashPassword,
-  checkPassword,
-  issueToken,
-  verifyToken,
-} from "../server/auth.mjs";
-import { validateProperty } from "../server/validation.mjs";
+import { validateProperty } from "../validation.js";
 const property = {
   titulo: "Casa teste",
   codigo: "URY-0001",
@@ -29,21 +23,6 @@ const property = {
   fotos: [],
   caracteristicas: [],
 };
-test("senha incorreta e hash malformado não autenticam", () => {
-  const hash = hashPassword("senha-local-de-teste");
-  assert.equal(checkPassword("senha-local-de-teste", hash), true);
-  assert.equal(checkPassword("outra", hash), false);
-  assert.equal(checkPassword("senha", "malformado"), false);
-});
-test("token adulterado, expirado ou com outra chave é recusado", () => {
-  const secret = "chave-local-exclusiva-de-teste";
-  const now = 1000000000;
-  const token = issueToken(secret, now);
-  assert.equal(verifyToken(token, secret, now), true);
-  assert.equal(verifyToken(token + "x", secret, now), false);
-  assert.equal(verifyToken(token, "outra", now), false);
-  assert.equal(verifyToken(token, secret, now + 28800 * 1000), false);
-});
 test("cadastro rejeita preço negativo, NaN e estados inválidos", () => {
   for (const change of [
     { preco: -1 },
@@ -55,7 +34,7 @@ test("cadastro rejeita preço negativo, NaN e estados inválidos", () => {
   ])
     assert.throws(() => validateProperty({ ...property, ...change }));
 });
-test("publicação exige descrição e foto, campos privados extras não entram no payload", () => {
+test("publicação exige descrição e foto; notas internas não entram no anúncio", () => {
   assert.throws(() => validateProperty({ ...property, status: "publicado" }));
   const result = validateProperty({
     ...property,
