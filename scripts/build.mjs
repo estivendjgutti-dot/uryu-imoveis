@@ -22,6 +22,7 @@ const files = [
   "apple-touch-icon.png",
   "empresa-foto.png",
   "background.mp4",
+  "intro.js",
   "intro.mp4",
   "intro-720.mp4",
   "intro-poster.jpg",

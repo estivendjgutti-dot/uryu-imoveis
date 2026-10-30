@@ -24,20 +24,7 @@
     <link rel="icon" type="image/png" sizes="192x192" href="/favicon.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="stylesheet" href="site.css" />
-    <style>
-      #intro{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:#f0e6d2;transition:opacity .6s ease}
-      #intro.saindo{opacity:0;pointer-events:none}
-      #intro video{width:100%;height:100%;object-fit:contain;background:#f0e6d2}
-      #intro button{position:absolute;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));padding:8px 16px;border:1px solid rgba(36,35,31,.35);border-radius:999px;background:rgba(240,230,210,.85);color:#24231f;font:500 14px/1 Manrope,system-ui,sans-serif;cursor:pointer}
-      html.com-intro body{overflow:hidden}
-    </style>
-    <script>
-      // Abertura com o vídeo da marca: uma vez por visita (sessão), pulada se o usuário prefere menos movimento.
-      try {
-        if (!sessionStorage.getItem("uryu-intro") && !matchMedia("(prefers-reduced-motion: reduce)").matches)
-          document.documentElement.classList.add("com-intro");
-      } catch {}
-    </script>
+    <script src="intro.js"></script>
 
     <style>
       html {
@@ -210,36 +197,6 @@
   </head>
 
   <body class="public-site font-sans text-cream antialiased overflow-x-hidden">
-    <div id="intro" hidden>
-      <video muted playsinline preload="auto" poster="intro-poster.jpg"></video>
-      <button type="button">Pular</button>
-    </div>
-    <script>
-      (function () {
-        var intro = document.getElementById("intro");
-        if (!document.documentElement.classList.contains("com-intro")) return intro.remove();
-        intro.hidden = false;
-        var video = intro.querySelector("video");
-        var done = false;
-        function fim() {
-          if (done) return;
-          done = true;
-          try { sessionStorage.setItem("uryu-intro", "1"); } catch {}
-          intro.classList.add("saindo");
-          document.documentElement.classList.remove("com-intro");
-          setTimeout(function () { intro.remove(); }, 700);
-        }
-        video.addEventListener("ended", fim);
-        video.addEventListener("error", fim);
-        video.src = matchMedia("(max-width: 900px)").matches ? "intro-720.mp4" : "intro.mp4";
-        intro.querySelector("button").addEventListener("click", fim);
-        var p = video.play();
-        if (p && p.catch) p.catch(fim);
-        // Rede lenta ou autoplay bloqueado: não prende o visitante.
-        setTimeout(function () { if (video.currentTime === 0) fim(); }, 4000);
-        setTimeout(fim, 15000);
-      })();
-    </script>
 
     <!-- ============ FIXED CINEMATIC VIDEO LAYER ============ -->
     <div class="cinema-background fixed inset-0 w-full h-full -z-20 bg-charcoal">
@@ -427,6 +384,7 @@
           etapa da negociação.
         </p>
         <a class="browse-link" href="#catalogo" data-i18n="browse_catalog">Explorar imóveis disponíveis ↓</a>
+        <button type="button" class="browse-link intro-replay" id="replay-intro" data-i18n="intro_replay">▶ Rever vídeo de abertura</button>
         <div class="reveal mt-10 flex items-center gap-6">
           <a
             href="https://wa.me/5511970508331?text=Ol%C3%A1%2C%20estou%20procurando%20um%20im%C3%B3vel."
@@ -837,6 +795,8 @@
 
     <script>
 
+      document.getElementById("replay-intro")?.addEventListener("click", () => window.uryuIntro?.play());
+
       const reduceMotion = window.matchMedia(
         "(prefers-reduced-motion: reduce)",
       ).matches;
@@ -847,6 +807,7 @@
           nav_home: "Home",
           nav_empresa: "A Empresa",
           browse_catalog: "Explorar imóveis disponíveis ↓",
+          intro_replay: "▶ Rever vídeo de abertura",
           nav_comprar: "Comprar",
           nav_alugar: "Alugar",
           nav_anuncie: "Anuncie seu Imóvel",
@@ -954,6 +915,7 @@
           nav_home: "Home",
           nav_empresa: "About Us",
           browse_catalog: "Browse available properties ↓",
+          intro_replay: "▶ Watch the intro again",
           nav_comprar: "Buy",
           nav_alugar: "Rent",
           nav_anuncie: "List Your Property",
@@ -1071,6 +1033,7 @@
           hero_sub:
             "Encuentra inmuebles para comprar o alquilar con asesoramiento cercano en cada etapa.",
           browse_catalog: "Explorar inmuebles disponibles ↓",
+          intro_replay: "▶ Ver el video de apertura",
           hero_cta1: "Encontrar mi inmueble",
           hero_cta2: "Hablar con un asesor",
           hero_scroll: "Desliza para explorar",
