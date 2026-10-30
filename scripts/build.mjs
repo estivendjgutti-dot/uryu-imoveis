@@ -9,7 +9,6 @@ const files = [
   "data.js",
   "catalog-i18n.js",
   "video-scroll.js",
-  "imovel.html",
   "imovel.js",
   "admin.html",
   "admin.js",
@@ -25,7 +24,6 @@ const files = [
   "intro.js",
   "og-image.jpg",
   "robots.txt",
-  "sitemap.xml",
   "intro.mp4",
   "intro-720.mp4",
   "intro-poster.jpg",
@@ -46,13 +44,15 @@ await mkdir("dist");
 for (const file of files) await copyFile(file, `dist/${file}`);
 await buildStyles();
 await sharp("empresa-foto.png").resize({ width:1200, withoutEnlargement:true }).webp({quality:82}).toFile("dist/empresa-foto.webp");
-if(apiUrl) for(const file of ['index.html','imovel.html']) {
+// imovel.html is not shipped as a static file: /imovel is served by api/imovel.js (per-listing SEO tags),
+// which reads the source template, and /sitemap.xml by api/sitemap.js.
+if(apiUrl) for(const file of ['index.html']) {
   const html=await readFile('dist/'+file,'utf8');
   await writeFile('dist/'+file,html.replace('    <script src="imoveis.js"></script>',''));
 }
 const preview = process.env.VERCEL_ENV === "preview";
 if (preview) {
-  for (const file of ["index.html", "imovel.html", "admin.html"]) {
+  for (const file of ["index.html", "admin.html"]) {
     const html = await readFile(`dist/${file}`, "utf8");
     await writeFile(`dist/${file}`, html.replace("<head>", '<head>\n<meta name="robots" content="noindex, nofollow" />'));
   }

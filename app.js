@@ -28,7 +28,7 @@ const savedSearch = (()=>{try{return JSON.parse(sessionStorage.getItem(searchKey
 function rememberSearch(link) {
   try {sessionStorage.setItem(searchKey,JSON.stringify({fields:Object.fromEntries(new FormData(form)),sort:sort.value,y:scrollY,page,viewport:innerWidth,property:link?.closest("#catalog-grid")?new URL(link.href).searchParams.get("id"):null}));} catch {}
 }
-document.addEventListener('click', e=> {const link=e.target.closest('a[href*="imovel.html?id="]');if(link) rememberSearch(link);});
+document.addEventListener('click', e=> {const link=e.target.closest('a[href*="imovel?id="]');if(link) rememberSearch(link);});
 const status = document.querySelector("#catalog-status");
 const sort = document.querySelector("#sort-properties");
 function options(name, values, label) {

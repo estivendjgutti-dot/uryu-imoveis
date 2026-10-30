@@ -48,7 +48,7 @@ app.get("/config.js", (_req, res) =>
     ),
 );
 app.get("/{*path}", (req, res) => {
-  const name = req.path === "/" ? "index.html" : req.path.slice(1);
+  const name = req.path === "/" ? "index.html" : req.path === "/imovel" ? "imovel.html" : req.path.slice(1);
   if (!allowed.has(name)) return res.sendStatus(404);
   res.sendFile(resolve(name));
 });

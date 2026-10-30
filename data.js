@@ -113,7 +113,7 @@ export function whatsapp(i) {
   return (
     "https://wa.me/5511970508331?text=" +
     encodeURIComponent(
-      `Olá! Tenho interesse no imóvel ${i.codigo}: ${i.titulo}. ${location.href.split("?")[0].replace(/[^/]*$/, "")}imovel.html?id=${i.id}`,
+      `Olá! Tenho interesse no imóvel ${i.codigo}: ${i.titulo}. ${location.href.split("?")[0].replace(/[^/]*$/, "")}imovel?id=${i.id}`,
     )
   );
 }
@@ -129,7 +129,7 @@ export function featuredCompare(a,b) {
 export function propertyCard(i) {
   const card = el("article", "property-card");
   const link = el("a", "property-image");
-  link.href = "imovel.html?id=" + encodeURIComponent(i.id);
+  link.href = "imovel?id=" + encodeURIComponent(i.id);
   const url = photoUrl(i.fotos[0]);
   if (url) {
     const img = el("img");

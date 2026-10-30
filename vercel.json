@@ -2,7 +2,15 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "cleanUrls": true,
+  "functions": {
+    "api/imovel.js": { "includeFiles": "imovel.html" }
+  },
+  "rewrites": [
+    { "source": "/imovel", "destination": "/api/imovel" },
+    { "source": "/sitemap.xml", "destination": "/api/sitemap" }
+  ],
   "redirects": [
+    { "source": "/imovel.html", "destination": "/imovel", "permanent": true },
     {
       "source": "/(.*)",
       "has": [{ "type": "host", "value": "www.uryuimoveis.com.br" }],
