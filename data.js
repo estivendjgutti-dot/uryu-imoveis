@@ -13,6 +13,14 @@ function friendlyError(data, status) {
   if (data.code === "23505") return "Já existe um imóvel com esse código.";
   if (/publicar_exige/.test(text)) return "Para publicar, informe descrição e ao menos uma foto.";
   if (/invalid login|invalid_credentials/i.test(text)) return "E-mail ou senha inválidos.";
+  if (/email not confirmed/i.test(text)) return "Confirme seu e-mail pelo link que enviamos antes de entrar.";
+  if (/already registered|user_already_exists/i.test(text)) return "Este e-mail já tem conta. Use “Entrar no painel”.";
+  if (/password/i.test(text) && /least|weak|short/i.test(text)) return "Senha fraca. Use ao menos 12 caracteres.";
+  if (/email_invalido/.test(text)) return "E-mail inválido.";
+  if (/codigo_invalido/.test(text)) return "Código de convite inválido ou vencido. Peça um novo código a quem convidou.";
+  if (/ja_admin/.test(text)) return "Esta pessoa já tem acesso ao painel.";
+  if (/sem_sessao/.test(text)) return "Entre novamente e tente de novo.";
+  if (/rate limit|over_email_send/i.test(text)) return "Muitas tentativas. Aguarde alguns minutos.";
   if (status === 401 || /jwt/i.test(text)) return "Sua sessão expirou. Entre novamente no painel.";
   if (status === 403 || data.code === "42501") return "Este usuário não tem permissão para essa ação.";
   if (/payload too large|exceeded the maximum/i.test(text)) return "A foto excede o limite de 12 MB.";

@@ -1,5 +1,5 @@
 import { isDemo, el, money, photoUrl } from "./data.js";
-import { signIn, signOut, listAll, saveProperty, setStatus, uploadPhoto } from "./admin-db.js";
+import { signIn, signOut, listAll, saveProperty, setStatus, uploadPhoto, activate, listAccess, inviteAdmin, removeAdmin, cancelInvite, currentUserId } from "./admin-db.js";
 const login = document.querySelector("#login-form"),
   panel = document.querySelector("#admin-panel"),
   editor = document.querySelector("#editor"),
@@ -266,6 +266,7 @@ document.querySelector("#logout").addEventListener("click", () => {
   revoke();
   panel.hidden = true;
   editor.hidden = true;
+  accessPanel.hidden = true;
   login.hidden = false;
   notify("Você saiu do painel.");
 });
@@ -380,3 +381,168 @@ if (isDemo) {
     true,
   );
 }
+
+const signup = document.querySelector("#signup-form"),
+  accessPanel = document.querySelector("#access-panel"),
+  accessMessage = document.querySelector("#access-message");
+document.querySelector("#show-signup").addEventListener("click", () => {
+  login.hidden = true;
+  signup.hidden = false;
+  message.textContent = "";
+});
+document.querySelector("#show-login").addEventListener("click", () => {
+  signup.hidden = true;
+  login.hidden = false;
+  message.textContent = "";
+});
+signup.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const button = signup.querySelector("button.action");
+  button.disabled = true;
+  try {
+    await activate(
+      document.querySelector("#signup-email").value,
+      document.querySelector("#signup-code").value,
+      document.querySelector("#signup-password").value,
+    );
+    await refresh();
+    signup.reset();
+    signup.hidden = true;
+    panel.hidden = false;
+    notify("Acesso liberado. Bem-vindo(a) ao painel.");
+  } catch (err) {
+    notify(err.message, true);
+  } finally {
+    button.disabled = false;
+  }
+});
+
+function accessRow(label, detail, buttons = []) {
+  const row = el("article", "admin-row");
+  const info = el("div");
+  info.append(el("strong", "", label), el("p", "muted", detail));
+  row.append(info);
+  if (buttons.length) {
+    const actions = el("div");
+    for (const [text, onAction] of buttons) {
+      const btn = el("button", "text-button", text);
+      btn.type = "button";
+      btn.addEventListener("click", async () => {
+        btn.disabled = true;
+        try {
+          await onAction();
+          await renderAccess();
+        } catch (err) {
+          notify(err.message, true, accessMessage);
+          btn.disabled = false;
+        }
+      });
+      actions.append(btn);
+    }
+    row.append(actions);
+  }
+  return row;
+}
+const inviteResult = document.querySelector("#invite-result");
+function showInviteCode(email, code) {
+  document.querySelector("#invite-result-email").textContent = email;
+  document.querySelector("#invite-code").textContent = code;
+  document.querySelector("#invite-text").value =
+    `Olá! Você foi convidado(a) para o painel de cadastro de imóveis da Uryu Imóveis.
+
+` +
+    `1) Abra ${location.origin}/admin
+` +
+    `2) Clique em "Primeiro acesso: criar minha senha"
+` +
+    `3) Use este e-mail: ${email}
+` +
+    `4) Código de convite: ${code}
+` +
+    `5) Crie uma senha com 12 caracteres ou mais.
+
+` +
+    `O código vale por 7 dias e só pode ser usado uma vez.`;
+  inviteResult.hidden = false;
+}
+document.querySelector("#copy-invite").addEventListener("click", async () => {
+  const area = document.querySelector("#invite-text");
+  try {
+    await navigator.clipboard.writeText(area.value);
+    notify("Mensagem copiada. Cole no WhatsApp.", false, accessMessage);
+  } catch {
+    area.select();
+    notify("Selecione o texto e copie (Ctrl+C).", false, accessMessage);
+  }
+});
+async function renderAccess() {
+  const list = document.querySelector("#access-list");
+  const { admins, invites } = await listAccess();
+  const me = currentUserId();
+  const iAmOwner = admins.some((a) => a.user_id === me && a.is_owner);
+  list.replaceChildren();
+  for (const a of admins)
+    list.append(
+      a.user_id === me
+        ? accessRow(a.email || "Você", "Você · acesso ativo")
+        : a.is_owner || !iAmOwner
+        ? accessRow(a.email || "Usuário sem e-mail", a.is_owner ? "Proprietário" : "Acesso ativo")
+        : accessRow(a.email || "Usuário sem e-mail", "Acesso ativo", [
+            ["Remover acesso", async () => {
+              if (!confirm(`Remover o acesso de ${a.email}?`)) throw new Error("Remoção cancelada.");
+              await removeAdmin(a.user_id);
+              notify(`Acesso de ${a.email} removido.`, false, accessMessage);
+            }],
+          ]),
+    );
+  for (const i of invites)
+    list.append(
+      accessRow(
+        i.email,
+        `Convite pendente · vale até ${new Date(i.expires_at).toLocaleDateString("pt-BR")}`,
+        [
+          ["Gerar novo código", async () => {
+            showInviteCode(i.email, await inviteAdmin(i.email));
+            notify(`Novo código gerado para ${i.email}. O anterior deixou de valer.`, false, accessMessage);
+          }],
+          ["Cancelar convite", async () => {
+            await cancelInvite(i.email);
+            if (document.querySelector("#invite-result-email").textContent === i.email) inviteResult.hidden = true;
+            notify(`Convite de ${i.email} cancelado.`, false, accessMessage);
+          }],
+        ],
+      ),
+    );
+}
+document.querySelector("#show-access").addEventListener("click", async () => {
+  panel.hidden = true;
+  accessPanel.hidden = false;
+  inviteResult.hidden = true;
+  accessMessage.textContent = "";
+  try {
+    await renderAccess();
+  } catch (err) {
+    notify(err.message, true, accessMessage);
+  }
+});
+document.querySelector("#close-access").addEventListener("click", () => {
+  accessPanel.hidden = true;
+  panel.hidden = false;
+});
+document.querySelector("#invite-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const input = document.querySelector("#invite-email");
+  const button = e.target.querySelector("button");
+  button.disabled = true;
+  try {
+    const email = input.value.trim().toLowerCase();
+    showInviteCode(email, await inviteAdmin(email));
+    notify(`Convite criado para ${email}. Envie a mensagem abaixo à pessoa.`, false, accessMessage);
+    input.value = "";
+    await renderAccess();
+  } catch (err) {
+    notify(err.message, true, accessMessage);
+  } finally {
+    button.disabled = false;
+  }
+});

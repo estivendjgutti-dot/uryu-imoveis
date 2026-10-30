@@ -37,6 +37,70 @@ export async function signIn(email, password) {
   }
 }
 
+export async function activate(email, code, password) {
+  const mail = String(email || "").trim().toLowerCase();
+  setAccessToken("");
+  let data = {};
+  try {
+    data = await sb("/auth/v1/signup", {
+      method: "POST",
+      body: JSON.stringify({ email: mail, password }),
+    });
+  } catch (e) {
+    if (!/já tem conta/.test(e.message)) throw e;
+  }
+  if (!data.access_token)
+    data = await sb("/auth/v1/token?grant_type=password", {
+      method: "POST",
+      body: JSON.stringify({ email: mail, password }),
+    });
+  useSession(data);
+  try {
+    await sb("/rest/v1/rpc/redeem_invite", {
+      method: "POST",
+      body: JSON.stringify({ p_code: String(code || "").trim() }),
+    });
+  } catch (e) {
+    signOut();
+    throw e;
+  }
+}
+
+export async function listAccess() {
+  await fresh();
+  const [admins, invites] = await Promise.all([
+    sb("/rest/v1/admins?select=user_id,email,is_owner,created_at&order=created_at"),
+    sb("/rest/v1/admin_invites?select=email,created_at,expires_at&order=created_at"),
+  ]);
+  return { admins, invites };
+}
+
+export async function inviteAdmin(email) {
+  await fresh();
+  return sb("/rest/v1/rpc/invite_admin", {
+    method: "POST",
+    body: JSON.stringify({ p_email: String(email || "").trim().toLowerCase() }),
+  });
+}
+
+export async function removeAdmin(userId) {
+  await fresh();
+  await sb(`/rest/v1/admins?user_id=eq.${userId}`, { method: "DELETE" });
+}
+
+export async function cancelInvite(email) {
+  await fresh();
+  await sb(`/rest/v1/admin_invites?email=eq.${encodeURIComponent(email)}`, { method: "DELETE" });
+}
+
+export function currentUserId() {
+  try {
+    return JSON.parse(atob(session.access.split(".")[1].replace(/-/g, "+").replace(/_/g, "/"))).sub;
+  } catch {
+    return "";
+  }
+}
+
 export function signOut() {
   session = null;
   setAccessToken("");

@@ -9,6 +9,9 @@
       href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="stylesheet" href="site.css" />
     <script src="config.js"></script>
   </head>
@@ -37,12 +40,41 @@
             maxlength="256"
             required /></label
         ><button class="action">Entrar no painel</button>
+        <p class="muted">Recebeu um convite? <button type="button" id="show-signup" class="text-button">Primeiro acesso: criar minha senha</button></p>
+      </form>
+      <form id="signup-form" class="login-panel" hidden>
+        <h2>Primeiro acesso</h2>
+        <p class="muted">Use o e-mail que foi convidado e o código de convite que você recebeu. O código vale uma vez só.</p>
+        <label
+          >E-mail<input id="signup-email" name="email" type="email" autocomplete="username" required /></label
+        ><label
+          >Código de convite<input
+            id="signup-code"
+            name="code"
+            autocomplete="off"
+            autocapitalize="none"
+            spellcheck="false"
+            maxlength="40"
+            placeholder="xxxx-xxxx-xxxx-xxxx-xxxx"
+            required /></label
+        ><label
+          >Crie uma senha · mínimo 12 caracteres<input
+            id="signup-password"
+            name="password"
+            type="password"
+            autocomplete="new-password"
+            minlength="12"
+            maxlength="256"
+            required /></label
+        ><button class="action">Criar minha senha</button>
+        <p><button type="button" id="show-login" class="text-button">Já tenho senha: entrar</button></p>
       </form>
       <section id="admin-panel" hidden>
         <div class="admin-toolbar">
           <p id="admin-count"></p>
           <div>
             <button id="new-property" class="action">Cadastrar imóvel +</button>
+            <button id="show-access" class="action secondary">Acessos</button>
             <button id="logout" class="text-button">Sair</button>
           </div>
         </div>
@@ -53,6 +85,27 @@
             placeholder="Buscar imóvel"
         /></label>
         <div id="admin-list"></div>
+      </section>
+      <section id="access-panel" class="editor" hidden>
+        <h2>Acessos ao painel</h2>
+        <p class="muted">Quem está aqui pode cadastrar, editar e publicar imóveis.</p>
+        <div id="access-list"></div>
+        <h3>Convidar pessoa</h3>
+        <form id="invite-form" class="invite-form">
+          <label>E-mail<input id="invite-email" name="email" type="email" required placeholder="nome@exemplo.com" /></label>
+          <button class="action">Convidar</button>
+        </form>
+        <p class="muted">Ao convidar, o painel gera um código de uso único, válido por 7 dias. Envie o código à pessoa (WhatsApp, por exemplo): ele aparece só uma vez.</p>
+        <div id="invite-result" class="invite-result" hidden>
+          <p class="muted">Código para <strong id="invite-result-email"></strong>:</p>
+          <p><code id="invite-code" class="invite-code"></code></p>
+          <label>Mensagem pronta para enviar<textarea id="invite-text" readonly rows="7"></textarea></label>
+          <button type="button" id="copy-invite" class="action">Copiar mensagem</button>
+        </div>
+        <p id="access-message" role="status" aria-live="polite"></p>
+        <div class="editor-actions">
+          <button type="button" id="close-access" class="action secondary">Voltar ao cadastro</button>
+        </div>
       </section>
       <form id="editor" class="editor" hidden>
         <h2 id="editor-title">Novo imóvel</h2>

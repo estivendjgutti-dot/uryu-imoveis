@@ -185,6 +185,13 @@ try {
             "Novas oportunidades em breve. Fale com um consultor.",
           ),
         );
+    if (!items.length) {
+      const cta = el("a", "empty-cta", "Falar com um consultor ↗");
+      cta.href = "https://wa.me/5511970508331?text=" + encodeURIComponent("Olá! Gostaria de saber das novas oportunidades.");
+      cta.target = "_blank";
+      cta.rel = "noopener";
+      document.querySelector(selector).append(cta);
+    }
   }
   setupFeaturedRails();
   animateEntries(document.querySelectorAll(".section-caption,.readable-panel,.planning-shell,.contact-invite,.reveal,#footer-content"));

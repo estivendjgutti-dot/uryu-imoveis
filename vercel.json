@@ -2,6 +2,14 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "cleanUrls": true,
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "www.uryuimoveis.com.br" }],
+      "destination": "https://uryuimoveis.com.br/$1",
+      "permanent": true
+    }
+  ],
   "git": {"deploymentEnabled": {"main": false}},
   "headers": [
     {
@@ -29,7 +37,7 @@
       ]
     },
     {
-      "source": "/background.mp4",
+      "source": "/(background|intro|intro-720)\\.mp4",
       "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400" }]
     }
   ]

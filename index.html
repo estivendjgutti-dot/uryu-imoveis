@@ -9,6 +9,40 @@
       content="Encontre imóveis para comprar ou alugar com a Uryu. Atendimento próximo em cada etapa da negociação."
     />
 
+    <link rel="canonical" href="https://uryuimoveis.com.br/" />
+    <meta name="google-site-verification" content="rvVEkXK5aD-M-z4EXICBrtObQVDU3fgaY69_rDr1GSY" />
+    <meta name="theme-color" content="#f0e6d2" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Uryu Imóveis" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:title" content="Uryu Imóveis | Comprar, alugar e anunciar" />
+    <meta property="og:description" content="Encontre imóveis para comprar ou alugar com a Uryu. Atendimento próximo em cada etapa da negociação." />
+    <meta property="og:url" content="https://uryuimoveis.com.br/" />
+    <meta property="og:image" content="https://uryuimoveis.com.br/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "RealEstateAgent",
+        "name": "Uryu Imóveis",
+        "url": "https://uryuimoveis.com.br/",
+        "logo": "https://uryuimoveis.com.br/logo-uryu.png",
+        "image": "https://uryuimoveis.com.br/og-image.jpg",
+        "telephone": "+55-11-97050-8331",
+        "email": "contato@uryuimoveis.com.br",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Rua Agudos, 416 - sala 07 - Rochdale",
+          "addressLocality": "Osasco",
+          "addressRegion": "SP",
+          "addressCountry": "BR"
+        },
+        "areaServed": "Osasco e região, SP"
+      }
+    </script>
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -20,7 +54,11 @@
     <link rel="stylesheet" href="theme.css" />
     <script src="config.js"></script>
     <script src="imoveis.js"></script>
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="stylesheet" href="site.css" />
+    <script src="intro.js"></script>
 
     <style>
       html {
@@ -193,6 +231,7 @@
   </head>
 
   <body class="public-site font-sans text-cream antialiased overflow-x-hidden">
+
     <!-- ============ FIXED CINEMATIC VIDEO LAYER ============ -->
     <div class="cinema-background fixed inset-0 w-full h-full -z-20 bg-charcoal">
       <picture class="cinema-poster"><source media="(max-width: 760px)" srcset="background-mobile.webp"><img src="background-poster.webp" alt="" fetchpriority="high"></picture>
@@ -379,6 +418,7 @@
           etapa da negociação.
         </p>
         <a class="browse-link" href="#catalogo" data-i18n="browse_catalog">Explorar imóveis disponíveis ↓</a>
+        <button type="button" class="browse-link intro-replay" id="replay-intro" data-i18n="intro_replay">▶ Rever vídeo de abertura</button>
         <div class="reveal mt-10 flex items-center gap-6">
           <a
             href="https://wa.me/5511970508331?text=Ol%C3%A1%2C%20estou%20procurando%20um%20im%C3%B3vel."
@@ -612,10 +652,11 @@
         <h2 id="planning-title">Doação em vida: planejar hoje, cuidar do amanhã.</h2>
         <p class="planning-intro">A doação de um imóvel em vida pode fazer parte do planejamento sucessório. Conhecer as possibilidades e os limites ajuda a tomar uma decisão alinhada à sua família.</p>
         <div class="planning-grid">
-          <article><span class="planning-number" aria-hidden="true">01</span><h3>Organização antecipada</h3><p>Definir a transmissão de um imóvel durante a vida permite discutir objetivos e condições com antecedência, respeitando os direitos dos herdeiros.</p></article>
-          <article><span class="planning-number" aria-hidden="true">02</span><h3>Possibilidade de usufruto</h3><p>Quando previsto e formalizado, o usufruto permite ao doador conservar o uso do imóvel ou os rendimentos de aluguel, conforme as condições do ato.</p></article>
-          <article><span class="planning-number" aria-hidden="true">03</span><h3>Clareza para a família</h3><p>Um planejamento bem documentado ajuda a tornar intenções e responsabilidades mais claras. A adequação da doação depende da situação patrimonial e familiar.</p></article>
+          <article><span class="planning-icon" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="10" width="32" height="30" rx="4"/><path d="M8 19h32M16 6v8M32 6v8M16 28l5 5 11-11"/></svg></span><span class="planning-number" aria-hidden="true">01</span><h3>Organização antecipada</h3><p>Definir a transmissão de um imóvel durante a vida permite discutir objetivos e condições com antecedência, respeitando os direitos dos herdeiros.</p></article>
+          <article><span class="planning-icon" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22 24 7l18 15"/><path d="M11 19v21h26V19"/><circle cx="24" cy="27" r="3.5"/><path d="M24 30.5V36"/></svg></span><span class="planning-number" aria-hidden="true">02</span><h3>Possibilidade de usufruto</h3><p>Quando previsto e formalizado, o usufruto permite ao doador conservar o uso do imóvel ou os rendimentos de aluguel, conforme as condições do ato.</p></article>
+          <article><span class="planning-icon" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="16" cy="17" r="5"/><circle cx="33" cy="19" r="4"/><path d="M6 38c0-6 4.5-10 10-10s10 4 10 10M28 38c0-4.5 3-7.5 7-7.5s7 3 7 7.5"/></svg></span><span class="planning-number" aria-hidden="true">03</span><h3>Clareza para a família</h3><p>Um planejamento bem documentado ajuda a tornar intenções e responsabilidades mais claras. A adequação da doação depende da situação patrimonial e familiar.</p></article>
         </div>
+        <div class="planning-dots" aria-hidden="true"><i class="on"></i><i></i><i></i></div>
         <details class="planning-details"><summary>O que avaliar antes de decidir?</summary><p>A doação transfere direitos e exige avaliar a subsistência do doador, a parcela dos herdeiros necessários, os documentos e os custos de formalização. Pode haver ITCMD e outras obrigações tributárias. Ela não garante economia de impostos nem elimina, por si só, a necessidade de inventário de outros bens.</p><p>Analise o caso com advogado, tabelião e contador. Este conteúdo é informativo e não substitui orientação jurídica ou tributária individual.</p><p class="planning-sources"><a href="https://www.planalto.gov.br/ccivil_03/leis/2002/l10406compilada.htm" target="_blank" rel="noopener">Código Civil</a> · <a href="https://portal.fazenda.sp.gov.br/servicos/itcmd/Paginas/Doa%C3%A7%C3%A3o-com-reserva-de-usufruto.aspx" target="_blank" rel="noopener">ITCMD e usufruto em São Paulo</a></p></details>
         <div class="planning-contact"><div><h3>Quer conversar sobre o seu imóvel?</h3><p>Conte à Uryu o que você está planejando.</p></div><a class="action" href="https://wa.me/5511970508331?text=Ol%C3%A1%2C%20gostaria%20de%20conversar%20sobre%20meu%20im%C3%B3vel%20e%20planejamento%20de%20doa%C3%A7%C3%A3o%20em%20vida." target="_blank" rel="noopener">Conversar sobre meu imóvel ↗</a></div>
       </div>
@@ -789,6 +830,17 @@
 
     <script>
 
+      (function () {
+        const grid = document.querySelector(".planning-grid");
+        const dots = document.querySelectorAll(".planning-dots i");
+        if (!grid || !dots.length) return;
+        grid.addEventListener("scroll", () => {
+          const i = Math.round((grid.scrollLeft / (grid.scrollWidth - grid.clientWidth || 1)) * (dots.length - 1));
+          dots.forEach((d, n) => d.classList.toggle("on", n === i));
+        }, { passive: true });
+      })();
+      document.getElementById("replay-intro")?.addEventListener("click", () => window.uryuIntro?.play());
+
       const reduceMotion = window.matchMedia(
         "(prefers-reduced-motion: reduce)",
       ).matches;
@@ -799,6 +851,7 @@
           nav_home: "Home",
           nav_empresa: "A Empresa",
           browse_catalog: "Explorar imóveis disponíveis ↓",
+          intro_replay: "▶ Rever vídeo de abertura",
           nav_comprar: "Comprar",
           nav_alugar: "Alugar",
           nav_anuncie: "Anuncie seu Imóvel",
@@ -906,6 +959,7 @@
           nav_home: "Home",
           nav_empresa: "About Us",
           browse_catalog: "Browse available properties ↓",
+          intro_replay: "▶ Watch the intro again",
           nav_comprar: "Buy",
           nav_alugar: "Rent",
           nav_anuncie: "List Your Property",
@@ -1023,6 +1077,7 @@
           hero_sub:
             "Encuentra inmuebles para comprar o alquilar con asesoramiento cercano en cada etapa.",
           browse_catalog: "Explorar inmuebles disponibles ↓",
+          intro_replay: "▶ Ver el video de apertura",
           hero_cta1: "Encontrar mi inmueble",
           hero_cta2: "Hablar con un asesor",
           hero_scroll: "Desliza para explorar",
