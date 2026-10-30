@@ -69,7 +69,7 @@ export async function activate(email, code, password) {
 export async function listAccess() {
   await fresh();
   const [admins, invites] = await Promise.all([
-    sb("/rest/v1/admins?select=user_id,email,created_at&order=created_at"),
+    sb("/rest/v1/admins?select=user_id,email,is_owner,created_at&order=created_at"),
     sb("/rest/v1/admin_invites?select=email,created_at,expires_at&order=created_at"),
   ]);
   return { admins, invites };

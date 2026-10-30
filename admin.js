@@ -479,11 +479,14 @@ async function renderAccess() {
   const list = document.querySelector("#access-list");
   const { admins, invites } = await listAccess();
   const me = currentUserId();
+  const iAmOwner = admins.some((a) => a.user_id === me && a.is_owner);
   list.replaceChildren();
   for (const a of admins)
     list.append(
       a.user_id === me
         ? accessRow(a.email || "Você", "Você · acesso ativo")
+        : a.is_owner || !iAmOwner
+        ? accessRow(a.email || "Usuário sem e-mail", a.is_owner ? "Proprietário" : "Acesso ativo")
         : accessRow(a.email || "Usuário sem e-mail", "Acesso ativo", [
             ["Remover acesso", async () => {
               if (!confirm(`Remover o acesso de ${a.email}?`)) throw new Error("Remoção cancelada.");
