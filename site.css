@@ -933,3 +933,22 @@ footer { min-height:0!important; padding:64px 24px 26px!important; display:flex;
 
 .intro-replay { display:flex; margin-top:0; border:0; background:none; font-family:inherit; cursor:pointer; opacity:.75; }
 .intro-replay:hover { opacity:1; }
+
+/* Patrimônio e família: ícones e carrossel só no mobile */
+.planning-icon,.planning-dots { display:none; }
+@media (max-width: 760px) {
+  .planning-shell { padding:24px 18px; }
+  .planning-shell h2 { font-size:28px; margin:.6rem 0 1rem; }
+  .planning-intro { font-size:15px; line-height:1.65; }
+  .planning-grid { display:flex; overflow-x:auto; scroll-snap-type:x mandatory; gap:12px; margin:22px -18px 0; padding:0 18px 4px; scrollbar-width:none; overscroll-behavior-x:contain; }
+  .planning-grid::-webkit-scrollbar { display:none; }
+  .planning-grid article { flex:0 0 82%; scroll-snap-align:center; border:1px solid #e4dfd2; border-radius:20px; padding:20px; background:#f7f4ea; position:relative; }
+  .planning-icon { display:flex; align-items:center; justify-content:center; width:56px; height:56px; border-radius:50%; background:#e8ecdc; color:#4a5a3b; }
+  .planning-icon svg { width:30px; height:30px; }
+  .planning-number { position:absolute; top:20px; right:20px; }
+  .planning-grid h3 { font-size:20px; margin:14px 0 8px; }
+  .planning-grid p { font-size:14.5px; line-height:1.6; }
+  .planning-dots { display:flex; justify-content:center; gap:8px; margin:14px 0 18px; }
+  .planning-dots i { width:8px; height:8px; border-radius:50%; background:#cfd3c2; transition:width .2s, background .2s; }
+  .planning-dots i.on { width:22px; border-radius:6px; background:#5e6a4e; }
+}

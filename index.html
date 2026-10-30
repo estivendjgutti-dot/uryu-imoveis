@@ -618,10 +618,11 @@
         <h2 id="planning-title">Doação em vida: planejar hoje, cuidar do amanhã.</h2>
         <p class="planning-intro">A doação de um imóvel em vida pode fazer parte do planejamento sucessório. Conhecer as possibilidades e os limites ajuda a tomar uma decisão alinhada à sua família.</p>
         <div class="planning-grid">
-          <article><span class="planning-number" aria-hidden="true">01</span><h3>Organização antecipada</h3><p>Definir a transmissão de um imóvel durante a vida permite discutir objetivos e condições com antecedência, respeitando os direitos dos herdeiros.</p></article>
-          <article><span class="planning-number" aria-hidden="true">02</span><h3>Possibilidade de usufruto</h3><p>Quando previsto e formalizado, o usufruto permite ao doador conservar o uso do imóvel ou os rendimentos de aluguel, conforme as condições do ato.</p></article>
-          <article><span class="planning-number" aria-hidden="true">03</span><h3>Clareza para a família</h3><p>Um planejamento bem documentado ajuda a tornar intenções e responsabilidades mais claras. A adequação da doação depende da situação patrimonial e familiar.</p></article>
+          <article><span class="planning-icon" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="10" width="32" height="30" rx="4"/><path d="M8 19h32M16 6v8M32 6v8M16 28l5 5 11-11"/></svg></span><span class="planning-number" aria-hidden="true">01</span><h3>Organização antecipada</h3><p>Definir a transmissão de um imóvel durante a vida permite discutir objetivos e condições com antecedência, respeitando os direitos dos herdeiros.</p></article>
+          <article><span class="planning-icon" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22 24 7l18 15"/><path d="M11 19v21h26V19"/><circle cx="24" cy="27" r="3.5"/><path d="M24 30.5V36"/></svg></span><span class="planning-number" aria-hidden="true">02</span><h3>Possibilidade de usufruto</h3><p>Quando previsto e formalizado, o usufruto permite ao doador conservar o uso do imóvel ou os rendimentos de aluguel, conforme as condições do ato.</p></article>
+          <article><span class="planning-icon" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="16" cy="17" r="5"/><circle cx="33" cy="19" r="4"/><path d="M6 38c0-6 4.5-10 10-10s10 4 10 10M28 38c0-4.5 3-7.5 7-7.5s7 3 7 7.5"/></svg></span><span class="planning-number" aria-hidden="true">03</span><h3>Clareza para a família</h3><p>Um planejamento bem documentado ajuda a tornar intenções e responsabilidades mais claras. A adequação da doação depende da situação patrimonial e familiar.</p></article>
         </div>
+        <div class="planning-dots" aria-hidden="true"><i class="on"></i><i></i><i></i></div>
         <details class="planning-details"><summary>O que avaliar antes de decidir?</summary><p>A doação transfere direitos e exige avaliar a subsistência do doador, a parcela dos herdeiros necessários, os documentos e os custos de formalização. Pode haver ITCMD e outras obrigações tributárias. Ela não garante economia de impostos nem elimina, por si só, a necessidade de inventário de outros bens.</p><p>Analise o caso com advogado, tabelião e contador. Este conteúdo é informativo e não substitui orientação jurídica ou tributária individual.</p><p class="planning-sources"><a href="https://www.planalto.gov.br/ccivil_03/leis/2002/l10406compilada.htm" target="_blank" rel="noopener">Código Civil</a> · <a href="https://portal.fazenda.sp.gov.br/servicos/itcmd/Paginas/Doa%C3%A7%C3%A3o-com-reserva-de-usufruto.aspx" target="_blank" rel="noopener">ITCMD e usufruto em São Paulo</a></p></details>
         <div class="planning-contact"><div><h3>Quer conversar sobre o seu imóvel?</h3><p>Conte à Uryu o que você está planejando.</p></div><a class="action" href="https://wa.me/5511970508331?text=Ol%C3%A1%2C%20gostaria%20de%20conversar%20sobre%20meu%20im%C3%B3vel%20e%20planejamento%20de%20doa%C3%A7%C3%A3o%20em%20vida." target="_blank" rel="noopener">Conversar sobre meu imóvel ↗</a></div>
       </div>
@@ -795,6 +796,15 @@
 
     <script>
 
+      (function () {
+        const grid = document.querySelector(".planning-grid");
+        const dots = document.querySelectorAll(".planning-dots i");
+        if (!grid || !dots.length) return;
+        grid.addEventListener("scroll", () => {
+          const i = Math.round((grid.scrollLeft / (grid.scrollWidth - grid.clientWidth || 1)) * (dots.length - 1));
+          dots.forEach((d, n) => d.classList.toggle("on", n === i));
+        }, { passive: true });
+      })();
       document.getElementById("replay-intro")?.addEventListener("click", () => window.uryuIntro?.play());
 
       const reduceMotion = window.matchMedia(
