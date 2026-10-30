@@ -1,5 +1,5 @@
 import { isDemo, el, money, photoUrl } from "./data.js";
-import { signIn, signOut, listAll, saveProperty, setStatus, uploadPhoto } from "./admin-db.js";
+import { signIn, signOut, listAll, saveProperty, setStatus, uploadPhoto, signUp, listAccess, inviteAdmin, removeAdmin, cancelInvite, currentUserId } from "./admin-db.js";
 const login = document.querySelector("#login-form"),
   panel = document.querySelector("#admin-panel"),
   editor = document.querySelector("#editor"),
@@ -266,6 +266,7 @@ document.querySelector("#logout").addEventListener("click", () => {
   revoke();
   panel.hidden = true;
   editor.hidden = true;
+  accessPanel.hidden = true;
   login.hidden = false;
   notify("Você saiu do painel.");
 });
@@ -380,3 +381,124 @@ if (isDemo) {
     true,
   );
 }
+
+const signup = document.querySelector("#signup-form"),
+  accessPanel = document.querySelector("#access-panel"),
+  accessMessage = document.querySelector("#access-message");
+document.querySelector("#show-signup").addEventListener("click", () => {
+  login.hidden = true;
+  signup.hidden = false;
+  message.textContent = "";
+});
+document.querySelector("#show-login").addEventListener("click", () => {
+  signup.hidden = true;
+  login.hidden = false;
+  message.textContent = "";
+});
+signup.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const button = signup.querySelector("button.action");
+  button.disabled = true;
+  try {
+    const needsConfirm = await signUp(
+      document.querySelector("#signup-email").value,
+      document.querySelector("#signup-password").value,
+    );
+    signup.reset();
+    signup.hidden = true;
+    login.hidden = false;
+    notify(
+      needsConfirm
+        ? "Senha criada. Abra o e-mail de confirmação que enviamos e depois entre aqui com e-mail e senha."
+        : "Senha criada. Entre com seu e-mail e senha.",
+    );
+  } catch (err) {
+    notify(err.message, true);
+  } finally {
+    button.disabled = false;
+  }
+});
+
+function accessRow(label, detail, actionText, onAction) {
+  const row = el("article", "admin-row");
+  const info = el("div");
+  info.append(el("strong", "", label), el("p", "muted", detail));
+  row.append(info);
+  if (actionText) {
+    const actions = el("div");
+    const btn = el("button", "text-button", actionText);
+    btn.type = "button";
+    btn.addEventListener("click", async () => {
+      btn.disabled = true;
+      try {
+        await onAction();
+        await renderAccess();
+      } catch (err) {
+        notify(err.message, true, accessMessage);
+        btn.disabled = false;
+      }
+    });
+    actions.append(btn);
+    row.append(actions);
+  }
+  return row;
+}
+async function renderAccess() {
+  const list = document.querySelector("#access-list");
+  const { admins, invites } = await listAccess();
+  const me = currentUserId();
+  list.replaceChildren();
+  for (const a of admins)
+    list.append(
+      a.user_id === me
+        ? accessRow(a.email || "Você", "Você · acesso ativo")
+        : accessRow(a.email || "Usuário sem e-mail", "Acesso ativo", "Remover acesso", async () => {
+            if (!confirm(`Remover o acesso de ${a.email}?`)) throw new Error("Remoção cancelada.");
+            await removeAdmin(a.user_id);
+            notify(`Acesso de ${a.email} removido.`, false, accessMessage);
+          }),
+    );
+  for (const i of invites)
+    list.append(
+      accessRow(i.email, "Convite pendente · aguardando primeiro acesso", "Cancelar convite", async () => {
+        await cancelInvite(i.email);
+        notify(`Convite de ${i.email} cancelado.`, false, accessMessage);
+      }),
+    );
+}
+document.querySelector("#show-access").addEventListener("click", async () => {
+  panel.hidden = true;
+  accessPanel.hidden = false;
+  accessMessage.textContent = "";
+  try {
+    await renderAccess();
+  } catch (err) {
+    notify(err.message, true, accessMessage);
+  }
+});
+document.querySelector("#close-access").addEventListener("click", () => {
+  accessPanel.hidden = true;
+  panel.hidden = false;
+});
+document.querySelector("#invite-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const input = document.querySelector("#invite-email");
+  const button = e.target.querySelector("button");
+  button.disabled = true;
+  try {
+    const result = await inviteAdmin(input.value);
+    notify(
+      result === "ativo"
+        ? `${input.value} já tinha conta e agora tem acesso ao painel.`
+        : `Convite registrado para ${input.value}. Peça para a pessoa fazer o primeiro acesso nesta página.`,
+      false,
+      accessMessage,
+    );
+    input.value = "";
+    await renderAccess();
+  } catch (err) {
+    notify(err.message, true, accessMessage);
+  } finally {
+    button.disabled = false;
+  }
+});

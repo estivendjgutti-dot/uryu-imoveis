@@ -58,7 +58,7 @@ summary {
   height: 100px !important;
 }
 #logo-img {
-  height: 64px !important;
+  height: 80px !important;
   width: auto !important;
 }
 #logo-text > span {
@@ -734,7 +734,7 @@ footer img {
   .cinema-background { position:absolute!important; height:100svh!important; bottom:auto!important; }
   .cinema-poster img { object-position:center center; }
   #nav-inner { height:76px!important; }
-  #logo-img { height:46px!important; }
+  #logo-img { height:54px!important; }
   #logo-text > span { padding:3px 8px!important; }
   .property-body { padding:20px; }
   .property-body h3 { font-size:23px; line-height:1.25; }
@@ -913,7 +913,7 @@ footer { min-height:0!important; padding:64px 24px 26px!important; display:flex;
   .public-site .mobile-property-contact a { flex-shrink:0; }
 }
 @media(max-width:360px) {
-  .public-site #logo-img { height:38px!important; }
+  .public-site #logo-img { height:44px!important; }
   .public-site #nav-inner > div { gap:6px; }
   .public-site .lang-btn { min-width:32px; }
   .public-site .planning-contact .action { width:100%; }
@@ -924,3 +924,6 @@ footer { min-height:0!important; padding:64px 24px 26px!important; display:flex;
   .public-site .contact-grid > * > p { font-size:13px; }
 }
 .empty-contact { display:table; margin-top:18px; }
+
+.invite-form{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end}
+.invite-form label{flex:1 1 260px}
