@@ -37,21 +37,40 @@ export async function signIn(email, password) {
   }
 }
 
-export async function signUp(email, password) {
+export async function activate(email, code, password) {
+  const mail = String(email || "").trim().toLowerCase();
   setAccessToken("");
-  const redirect = encodeURIComponent(location.origin + "/admin.html");
-  const data = await sb(`/auth/v1/signup?redirect_to=${redirect}`, {
-    method: "POST",
-    body: JSON.stringify({ email: String(email || "").trim().toLowerCase(), password }),
-  });
-  return !data.access_token;
+  let data = {};
+  try {
+    data = await sb("/auth/v1/signup", {
+      method: "POST",
+      body: JSON.stringify({ email: mail, password }),
+    });
+  } catch (e) {
+    if (!/já tem conta/.test(e.message)) throw e;
+  }
+  if (!data.access_token)
+    data = await sb("/auth/v1/token?grant_type=password", {
+      method: "POST",
+      body: JSON.stringify({ email: mail, password }),
+    });
+  useSession(data);
+  try {
+    await sb("/rest/v1/rpc/redeem_invite", {
+      method: "POST",
+      body: JSON.stringify({ p_code: String(code || "").trim() }),
+    });
+  } catch (e) {
+    signOut();
+    throw e;
+  }
 }
 
 export async function listAccess() {
   await fresh();
   const [admins, invites] = await Promise.all([
     sb("/rest/v1/admins?select=user_id,email,created_at&order=created_at"),
-    sb("/rest/v1/admin_invites?select=email,created_at&order=created_at"),
+    sb("/rest/v1/admin_invites?select=email,created_at,expires_at&order=created_at"),
   ]);
   return { admins, invites };
 }

@@ -41,9 +41,19 @@
       </form>
       <form id="signup-form" class="login-panel" hidden>
         <h2>Primeiro acesso</h2>
-        <p class="muted">Use o e-mail que recebeu o convite. Depois de criar a senha, confirme pelo link enviado ao seu e-mail.</p>
+        <p class="muted">Use o e-mail que foi convidado e o código de convite que você recebeu. O código vale uma vez só.</p>
         <label
           >E-mail<input id="signup-email" name="email" type="email" autocomplete="username" required /></label
+        ><label
+          >Código de convite<input
+            id="signup-code"
+            name="code"
+            autocomplete="off"
+            autocapitalize="none"
+            spellcheck="false"
+            maxlength="40"
+            placeholder="xxxx-xxxx-xxxx-xxxx-xxxx"
+            required /></label
         ><label
           >Crie uma senha · mínimo 12 caracteres<input
             id="signup-password"
@@ -82,7 +92,13 @@
           <label>E-mail<input id="invite-email" name="email" type="email" required placeholder="nome@exemplo.com" /></label>
           <button class="action">Convidar</button>
         </form>
-        <p class="muted">Depois de convidar, peça para a pessoa abrir esta página, clicar em “Primeiro acesso: criar minha senha” e confirmar o e-mail.</p>
+        <p class="muted">Ao convidar, o painel gera um código de uso único, válido por 7 dias. Envie o código à pessoa (WhatsApp, por exemplo): ele aparece só uma vez.</p>
+        <div id="invite-result" class="invite-result" hidden>
+          <p class="muted">Código para <strong id="invite-result-email"></strong>:</p>
+          <p><code id="invite-code" class="invite-code"></code></p>
+          <label>Mensagem pronta para enviar<textarea id="invite-text" readonly rows="7"></textarea></label>
+          <button type="button" id="copy-invite" class="action">Copiar mensagem</button>
+        </div>
         <p id="access-message" role="status" aria-live="polite"></p>
         <div class="editor-actions">
           <button type="button" id="close-access" class="action secondary">Voltar ao cadastro</button>

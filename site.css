@@ -927,3 +927,6 @@ footer { min-height:0!important; padding:64px 24px 26px!important; display:flex;
 
 .invite-form{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end}
 .invite-form label{flex:1 1 260px}
+.invite-result{margin:16px 0;padding:16px;border:1px solid var(--line);border-radius:12px;display:grid;gap:12px}
+.invite-code{display:block;font-size:1.4rem;letter-spacing:.08em;padding:12px 14px;border-radius:10px;background:rgba(255,255,255,.06);word-break:break-all;user-select:all}
+.invite-result textarea{width:100%;font:inherit}
