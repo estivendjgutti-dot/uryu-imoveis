@@ -24,6 +24,20 @@
     <link rel="icon" type="image/png" sizes="192x192" href="/favicon.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="stylesheet" href="site.css" />
+    <style>
+      #intro{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:#f0e6d2;transition:opacity .6s ease}
+      #intro.saindo{opacity:0;pointer-events:none}
+      #intro video{width:100%;height:100%;object-fit:contain;background:#f0e6d2}
+      #intro button{position:absolute;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));padding:8px 16px;border:1px solid rgba(36,35,31,.35);border-radius:999px;background:rgba(240,230,210,.85);color:#24231f;font:500 14px/1 Manrope,system-ui,sans-serif;cursor:pointer}
+      html.com-intro body{overflow:hidden}
+    </style>
+    <script>
+      // Abertura com o vídeo da marca: uma vez por visita (sessão), pulada se o usuário prefere menos movimento.
+      try {
+        if (!sessionStorage.getItem("uryu-intro") && !matchMedia("(prefers-reduced-motion: reduce)").matches)
+          document.documentElement.classList.add("com-intro");
+      } catch {}
+    </script>
 
     <style>
       html {
@@ -196,6 +210,37 @@
   </head>
 
   <body class="public-site font-sans text-cream antialiased overflow-x-hidden">
+    <div id="intro" hidden>
+      <video muted playsinline preload="auto" poster="intro-poster.jpg"></video>
+      <button type="button">Pular</button>
+    </div>
+    <script>
+      (function () {
+        var intro = document.getElementById("intro");
+        if (!document.documentElement.classList.contains("com-intro")) return intro.remove();
+        intro.hidden = false;
+        var video = intro.querySelector("video");
+        var done = false;
+        function fim() {
+          if (done) return;
+          done = true;
+          try { sessionStorage.setItem("uryu-intro", "1"); } catch {}
+          intro.classList.add("saindo");
+          document.documentElement.classList.remove("com-intro");
+          setTimeout(function () { intro.remove(); }, 700);
+        }
+        video.addEventListener("ended", fim);
+        video.addEventListener("error", fim);
+        video.src = matchMedia("(max-width: 900px)").matches ? "intro-720.mp4" : "intro.mp4";
+        intro.querySelector("button").addEventListener("click", fim);
+        var p = video.play();
+        if (p && p.catch) p.catch(fim);
+        // Rede lenta ou autoplay bloqueado: não prende o visitante.
+        setTimeout(function () { if (video.currentTime === 0) fim(); }, 4000);
+        setTimeout(fim, 15000);
+      })();
+    </script>
+
     <!-- ============ FIXED CINEMATIC VIDEO LAYER ============ -->
     <div class="cinema-background fixed inset-0 w-full h-full -z-20 bg-charcoal">
       <picture class="cinema-poster"><source media="(max-width: 760px)" srcset="background-mobile.webp"><img src="background-poster.webp" alt="" fetchpriority="high"></picture>

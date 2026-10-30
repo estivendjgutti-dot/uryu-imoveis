@@ -29,7 +29,7 @@
       ]
     },
     {
-      "source": "/background.mp4",
+      "source": "/(background|intro|intro-720)\\.mp4",
       "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400" }]
     }
   ]
