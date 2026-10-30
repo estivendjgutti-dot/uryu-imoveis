@@ -1,4 +1,4 @@
-// Abertura com o vídeo da marca: toca a cada carregamento das páginas públicas e pode ser revista pelo botão da home.
+// Abertura com o vídeo da marca: toca uma vez por visita às páginas públicas e pode ser revista pelo botão da home.
 (function () {
   var root = document.documentElement;
   var cream = "#f0e6d2";
@@ -47,7 +47,26 @@
     setTimeout(function () { if (video.currentTime === 0) fim(); }, 4000);
     setTimeout(fim, 15000);
   }
+  // Uma abertura por visita: quem já viu (na home ou num link de imóvel) não a vê de novo enquanto navega.
+  // A marca vence com 30 min sem abrir nenhuma página; cada página aberta renova o prazo.
+  var key = "uryu-intro-visto";
+  var janela = 30 * 60 * 1000;
+  function jaViu() {
+    try {
+      var t = Number(localStorage.getItem(key));
+      if (t && Date.now() - t < janela) return true;
+    } catch (e) {
+      try { if (sessionStorage.getItem(key)) return true; } catch (e2) {}
+    }
+    return false;
+  }
+  function marcar() {
+    try { localStorage.setItem(key, String(Date.now())); } catch (e) {}
+    try { sessionStorage.setItem(key, "1"); } catch (e) {}
+  }
   window.uryuIntro = { play: play };
+  var viu = jaViu();
+  marcar();
   // Quem pede menos movimento não vê a abertura sozinha (o botão da home continua disponível).
-  if (!matchMedia("(prefers-reduced-motion: reduce)").matches) play();
+  if (!viu && !matchMedia("(prefers-reduced-motion: reduce)").matches) play();
 })();
