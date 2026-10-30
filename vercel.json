@@ -2,6 +2,14 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "cleanUrls": true,
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "www.uryuimoveis.com.br" }],
+      "destination": "https://uryuimoveis.com.br/$1",
+      "permanent": true
+    }
+  ],
   "git": {"deploymentEnabled": {"main": false}},
   "headers": [
     {
